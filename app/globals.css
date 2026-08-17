@@ -352,6 +352,13 @@ html[lang="en"] .case-heading .section-title h2 { font-size: clamp(38px,4.7vw,70
 .contact-email strong { min-width: 0; overflow-wrap: anywhere; font-size: 15px; font-weight: 560; letter-spacing: .01em; }
 .contact-email-arrow { color: var(--blue-bright); font-size: 18px; transition: transform .2s ease; }
 .contact-email:hover .contact-email-arrow { transform: translate(2px,-2px); }
+.contact-actions { min-width: 0; width: min(100%,720px); justify-self: end; display: grid; gap: 30px; }
+.contact-wechat { min-width: 0; max-width: 100%; margin: 0; padding: clamp(16px,2vw,24px); display: grid; grid-template-columns: auto minmax(0,1fr); gap: clamp(20px,2.5vw,34px); align-items: center; background: color-mix(in srgb,var(--night-soft) 82%,transparent); border: 1px solid var(--line-dark); }
+.contact-wechat-qr { width: clamp(190px,22vw,280px); max-width: 100%; height: auto; display: block; background: #fff; border: 8px solid #fff; }
+.contact-wechat figcaption { min-width: 0; }
+.contact-wechat figcaption span { display: block; color: var(--blue-bright); font: 9px var(--font-geist-mono),monospace; letter-spacing: .14em; }
+.contact-wechat figcaption strong { display: block; margin-top: 18px; overflow-wrap: anywhere; font-size: clamp(25px,2.5vw,38px); line-height: 1.05; letter-spacing: -.045em; }
+.contact-wechat figcaption p { margin: 20px 0 0; color: #a8afba; font-size: 14px; line-height: 1.7; }
 .contact-link { justify-self: end; width: min(100%,620px); min-height: 64px; padding: 0 0 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; appearance: none; color: inherit; background: transparent; border: 0; border-bottom: 2px solid var(--blue-bright); font: inherit; font-size: clamp(25px,3.1vw,44px); font-weight: 690; text-align: left; cursor: pointer; transition: color .2s ease, border-color .2s ease; }
 .contact-link:hover { color: var(--ice); border-color: var(--ice); }
 .contact-link:disabled { color: #aeb5c1; border-color: #6574bf; cursor: wait; }
@@ -371,6 +378,7 @@ html[data-theme="light"] .contact-email-label { color: #535c69; }
 html[data-theme="light"] .capability-intro > p:last-child,
 html[data-theme="light"] .capability-card p,
 html[data-theme="light"] .contact-copy > p { color: #4e5663; }
+html[data-theme="light"] .contact-wechat figcaption p { color: #4e5663; }
 html[data-theme="light"] .case-intro,
 html[data-theme="light"] .system-case-summary,
 html[data-theme="light"] .system-case-facts dd,
@@ -454,12 +462,19 @@ html[data-theme="light"] footer { color: #5c6471; }
   .contact { min-height: auto; }
   .contact-status { display: none; }
   .contact-bottom { grid-template-columns: 1fr; }
+  .contact-actions { justify-self: stretch; width: 100%; }
   .contact-email { grid-template-columns: minmax(0,1fr) auto; gap: 4px 16px; padding: 14px 0; }
   .contact-email-label, .contact-email strong { grid-column: 1; }
   .contact-email-arrow { grid-column: 2; grid-row: 1 / 3; }
   .contact-link { justify-self: start; width: 100%; }
   .cursor-glow { display: none; }
   footer { grid-template-columns: 1fr; gap: 8px; }
+}
+
+@media (max-width: 620px) {
+  .contact-wechat { grid-template-columns: 1fr; }
+  .contact-wechat-qr { width: min(100%,260px); justify-self: center; }
+  .contact-wechat figcaption { text-align: center; }
 }
 
 @media (max-width: 380px) {

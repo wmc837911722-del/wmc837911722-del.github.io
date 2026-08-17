@@ -835,11 +835,30 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <button className="contact-link" type="button" onClick={copyCollaborationBrief} disabled={copyState === "copying"}>
-            <span>{copyState === "copied" ? copy.contact.copyDone : copyState === "failed" ? copy.contact.copyFailed : copyState === "copying" ? copy.contact.copyWorking : copy.contact.copyIdle}</span>
-            <span className="contact-action-code" aria-hidden="true">{copyState === "copied" ? copy.contact.copyCodeDone : copyState === "failed" ? copy.contact.copyCodeFailed : copyState === "copying" ? copy.contact.copyCodeWorking : copy.contact.copyCodeIdle}</span>
-          </button>
-          <span className="sr-only" role="status" aria-live="polite">{copyState === "copied" ? copy.contact.liveDone : copyState === "failed" ? copy.contact.liveFailed : ""}</span>
+          <div className="contact-actions">
+            <figure className="contact-wechat">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="contact-wechat-qr"
+                src="/contact/wechat-fengyu.jpg"
+                alt={copy.contact.wechatImageAlt}
+                width={888}
+                height={1131}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>
+                <span>{copy.contact.wechatLabel}</span>
+                <strong>{copy.contact.wechatTitle}</strong>
+                <p>{copy.contact.wechatNote}</p>
+              </figcaption>
+            </figure>
+            <button className="contact-link" type="button" onClick={copyCollaborationBrief} disabled={copyState === "copying"}>
+              <span>{copyState === "copied" ? copy.contact.copyDone : copyState === "failed" ? copy.contact.copyFailed : copyState === "copying" ? copy.contact.copyWorking : copy.contact.copyIdle}</span>
+              <span className="contact-action-code" aria-hidden="true">{copyState === "copied" ? copy.contact.copyCodeDone : copyState === "failed" ? copy.contact.copyCodeFailed : copyState === "copying" ? copy.contact.copyCodeWorking : copy.contact.copyCodeIdle}</span>
+            </button>
+            <span className="sr-only" role="status" aria-live="polite">{copyState === "copied" ? copy.contact.liveDone : copyState === "failed" ? copy.contact.liveFailed : ""}</span>
+          </div>
         </div>
       </section>
 
