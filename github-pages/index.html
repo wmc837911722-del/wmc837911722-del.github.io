@@ -12,13 +12,26 @@
       (function () {
         try {
           var reset = function () {
-            if (!location.hash) {
-              history.scrollRestoration = "manual";
+            if (location.hash) {
+              return;
+            }
+            history.scrollRestoration = "manual";
+            var root = document.documentElement;
+            var behavior = root.style.scrollBehavior;
+            root.style.scrollBehavior = "auto";
+            try {
               scrollTo(0, 0);
+            } finally {
+              root.style.scrollBehavior = behavior;
             }
           };
           reset();
-          addEventListener("pageshow", reset);
+          addEventListener("pageshow", function () {
+            reset();
+            if (!location.hash) {
+              history.scrollRestoration = "auto";
+            }
+          });
         } catch (error) {}
       })();
     </script>

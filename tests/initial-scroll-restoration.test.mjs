@@ -37,11 +37,21 @@ function firstLayoutHeadScript(layout) {
 
 function runBootScript(script, hash) {
   const scrollCalls = [];
+  const scrollBehaviorChanges = [];
   const listeners = new Map();
   const themeMeta = { content: "#080b12" };
+  let scrollBehavior = "";
+  const rootStyle = {};
+  Object.defineProperty(rootStyle, "scrollBehavior", {
+    get: () => scrollBehavior,
+    set: (value) => {
+      scrollBehavior = value;
+      scrollBehaviorChanges.push(value);
+    },
+  });
   const context = {
     document: {
-      documentElement: { dataset: {}, style: {} },
+      documentElement: { dataset: {}, style: rootStyle },
       querySelector: () => themeMeta,
     },
     history: { scrollRestoration: "auto" },
@@ -60,6 +70,8 @@ function runBootScript(script, hash) {
   return {
     history: context.history,
     scrollCalls,
+    scrollBehaviorChanges,
+    rootStyle,
     pageshow: listeners.get("pageshow"),
   };
 }
@@ -88,6 +100,11 @@ test("the earliest boot script restores root pages to the top without overriding
         [[0, 0]],
         "a root URL should start at the top",
       );
+      assert.deepEqual(
+        root.scrollBehaviorChanges,
+        ["auto", ""],
+        "the initial reset should bypass smooth scrolling without changing the site preference",
+      );
       assert.equal(
         typeof root.pageshow,
         "function",
@@ -101,6 +118,12 @@ test("the earliest boot script restores root pages to the top without overriding
         [[0, 0]],
         "a normal pageshow event should win the race with late browser restoration",
       );
+      assert.equal(
+        root.history.scrollRestoration,
+        "auto",
+        "native restoration should resume after the entry has been normalized",
+      );
+      assert.equal(root.rootStyle.scrollBehavior, "");
       root.scrollCalls.length = 0;
       root.pageshow({ persisted: true });
       assert.deepEqual(
@@ -108,6 +131,7 @@ test("the earliest boot script restores root pages to the top without overriding
         [[0, 0]],
         "a bfcache-restored root URL should return to the top",
       );
+      assert.equal(root.history.scrollRestoration, "auto");
 
       const anchored = runBootScript(script, "#case-study");
       assert.equal(
@@ -120,6 +144,7 @@ test("the earliest boot script restores root pages to the top without overriding
         [],
         "initial hash navigation must not be overwritten",
       );
+      assert.deepEqual(anchored.scrollBehaviorChanges, []);
       assert.equal(typeof anchored.pageshow, "function");
       anchored.pageshow({ persisted: true });
       assert.deepEqual(
