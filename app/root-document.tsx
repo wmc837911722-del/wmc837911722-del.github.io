@@ -29,6 +29,7 @@ export default function RootDocument({
       suppressHydrationWarning
     >
       <head>
+        <meta name="msvalidate.01" content="2ABD6FF780C81CC0672EA3C010EE51FA" />
         <meta name="theme-color" content="#080b12" />
         <script dangerouslySetInnerHTML={{ __html: scrollBootScript }} />
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
