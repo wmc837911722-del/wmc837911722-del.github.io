@@ -142,49 +142,152 @@ export const siteCopy = {
     },
     caseStudy: {
       label: "PARTICIPATED WORK",
-      labelLocal: "参与案例",
-      kicker: "TEAM PROJECT / IN-SITE CASE STUDY",
-      title: ["案例直接放在本站，", "不把访客导向别人的页面。"],
-      previewAria: "跳转到 WUDE 参与案例详情",
-      previewTop: "PROJECT CASE / IN SITE",
-      previewBadge: "CASE 01",
-      previewMeta: "ENGINEERING PORTFOLIO / 2025—2026",
-      previewTitle: "PERSONAL SITE",
-      previewRail: ["PROJECTS", "NOTES", "UPDATES"],
-      previewFlow: ["SOURCE", "SNAPSHOT", "PUBLISH"],
-      caseKicker: "WUDE / PERSONAL SITE · STATIC DELIVERY",
-      caseTitle: "把项目经验、技术判断与工程手记，沉淀成可持续更新的个人站。",
-      summary:
-        "这是一个使用原生 HTML、CSS 和 JavaScript 构建的工程作品集。站点通过 GitHub Actions 生成静态内容快照并自动发布，访客浏览时不依赖在线后端。",
+      labelLocal: "系统案例",
+      kicker: "AI APPLICATIONS / PLATFORM ENGINEERING",
+      title: ["四个真实系统案例，", "直接在本站展开。"],
+      intro:
+        "从用户服务到知识检索、智能运维和内容调度，以下案例直接展示可核对的系统背景、工程链路与技术选择。",
+      aria: "风雨参与的四个系统项目案例",
       roleLabel: "MY ROLE / 我的角色",
-      role: "项目参与者",
-      roleNote: "参与关系由风雨本人确认；具体职责范围尚未在公开资料中披露。",
-      facts: [
-        { id: "architecture", number: "01", title: "原生静态架构", description: "HTML / CSS / JavaScript，同源资源减少外部依赖。" },
-        { id: "automation", number: "02", title: "自动内容快照", description: "由 GitHub Actions 生成更新数据并完成自动发布。" },
-        { id: "content", number: "03", title: "持续内容体系", description: "覆盖项目索引、技术手记、动态与个人介绍。" },
-      ],
-      viewDetails: "查看完整案例",
       discuss: "沟通类似项目",
-      disclosure: "本页为风雨参与项目的站内案例整理，不代表对团队全部成果的独立署名。",
-      details: [
+      disclosure:
+        "以下内容仅呈现公开资料可核对的系统事实。风雨确认参与相关团队项目；具体职责边界、参与周期与量化结果尚未公开，本站不将团队成果表述为个人独立完成。",
+      projects: [
         {
-          id: "context",
-          number: "A / CONTEXT",
-          title: "项目背景",
-          description: "把分散的项目经历、技术判断和更新记录，整理为结构清晰、可持续维护的公开知识界面。",
+          id: "mental-health-platform",
+          number: "CASE 01",
+          year: "2026",
+          category: "行业 SaaS / AI 应用",
+          visualMark: "大白 AI",
+          title: "大白 AI 心理健康平台",
+          summary:
+            "面向个人与组织的心理健康产品，将 AI 咨询、心理画像、风险预警和快速筛查整合在同一套服务中。",
+          flow: ["ASSESS", "CHAT", "SERVICE", "DELIVER"],
+          facts: [
+            {
+              id: "flow",
+              label: "系统链路",
+              value:
+                "服务发现与网关 → 用户及会话状态 → SSE 流式 AI 对话 → 测评与报告 → 咨询、交易及支付 → 持续交付。",
+            },
+            {
+              id: "focus",
+              label: "工程重点",
+              value:
+                "让对话、测评、咨询和交易共享可追踪状态，并处理异步回调、超时、支付幂等、发布检查与回滚。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "Spring Cloud / SSE / MongoDB / Payment / Vue 3 / CI/CD",
+            },
+          ],
+          role: "团队项目参与者",
+          roleNote: "风雨确认参与；具体职责、周期与量化结果未公开。",
+          tagsLabel: "大白 AI 项目技术标签",
+          tags: ["AI CONSULTATION", "SSE", "TRANSACTION STATE", "CI/CD"],
         },
         {
-          id: "architecture",
-          number: "B / ARCHITECTURE",
-          title: "工程方式",
-          description: "使用轻量原生前端和同源资源，构建无需浏览器端后端服务即可完整访问的静态站点。",
+          id: "industrial-compliance-platform",
+          number: "CASE 02",
+          year: "2025—2026",
+          category: "私有 AI / RAG 平台",
+          visualMark: "RAG",
+          title: "工业合规知识平台",
+          summary:
+            "面向内部合规资料的私有知识平台，使分散文档能够被加工、检索、追溯和重建。",
+          flow: ["DOCS", "PARSE", "INDEX", "ANSWER"],
+          facts: [
+            {
+              id: "flow",
+              label: "系统链路",
+              value:
+                "文档接入 → 解析、清洗与分块 → 异步向量化 → 混合检索与重排 → 本地模型生成 → 原文追溯。",
+            },
+            {
+              id: "focus",
+              label: "工程重点",
+              value:
+                "构建可重跑的文档流水线、可恢复的异步向量任务，以及内网模型部署、依赖降级和答案溯源能力。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "Java 17 / RAG / Redis Stream / Vector Search / Local LLM / Kubernetes",
+            },
+          ],
+          role: "团队项目参与者",
+          roleNote: "风雨确认参与；具体职责、周期与量化结果未公开。",
+          tagsLabel: "工业合规项目技术标签",
+          tags: ["PRIVATE AI", "HYBRID SEARCH", "LOCAL LLM", "KUBERNETES"],
         },
         {
-          id: "delivery",
-          number: "C / DELIVERY",
-          title: "发布链路",
-          description: "由自动化工作流生成内容快照、构建静态文件并发布，让内容更新与工程交付形成固定流程。",
+          id: "sre-copilot",
+          number: "CASE 03",
+          year: "2025",
+          category: "AI Agent / 可观测性",
+          visualMark: "SRE",
+          title: "智能 SRE 运维助手",
+          summary:
+            "围绕指标、日志和集群事件组织故障排查，让 Agent 的结论建立在可检查的系统证据之上。",
+          flow: ["OBSERVE", "REASON", "ACT", "REPORT"],
+          facts: [
+            {
+              id: "flow",
+              label: "系统链路",
+              value:
+                "问题输入 → 调查计划 → 工具作用域校验 → 指标、日志与 Kubernetes 查询 → 流式证据 → 诊断总结。",
+            },
+            {
+              id: "focus",
+              label: "工程重点",
+              value:
+                "明确集群、命名空间与时间窗口边界，将计划和工具调用保存为可观察事件，并支持中断、执行上限与模型降级。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "Spring Boot 3 / React / AI Agent / MCP / Prometheus / Kubernetes",
+            },
+          ],
+          role: "团队项目参与者",
+          roleNote: "风雨确认参与；具体职责、周期与量化结果未公开。",
+          tagsLabel: "SRE 助手项目技术标签",
+          tags: ["AI AGENT", "MCP", "PROMETHEUS", "KUBERNETES"],
+        },
+        {
+          id: "content-orchestration",
+          number: "CASE 04",
+          year: "2025—2026",
+          category: "AIGC 基础设施 / 任务编排",
+          visualMark: "AIGC",
+          title: "生成式内容调度平台",
+          summary:
+            "面向批量内容生成任务的统一工作台，处理数据导入、模型调度、失败恢复和实时进度。",
+          flow: ["IMPORT", "QUEUE", "MODEL", "EXPORT"],
+          facts: [
+            {
+              id: "flow",
+              label: "系统链路",
+              value:
+                "表格导入 → 模板变量与任务校验 → 分级队列 → 多模型网关 → 重试与状态流转 → WebSocket 进度 → 结果导出。",
+            },
+            {
+              id: "focus",
+              label: "工程重点",
+              value:
+                "统一输入校验和任务标准，管理优先级、队列积压与失败重试，隔离模型供应方差异并实时反馈进度。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "NestJS / TypeScript / Redis Stream / WebSocket / Vue 3 / Docker",
+            },
+          ],
+          role: "团队项目参与者",
+          roleNote: "风雨确认参与；具体职责、周期与量化结果未公开。",
+          tagsLabel: "生成式内容调度项目技术标签",
+          tags: ["TASK QUEUE", "MODEL GATEWAY", "WEBSOCKET", "DOCKER"],
         },
       ],
     },
@@ -347,34 +450,153 @@ export const siteCopy = {
     },
     caseStudy: {
       label: "PARTICIPATED WORK",
-      labelLocal: "Selected engagement",
-      kicker: "TEAM PROJECT / IN-SITE CASE STUDY",
-      title: ["The complete case lives here—", "not on somebody else’s site."],
-      previewAria: "Jump to the WUDE participation case details",
-      previewTop: "PROJECT CASE / IN SITE",
-      previewBadge: "CASE 01",
-      previewMeta: "ENGINEERING PORTFOLIO / 2025—2026",
-      previewTitle: "PERSONAL SITE",
-      previewRail: ["PROJECTS", "NOTES", "UPDATES"],
-      previewFlow: ["SOURCE", "SNAPSHOT", "PUBLISH"],
-      caseKicker: "WUDE / PERSONAL SITE · STATIC DELIVERY",
-      caseTitle: "Turn project experience, technical judgment and engineering notes into a maintainable personal site.",
-      summary: "A framework-free HTML, CSS and JavaScript engineering portfolio. GitHub Actions creates static content snapshots and publishes the site, while the visitor experience needs no live backend.",
+      labelLocal: "System cases",
+      kicker: "AI APPLICATIONS / PLATFORM ENGINEERING",
+      title: ["Four real system cases,", "documented directly on this site."],
+      intro:
+        "From user-facing services to knowledge retrieval, intelligent operations and content orchestration, each case presents the system context, engineering flow and technology choices directly on this page.",
+      aria: "Four system projects Fengyu participated in",
       roleLabel: "MY ROLE",
-      role: "Project contributor",
-      roleNote: "Participation is confirmed by Fengyu; the specific scope has not been disclosed in public materials.",
-      facts: [
-        { id: "architecture", number: "01", title: "Native static architecture", description: "HTML, CSS and JavaScript with same-origin assets and fewer external dependencies." },
-        { id: "automation", number: "02", title: "Automated snapshots", description: "GitHub Actions creates update data and completes the publishing workflow." },
-        { id: "content", number: "03", title: "Sustainable content system", description: "Project index, technical notes, updates and personal introduction in one structure." },
-      ],
-      viewDetails: "Read the full case",
       discuss: "Discuss a similar project",
-      disclosure: "This in-site case documents a team project Fengyu participated in; it is not a claim of sole ownership over the team’s work.",
-      details: [
-        { id: "context", number: "A / CONTEXT", title: "Project context", description: "Organize scattered project experience, technical judgment and updates into a clear public knowledge interface that can be maintained over time." },
-        { id: "architecture", number: "B / ARCHITECTURE", title: "Engineering approach", description: "Use a lightweight native frontend and same-origin assets so the static site works without a visitor-facing backend service." },
-        { id: "delivery", number: "C / DELIVERY", title: "Delivery model", description: "An automated workflow creates content snapshots, builds static files and publishes updates through a repeatable release path." },
+      disclosure:
+        "These summaries are limited to publicly verifiable system facts. Fengyu confirms participation in the team projects; specific responsibilities, duration and measured outcomes are not publicly disclosed, and the work is not presented as independently completed.",
+      projects: [
+        {
+          id: "mental-health-platform",
+          number: "CASE 01",
+          year: "2026",
+          category: "Industry SaaS / AI Application",
+          visualMark: "DABAI AI",
+          title: "Dabai AI Mental Health Platform",
+          summary:
+            "An AI-enabled mental health product combining consultation, psychological profiling, risk alerts and rapid screening for individual and organizational use.",
+          flow: ["ASSESS", "CHAT", "SERVICE", "DELIVER"],
+          facts: [
+            {
+              id: "flow",
+              label: "System flow",
+              value:
+                "Service discovery and gateway → user and session state → SSE-based AI conversations → assessments and reports → consultation, transaction and payment → continuous delivery.",
+            },
+            {
+              id: "focus",
+              label: "Engineering focus",
+              value:
+                "Traceable state across conversations, assessments, consultations and transactions, with asynchronous callbacks, timeout handling, payment idempotency, release checks and rollback readiness.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "Spring Cloud / SSE / MongoDB / Payment / Vue 3 / CI/CD",
+            },
+          ],
+          role: "Team project contributor",
+          roleNote: "Participation confirmed by Fengyu; scope, duration and measured outcomes are not publicly disclosed.",
+          tagsLabel: "Dabai AI project technology tags",
+          tags: ["AI CONSULTATION", "SSE", "TRANSACTION STATE", "CI/CD"],
+        },
+        {
+          id: "industrial-compliance-platform",
+          number: "CASE 02",
+          year: "2025–2026",
+          category: "Private AI / RAG Platform",
+          visualMark: "RAG",
+          title: "Industrial Compliance Knowledge Platform",
+          summary:
+            "A private knowledge platform that turns internal compliance documents into searchable, traceable and rebuildable knowledge.",
+          flow: ["DOCS", "PARSE", "INDEX", "ANSWER"],
+          facts: [
+            {
+              id: "flow",
+              label: "System flow",
+              value:
+                "Document ingestion → parsing, cleaning and chunking → asynchronous embedding → hybrid retrieval and reranking → local-model generation → source traceability.",
+            },
+            {
+              id: "focus",
+              label: "Engineering focus",
+              value:
+                "Re-runnable document pipelines, recoverable asynchronous embedding tasks, private model deployment, graceful degradation and source-backed answers.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "Java 17 / RAG / Redis Stream / Vector Search / Local LLM / Kubernetes",
+            },
+          ],
+          role: "Team project contributor",
+          roleNote: "Participation confirmed by Fengyu; scope, duration and measured outcomes are not publicly disclosed.",
+          tagsLabel: "Industrial compliance project technology tags",
+          tags: ["PRIVATE AI", "HYBRID SEARCH", "LOCAL LLM", "KUBERNETES"],
+        },
+        {
+          id: "sre-copilot",
+          number: "CASE 03",
+          year: "2025",
+          category: "AI Agent / Observability",
+          visualMark: "SRE",
+          title: "Intelligent SRE Operations Assistant",
+          summary:
+            "An operations assistant that organizes incident investigation around metrics, logs and cluster events, grounding its conclusions in inspectable evidence.",
+          flow: ["OBSERVE", "REASON", "ACT", "REPORT"],
+          facts: [
+            {
+              id: "flow",
+              label: "System flow",
+              value:
+                "User question → investigation plan → tool-scope validation → metrics, logs and Kubernetes queries → streamed evidence → diagnostic summary.",
+            },
+            {
+              id: "focus",
+              label: "Engineering focus",
+              value:
+                "Explicit cluster, namespace and time-window boundaries, observable tool events, interruption, execution limits and model fallback.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "Spring Boot 3 / React / AI Agent / MCP / Prometheus / Kubernetes",
+            },
+          ],
+          role: "Team project contributor",
+          roleNote: "Participation confirmed by Fengyu; scope, duration and measured outcomes are not publicly disclosed.",
+          tagsLabel: "SRE assistant project technology tags",
+          tags: ["AI AGENT", "MCP", "PROMETHEUS", "KUBERNETES"],
+        },
+        {
+          id: "content-orchestration",
+          number: "CASE 04",
+          year: "2025–2026",
+          category: "AIGC Infrastructure / Orchestration",
+          visualMark: "AIGC",
+          title: "Generative Content Orchestration Platform",
+          summary:
+            "A unified workspace for batch content generation, covering data ingestion, model orchestration, failure recovery and live progress.",
+          flow: ["IMPORT", "QUEUE", "MODEL", "EXPORT"],
+          facts: [
+            {
+              id: "flow",
+              label: "System flow",
+              value:
+                "Spreadsheet import → template variables and validation → priority queues → multi-model gateway → retries and state transitions → WebSocket progress → export.",
+            },
+            {
+              id: "focus",
+              label: "Engineering focus",
+              value:
+                "Standardized validation and task definitions, queue pressure and retry management, provider abstraction and real-time execution feedback.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "NestJS / TypeScript / Redis Stream / WebSocket / Vue 3 / Docker",
+            },
+          ],
+          role: "Team project contributor",
+          roleNote: "Participation confirmed by Fengyu; scope, duration and measured outcomes are not publicly disclosed.",
+          tagsLabel: "Generative content orchestration technology tags",
+          tags: ["TASK QUEUE", "MODEL GATEWAY", "WEBSOCKET", "DOCKER"],
+        },
       ],
     },
     process: {

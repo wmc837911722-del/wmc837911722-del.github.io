@@ -183,7 +183,7 @@ export default function Home() {
           if (reduceMotion) {
             gsap.set(
               select(
-                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card, .brand-tile",
+                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card, .brand-tile, .system-case",
               ),
               { clearProps: "all" },
             );
@@ -307,6 +307,20 @@ export default function Home() {
             scrollTrigger: {
               trigger: select(".partner-wall")[0],
               start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          });
+
+          gsap.from(select(".system-case"), {
+            autoAlpha: 0,
+            y: 24,
+            scale: 0.99,
+            duration: 0.55,
+            stagger: { each: 0.07, from: "start", grid: "auto" },
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: select(".case-grid")[0],
+              start: "top 84%",
               toggleActions: "play none none reverse",
             },
           });
@@ -587,61 +601,74 @@ export default function Home() {
           <div className="section-title section-reveal">
             <p className="kicker">{copy.caseStudy.kicker}</p>
             <h2 id="case-study-title">{copy.caseStudy.title[0]}<br />{copy.caseStudy.title[1]}</h2>
+            <p className="case-intro">{copy.caseStudy.intro}</p>
           </div>
         </div>
 
-        <article className="case-feature">
-          <a className="case-preview-link section-reveal" href="#wude-case-details" aria-label={copy.caseStudy.previewAria}>
-            <div className="case-preview-bar" aria-hidden="true">
-              <span className="case-preview-dots"><i /><i /><i /></span>
-              <span>{copy.caseStudy.previewTop}</span>
-              <strong>{copy.caseStudy.previewBadge}</strong>
-            </div>
-            <div className="case-preview-canvas" aria-hidden="true">
-              <p>{copy.caseStudy.previewMeta}</p>
-              <div className="case-preview-title"><span>WUDE</span><strong>{copy.caseStudy.previewTitle}</strong></div>
-              <div className="case-preview-rail">{copy.caseStudy.previewRail.map((item) => <span key={item}>{item}</span>)}</div>
-              <div className="case-preview-flow">
-                {copy.caseStudy.previewFlow.map((item, index) => (
-                  <span className="case-flow-item" key={item}>
-                    <span>{item}</span>{index < copy.caseStudy.previewFlow.length - 1 ? <i>→</i> : null}
-                  </span>
-                ))}
+        <div className="case-grid" aria-label={copy.caseStudy.aria} role="list">
+          {copy.caseStudy.projects.map((project) => (
+            <article
+              className="system-case"
+              id={`case-${project.id}`}
+              data-case-id={project.id}
+              key={project.id}
+              role="listitem"
+            >
+              <div className="system-case-visual" aria-hidden="true">
+                <div className="system-case-visual-meta">
+                  <span>{project.number}</span>
+                  <span>{project.year}</span>
+                </div>
+                <strong className="system-case-mark">{project.visualMark}</strong>
+                <div className="system-case-flow">
+                  {project.flow.map((node, index) => (
+                    <span className="system-case-flow-item" key={node}>
+                      <span>{node}</span>
+                      {index < project.flow.length - 1 ? <i>→</i> : null}
+                    </span>
+                  ))}
+                </div>
+                <p>{project.category}</p>
               </div>
-            </div>
-          </a>
 
-          <div className="case-info section-reveal">
-            <p className="case-kicker">{copy.caseStudy.caseKicker}</p>
-            <h3>{copy.caseStudy.caseTitle}</h3>
-            <p className="case-summary">{copy.caseStudy.summary}</p>
-            <div className="case-role">
-              <span>{copy.caseStudy.roleLabel}</span>
-              <strong>{copy.caseStudy.role}</strong>
-              <p>{copy.caseStudy.roleNote}</p>
-            </div>
-            <ul className="case-facts">
-              {copy.caseStudy.facts.map((fact) => (
-                <li key={fact.id}><span>{fact.number}</span><div><strong>{fact.title}</strong><p>{fact.description}</p></div></li>
-              ))}
-            </ul>
-            <div className="case-actions">
-              <a href="#wude-case-details">{copy.caseStudy.viewDetails}<span aria-hidden="true">↓</span></a>
-              <a href="#contact">{copy.caseStudy.discuss}<span aria-hidden="true">→</span></a>
-            </div>
-            <p className="case-disclosure">{copy.caseStudy.disclosure}</p>
-          </div>
+              <div className="system-case-content">
+                <p className="system-case-eyebrow">
+                  {project.number} / {project.year} / {project.category}
+                </p>
+                <h3>{project.title}</h3>
+                <p className="system-case-summary">{project.summary}</p>
 
-          <div className="case-details" id="wude-case-details">
-            {copy.caseStudy.details.map((detail) => (
-              <section className="case-detail" key={detail.id}>
-                <span>{detail.number}</span>
-                <h4>{detail.title}</h4>
-                <p>{detail.description}</p>
-              </section>
-            ))}
-          </div>
-        </article>
+                <dl className="system-case-facts">
+                  {project.facts.map((fact) => (
+                    <div key={fact.id}>
+                      <dt>{fact.label}</dt>
+                      <dd>{fact.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="system-case-role">
+                  <span>{copy.caseStudy.roleLabel}</span>
+                  <strong>{project.role}</strong>
+                  <p>{project.roleNote}</p>
+                </div>
+
+                <ul className="system-case-tags" aria-label={project.tagsLabel}>
+                  {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                </ul>
+
+                <a
+                  className="system-case-cta"
+                  href="#contact"
+                  aria-label={`${copy.caseStudy.discuss}: ${project.title}`}
+                >
+                  {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p className="case-disclosure section-reveal">{copy.caseStudy.disclosure}</p>
       </section>
 
       <section className="section process" id="process">

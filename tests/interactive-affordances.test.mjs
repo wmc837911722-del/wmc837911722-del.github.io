@@ -45,24 +45,48 @@ test("non-interactive capability and process rows do not mimic buttons", () => {
   assert.doesNotMatch(css, /\.steps\s+li:hover\s*\{/);
 });
 
-test("participation case is complete on-site and never links to the other site", () => {
+test("all four participation cases are complete on-site and never link to the source site", () => {
   assert.match(page, /<a href="#case-study">\{copy\.header\.caseStudy\}<\/a>/);
   assert.match(page, /id="case-study"/);
-  assert.match(page, /href="#wude-case-details"/);
-  assert.match(page, /id="wude-case-details"/);
-  assert.match(copy, /role: "项目参与者"/);
-  assert.match(page, /href="#contact">\{copy\.caseStudy\.discuss\}/);
+  assert.match(page, /className="case-grid"/);
+  assert.match(page, /copy\.caseStudy\.projects\.map\(\(project\) =>/);
+  assert.match(page, /data-case-id=\{project\.id\}/);
+  assert.match(page, /className="system-case-role"/);
+  assert.match(
+    page,
+    /className="system-case-cta"\s+href="#contact"/,
+  );
+  for (const title of [
+    "大白 AI 心理健康平台",
+    "工业合规知识平台",
+    "智能 SRE 运维助手",
+    "生成式内容调度平台",
+  ]) {
+    assert.match(copy, new RegExp(title));
+  }
+  assert.match(copy, /role: "团队项目参与者"/);
+  assert.match(copy, /具体职责、周期与量化结果未公开/);
+  assert.doesNotMatch(page, /wude-case-details/);
   for (const source of [page, copy, readme, profileReadme]) {
     assert.doesNotMatch(source, /cs-wude\.github\.io|github\.com\/CS-wude/i);
-    assert.doesNotMatch(source, /独立完成|独立开发 WUDE|主导 WUDE/);
   }
+  assert.equal((copy.match(/role: "团队项目参与者"/g) ?? []).length, 4);
+  assert.equal((copy.match(/role: "Team project contributor"/g) ?? []).length, 4);
+  assert.doesNotMatch(copy, /role:\s*"(?:独立开发者|项目负责人|Project owner|Sole owner)"/i);
 });
 
-test("participation case layout prevents fixed-width overflow", () => {
-  assert.match(css, /\.case-feature\s*\{[^}]*minmax\(0,1\.06fr\)[^}]*minmax\(0,\.94fr\)/s);
-  assert.match(css, /\.case-info\s*\{[^}]*min-width:\s*0/s);
-  assert.match(css, /\.case-preview-link\s*\{[^}]*overflow:\s*hidden/s);
-  assert.doesNotMatch(css, /\.case-(?:feature|info|preview-link)[^{]*\{[^}]*width:\s*100vw/s);
+test("participation case grid is responsive and prevents fixed-width overflow", () => {
+  assert.match(css, /\.case-grid\s*\{[^}]*repeat\(2,minmax\(0,1fr\)\)/s);
+  assert.match(css, /\.system-case\s*\{[^}]*min-width:\s*0/s);
+  assert.match(css, /\.system-case-visual\s*\{[^}]*overflow:\s*hidden/s);
+  assert.match(
+    css,
+    /@media\s*\(max-width:\s*\d+px\)[\s\S]*?\.case-grid\s*\{[^}]*grid-template-columns:\s*1fr/s,
+  );
+  assert.doesNotMatch(
+    css,
+    /\.(?:case-grid|system-case|system-case-visual|system-case-content)[^{]*\{[^}]*width:\s*100vw/s,
+  );
 });
 
 test("language and theme controls are accessible buttons with 44px targets", () => {

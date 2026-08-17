@@ -12,7 +12,11 @@ test("the locale dictionary covers the full commercial page in both languages", 
   assert.match(copy, /en:\s*\{/);
   assert.match(copy, /Business discovery & solution design/);
   assert.match(copy, /Selected partners/);
-  assert.match(copy, /The complete case lives here/);
+  assert.match(copy, /Dabai AI Mental Health Platform/);
+  assert.match(copy, /Industrial Compliance Knowledge Platform/);
+  assert.match(copy, /Intelligent SRE Operations Assistant/);
+  assert.match(copy, /Generative Content Orchestration Platform/);
+  assert.match(copy, /specific responsibilities, duration and measured outcomes are not publicly disclosed/);
   assert.match(copy, /FDE \/ AI delivery project inquiry/);
 });
 

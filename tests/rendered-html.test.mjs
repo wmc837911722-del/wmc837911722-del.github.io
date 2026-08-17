@@ -37,9 +37,15 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /合作品牌/);
   assert.match(html, /WUDE 项目团队/);
   assert.match(html, /id="case-study"/);
-  assert.match(html, /WUDE \/ PERSONAL SITE/);
-  assert.match(html, /项目参与者/);
-  assert.match(html, /id="wude-case-details"/);
+  assert.match(html, /大白 AI 心理健康平台/);
+  assert.match(html, /工业合规知识平台/);
+  assert.match(html, /智能 SRE 运维助手/);
+  assert.match(html, /生成式内容调度平台/);
+  assert.equal((html.match(/data-case-id=/g) ?? []).length, 4);
+  assert.equal((html.match(/class="system-case-cta" href="#contact"/g) ?? []).length, 4);
+  assert.match(html, /团队项目参与者/);
+  assert.match(html, /具体职责、周期与量化结果未公开/);
+  assert.doesNotMatch(html, /wude-case-details/);
   assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude/i);
   assert.match(html, /id="process"/);
   assert.match(html, /id="about"/);
