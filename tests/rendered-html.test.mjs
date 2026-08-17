@@ -43,8 +43,9 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /生成式内容调度平台/);
   assert.equal((html.match(/data-case-id=/g) ?? []).length, 4);
   assert.equal((html.match(/class="system-case-cta" href="#contact"/g) ?? []).length, 4);
-  assert.match(html, /团队项目参与者/);
-  assert.match(html, /具体职责、周期与量化结果未公开/);
+  assert.equal((html.match(/>项目主导者</g) ?? []).length, 4);
+  assert.doesNotMatch(html, /团队项目参与者|风雨确认参与/);
+  assert.doesNotMatch(html, /具体职责(?:边界)?、(?:参与)?周期与量化结果(?:尚)?未公开/);
   assert.doesNotMatch(html, /wude-case-details/);
   assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude/i);
   assert.match(html, /id="process"/);

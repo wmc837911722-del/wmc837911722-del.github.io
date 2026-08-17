@@ -36,7 +36,7 @@ const caseSection = (html) => {
   return html.slice(start, end);
 };
 
-test("case data contains exactly four bilingual system projects with contributor disclosure", async () => {
+test("case data contains exactly four bilingual system projects led by Fengyu", async () => {
   const copy = await read("app/site-copy.ts");
 
   for (const project of projects) {
@@ -45,10 +45,15 @@ test("case data contains exactly four bilingual system projects with contributor
     assert.match(copy, new RegExp(project.en));
   }
 
-  assert.equal((copy.match(/role: "团队项目参与者"/g) ?? []).length, 4);
-  assert.equal((copy.match(/role: "Team project contributor"/g) ?? []).length, 4);
-  assert.match(copy, /具体职责、周期与量化结果未公开/);
-  assert.match(copy, /scope, duration and measured outcomes are not publicly disclosed/);
+  assert.equal((copy.match(/role: "项目主导者"/g) ?? []).length, 4);
+  assert.equal((copy.match(/role: "Project lead"/g) ?? []).length, 4);
+  assert.doesNotMatch(copy, /团队项目参与者|Team project contributor/i);
+  assert.doesNotMatch(copy, /风雨确认参与|Participation confirmed by Fengyu/i);
+  assert.doesNotMatch(copy, /具体职责(?:边界)?、(?:参与)?周期与量化结果(?:尚)?未公开/);
+  assert.doesNotMatch(
+    copy,
+    /scope, duration and measured outcomes are not publicly disclosed/i,
+  );
 });
 
 test("the rendered GitHub Pages case section stays on-site", async () => {
@@ -64,6 +69,7 @@ test("the rendered GitHub Pages case section stays on-site", async () => {
     (html.match(/class="system-case-cta" href="#contact"/g) ?? []).length,
     projects.length,
   );
+  assert.equal((html.match(/>项目主导者</g) ?? []).length, projects.length);
   assert.doesNotMatch(html, /\b(?:href|src)="https?:\/\//i);
   assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude|wude-case-details/i);
 });

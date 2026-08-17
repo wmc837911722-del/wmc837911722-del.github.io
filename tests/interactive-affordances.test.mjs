@@ -29,6 +29,15 @@ test("service card hover keeps the control inside its grid cell", () => {
   );
 });
 
+test("hero reveal clipping keeps CJK punctuation fully visible", () => {
+  const wrapperRule = css.match(/\.hero-line-wrap\s*\{([^}]*)\}/)?.[1];
+
+  assert.ok(wrapperRule, "expected a clipping wrapper for the hero reveal");
+  assert.match(wrapperRule, /overflow:\s*hidden/);
+  assert.match(wrapperRule, /padding:\s*0\s+\.12em\s+\.16em\s+0/);
+  assert.match(wrapperRule, /margin:\s*0\s+-\.12em\s+-\.16em\s+0/);
+});
+
 test("contact CTA performs an action instead of linking back to the top", () => {
   assert.match(page, /<button\s+className="contact-link"/);
   assert.doesNotMatch(page, /className="contact-link"\s+href="#top"/);
@@ -45,7 +54,7 @@ test("non-interactive capability and process rows do not mimic buttons", () => {
   assert.doesNotMatch(css, /\.steps\s+li:hover\s*\{/);
 });
 
-test("all four participation cases are complete on-site and never link to the source site", () => {
+test("all four lead cases are complete on-site and never link to the source site", () => {
   assert.match(page, /<a href="#case-study">\{copy\.header\.caseStudy\}<\/a>/);
   assert.match(page, /id="case-study"/);
   assert.match(page, /className="[^"]*\bcase-carousel\b[^"]*"/);
@@ -65,18 +74,20 @@ test("all four participation cases are complete on-site and never link to the so
   ]) {
     assert.match(copy, new RegExp(title));
   }
-  assert.match(copy, /role: "团队项目参与者"/);
-  assert.match(copy, /具体职责、周期与量化结果未公开/);
+  assert.match(copy, /role: "项目主导者"/);
   assert.doesNotMatch(page, /wude-case-details/);
   for (const source of [page, copy, readme, profileReadme]) {
     assert.doesNotMatch(source, /cs-wude\.github\.io|github\.com\/CS-wude/i);
   }
-  assert.equal((copy.match(/role: "团队项目参与者"/g) ?? []).length, 4);
-  assert.equal((copy.match(/role: "Team project contributor"/g) ?? []).length, 4);
-  assert.doesNotMatch(copy, /role:\s*"(?:独立开发者|项目负责人|Project owner|Sole owner)"/i);
+  assert.equal((copy.match(/role: "项目主导者"/g) ?? []).length, 4);
+  assert.equal((copy.match(/role: "Project lead"/g) ?? []).length, 4);
+  assert.doesNotMatch(copy, /团队项目参与者|Team project contributor/i);
+  assert.doesNotMatch(copy, /风雨确认参与|Participation confirmed by Fengyu/i);
+  assert.doesNotMatch(copy, /具体职责(?:边界)?、(?:参与)?周期与量化结果(?:尚)?未公开/);
+  assert.doesNotMatch(copy, /scope, duration and measured outcomes are not publicly disclosed/i);
 });
 
-test("participation case carousel is responsive and prevents fixed-width overflow", () => {
+test("lead case carousel is responsive and prevents fixed-width overflow", () => {
   assert.match(css, /\.case-carousel\s*\{[^}]*min-width:\s*0/s);
   assert.match(css, /\.case-carousel-viewport\s*\{[^}]*overflow:\s*hidden/s);
   assert.match(css, /\.case-carousel-track\s*\{[^}]*min-width:\s*0/s);

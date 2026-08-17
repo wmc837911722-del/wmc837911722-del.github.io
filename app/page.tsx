@@ -4,6 +4,7 @@ import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { siteCopy, type Locale } from "./site-copy";
 
 type Theme = "dark" | "light";
+type CaseDirection = "next" | "previous";
 
 const LOCALE_STORAGE_KEY = "fengyu:locale:v1";
 const THEME_STORAGE_KEY = "fengyu:theme:v1";
@@ -15,10 +16,13 @@ const contactEmails = [
 export default function Home() {
   const pageRef = useRef<HTMLElement>(null);
   const copyResetRef = useRef<number | null>(null);
+  const caseTransitionRef = useRef<number | null>(null);
   const [locale, setLocale] = useState<Locale>("zh");
   const [theme, setTheme] = useState<Theme>("dark");
   const [preferenceAnnouncement, setPreferenceAnnouncement] = useState("");
   const [activeCaseIndex, setActiveCaseIndex] = useState(0);
+  const [previousCaseIndex, setPreviousCaseIndex] = useState<number | null>(null);
+  const [caseDirection, setCaseDirection] = useState<CaseDirection>("next");
   const [caseAnnouncement, setCaseAnnouncement] = useState("");
   const [copyState, setCopyState] = useState<
     "idle" | "copying" | "copied" | "failed"
@@ -27,28 +31,42 @@ export default function Home() {
   const collaborationBrief = copy.contact.mailTemplate;
   const caseCount = copy.caseStudy.projects.length;
 
-  const goToCase = (index: number) => {
+  const goToCase = (index: number, direction: CaseDirection) => {
     const nextIndex = ((index % caseCount) + caseCount) % caseCount;
+    if (nextIndex === activeCaseIndex) return;
+
+    if (caseTransitionRef.current !== null) {
+      window.clearTimeout(caseTransitionRef.current);
+    }
+    setCaseDirection(direction);
+    setPreviousCaseIndex(activeCaseIndex);
     setActiveCaseIndex(nextIndex);
     setCaseAnnouncement(
       `${String(nextIndex + 1).padStart(2, "0")} / ${String(caseCount).padStart(2, "0")}: ${copy.caseStudy.projects[nextIndex].title}`,
     );
+    caseTransitionRef.current = window.setTimeout(() => {
+      setPreviousCaseIndex(null);
+      caseTransitionRef.current = null;
+    }, 440);
   };
 
   const handleCaseCarouselKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.currentTarget !== event.target) return;
 
-    const destinations: Record<string, number> = {
-      "ArrowLeft": activeCaseIndex - 1,
-      "ArrowRight": activeCaseIndex + 1,
-      "Home": 0,
-      "End": caseCount - 1,
+    const destinations: Record<
+      string,
+      { index: number; direction: CaseDirection }
+    > = {
+      "ArrowLeft": { index: activeCaseIndex - 1, direction: "previous" },
+      "ArrowRight": { index: activeCaseIndex + 1, direction: "next" },
+      "Home": { index: 0, direction: "previous" },
+      "End": { index: caseCount - 1, direction: "next" },
     };
     const destination = destinations[event.key];
     if (destination === undefined) return;
 
     event.preventDefault();
-    goToCase(destination);
+    goToCase(destination.index, destination.direction);
   };
 
   const copyCollaborationBrief = async () => {
@@ -105,6 +123,11 @@ export default function Home() {
       copyResetRef.current = null;
     }
     setCopyState("idle");
+    if (caseTransitionRef.current !== null) {
+      window.clearTimeout(caseTransitionRef.current);
+      caseTransitionRef.current = null;
+    }
+    setPreviousCaseIndex(null);
     setCaseAnnouncement("");
     setLocale(nextLocale);
     setPreferenceAnnouncement(
@@ -174,6 +197,9 @@ export default function Home() {
     () => () => {
       if (copyResetRef.current !== null) {
         window.clearTimeout(copyResetRef.current);
+      }
+      if (caseTransitionRef.current !== null) {
+        window.clearTimeout(caseTransitionRef.current);
       }
     },
     [],
@@ -624,6 +650,7 @@ export default function Home() {
           role="region"
           aria-roledescription="carousel"
           aria-labelledby="case-study-title"
+          data-direction={caseDirection}
         >
           <p className="sr-only" id="case-carousel-instructions">
             {copy.caseStudy.keyboardHint}
@@ -635,7 +662,7 @@ export default function Home() {
               aria-label={copy.caseStudy.previous}
               aria-controls="case-carousel-track"
               aria-describedby="case-carousel-instructions"
-              onClick={() => goToCase(activeCaseIndex - 1)}
+              onClick={() => goToCase(activeCaseIndex - 1, "previous")}
               onKeyDown={handleCaseCarouselKeyDown}
               aria-keyshortcuts="ArrowLeft ArrowRight Home End"
             >
@@ -651,7 +678,7 @@ export default function Home() {
               aria-label={copy.caseStudy.next}
               aria-controls="case-carousel-track"
               aria-describedby="case-carousel-instructions"
-              onClick={() => goToCase(activeCaseIndex + 1)}
+              onClick={() => goToCase(activeCaseIndex + 1, "next")}
               onKeyDown={handleCaseCarouselKeyDown}
               aria-keyshortcuts="ArrowLeft ArrowRight Home End"
             >
@@ -663,20 +690,27 @@ export default function Home() {
             <div
               className="case-carousel-track"
               id="case-carousel-track"
-              style={{ transform: `translate3d(-${activeCaseIndex * 100}%, 0, 0)` }}
             >
-              {copy.caseStudy.projects.map((project, index) => (
-                <article
-                  className="system-case"
-                  id={`case-${project.id}`}
-                  data-case-id={project.id}
-                  data-active={index === activeCaseIndex ? "true" : "false"}
-                  key={project.id}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${index + 1} / ${caseCount}: ${project.title}`}
-                  aria-hidden={index !== activeCaseIndex}
-                >
+              {copy.caseStudy.projects.map((project, index) => {
+                const caseState = index === activeCaseIndex
+                  ? "active"
+                  : index === previousCaseIndex
+                    ? "exiting"
+                    : "inactive";
+
+                return (
+                  <article
+                    className="system-case"
+                    id={`case-${project.id}`}
+                    data-case-id={project.id}
+                    data-state={caseState}
+                    data-active={index === activeCaseIndex ? "true" : "false"}
+                    key={project.id}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${index + 1} / ${caseCount}: ${project.title}`}
+                    aria-hidden={index !== activeCaseIndex}
+                  >
                   <figure className="system-case-media">
                     <div className="system-case-media-meta">
                       <span>{copy.caseStudy.imageLabel}</span>
@@ -742,8 +776,9 @@ export default function Home() {
                       {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
                     </a>
                   </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
           <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">

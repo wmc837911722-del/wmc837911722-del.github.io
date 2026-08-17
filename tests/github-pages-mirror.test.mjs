@@ -47,7 +47,8 @@ test("GitHub Pages output contains pre-rendered portfolio content", async () => 
   assert.match(html, /生成式内容调度平台/);
   assert.equal((html.match(/data-case-id=/g) ?? []).length, 4);
   assert.equal((html.match(/class="system-case-cta" href="#contact"/g) ?? []).length, 4);
-  assert.match(html, /团队项目参与者/);
+  assert.equal((html.match(/>项目主导者</g) ?? []).length, 4);
+  assert.doesNotMatch(html, /团队项目参与者|风雨确认参与/);
   assert.doesNotMatch(html, /wude-case-details/);
   assert.match(html, /class="preference-control language-control"/);
   assert.match(html, /class="preference-control theme-control"/);

@@ -16,7 +16,11 @@ test("the locale dictionary covers the full commercial page in both languages", 
   assert.match(copy, /Industrial Compliance Knowledge Platform/);
   assert.match(copy, /Intelligent SRE Operations Assistant/);
   assert.match(copy, /Generative Content Orchestration Platform/);
-  assert.match(copy, /specific responsibilities, duration and measured outcomes are not publicly disclosed/);
+  assert.equal((copy.match(/role: "Project lead"/g) ?? []).length, 4);
+  assert.doesNotMatch(
+    copy,
+    /specific responsibilities, duration and measured outcomes are not publicly disclosed/i,
+  );
   assert.match(copy, /FDE \/ AI delivery project inquiry/);
 });
 

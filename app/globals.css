@@ -176,7 +176,7 @@ nav > a:not(.nav-cta):hover::after { transform: scaleX(1); transform-origin: lef
 .hero-kicker { display: flex; justify-content: space-between; gap: 28px; max-width: 830px; color: #aeb5c1; font: 10px var(--font-geist-mono), monospace; letter-spacing: .15em; }
 .hero-kicker span:first-child { color: var(--ice); }
 h1 { max-width: 1180px; margin: clamp(60px,8vh,96px) 0 clamp(58px,7vh,86px); font-size: clamp(54px,8.5vw,136px); line-height: .88; letter-spacing: -.078em; font-weight: 760; }
-.hero-line-wrap { display: block; overflow: hidden; }
+.hero-line-wrap { display: block; overflow: hidden; padding: 0 .12em .16em 0; margin: 0 -.12em -.16em 0; }
 .hero-line { display: block; will-change: transform; }
 h1 em { padding-left: .65em; color: transparent; -webkit-text-stroke: 1.35px var(--ice); font-style: normal; }
 .hero-bottom { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 48px; padding-right: clamp(40px,7vw,110px); }
@@ -277,8 +277,12 @@ html[lang="en"] .case-heading .section-title h2 { font-size: clamp(38px,4.7vw,70
 .case-carousel-position span { flex: 0 0 auto; color: var(--blue); font: 9px var(--font-geist-mono), monospace; letter-spacing: .12em; }
 .case-carousel-position strong { min-width: 0; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
 .case-carousel-viewport { min-width: 0; width: 100%; overflow: hidden; outline-offset: -5px; }
-.case-carousel-track { min-width: 0; width: 100%; display: flex; align-items: stretch; transition: transform .38s cubic-bezier(.22,1,.36,1); will-change: transform; }
-.system-case { flex: 0 0 100%; width: 100%; min-width: 0; display: grid; grid-template-columns: minmax(0,1.08fr) minmax(360px,.92fr); color: var(--ink); background: var(--paper); }
+.case-carousel-track { min-width: 0; width: 100%; display: grid; align-items: stretch; }
+.system-case { grid-area: 1 / 1; width: 100%; min-width: 0; display: grid; grid-template-columns: minmax(0,1.08fr) minmax(360px,.92fr); color: var(--ink); background: var(--paper); opacity: 0; visibility: hidden; pointer-events: none; transform: translate3d(28px,0,0) scale(.992); transition: opacity .28s ease, transform .42s cubic-bezier(.22,1,.36,1); }
+.case-carousel[data-direction="previous"] .system-case { transform: translate3d(-28px,0,0) scale(.992); }
+.system-case[data-state="active"] { z-index: 2; opacity: 1; visibility: visible; pointer-events: auto; transform: translate3d(0,0,0) scale(1); will-change: transform, opacity; }
+.case-carousel[data-direction="next"] .system-case[data-state="exiting"] { z-index: 1; visibility: visible; transform: translate3d(-28px,0,0) scale(.992); will-change: transform, opacity; }
+.case-carousel[data-direction="previous"] .system-case[data-state="exiting"] { z-index: 1; visibility: visible; transform: translate3d(28px,0,0) scale(.992); will-change: transform, opacity; }
 .system-case-media { min-width: 0; margin: 0; padding: clamp(22px,2.8vw,40px); display: flex; flex-direction: column; color: var(--fixed-white); background: var(--fixed-night); border-right: 1px solid var(--line-light); }
 .system-case-media-meta { min-width: 0; display: flex; justify-content: space-between; gap: 18px; color: #929bab; font: 9px var(--font-geist-mono), monospace; letter-spacing: .13em; }
 .system-case-image-frame { min-width: 0; flex: 1; aspect-ratio: 16 / 9; margin: clamp(24px,3vw,42px) 0 20px; display: grid; place-items: center; overflow: hidden; background: #05070c; border: 1px solid rgba(255,255,255,.16); box-shadow: 0 28px 70px rgba(0,0,0,.3); }
@@ -475,6 +479,6 @@ html[data-theme="light"] footer { color: #5c6471; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .scroll-progress { display: none; }
-  .case-carousel-track { transition: none !important; }
+  .system-case { transition: none !important; transform: none !important; }
   .hero-line, .hero-orbit, .ticker-track, .about-mark, .service-card, .capability-card, .brand-tile, .section-reveal { transform: none !important; opacity: 1 !important; visibility: visible !important; }
 }

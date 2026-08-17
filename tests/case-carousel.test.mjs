@@ -56,6 +56,98 @@ test("case carousel supports keyboard navigation instead of requiring a pointer"
   assert.match(page, /event\.preventDefault\(\)/);
 });
 
+test("case carousel wraps through short direction-aware stacked transitions", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  const carouselTag = page.match(
+    /<div\b[^>]*className="[^"]*\bcase-carousel\b[^"]*"[^>]*>/s,
+  )?.[0];
+  const trackTag = page.match(
+    /<div\b[^>]*className="case-carousel-track"[^>]*>/s,
+  )?.[0];
+  const trackRule = css.match(/\.case-carousel-track\s*\{([^}]*)\}/)?.[1];
+  const slideRule = css.match(/\.system-case\s*\{([^}]*)\}/)?.[1];
+  const stateRules = [...css.matchAll(
+    /([^{}]*\.system-case\[data-state="(?:active|exiting|inactive)"\][^{}]*)\{([^{}]*)\}/g,
+  )].map(([, selector, body]) => ({ selector, body }));
+
+  assert.ok(carouselTag, "expected a carousel root element");
+  assert.match(carouselTag, /data-direction=\{/);
+  assert.ok(trackTag, "expected a carousel track element");
+  assert.doesNotMatch(
+    trackTag,
+    /style=\{\{[^}]*transform/,
+    "the track must not translate across every intervening slide",
+  );
+  assert.doesNotMatch(page, /activeCaseIndex\s*\*\s*100/);
+  assert.match(page, /data-state=\{/);
+  for (const state of ["active", "exiting", "inactive"]) {
+    assert.match(page, new RegExp(`["']${state}["']`));
+  }
+  for (const state of ["active", "exiting"]) {
+    assert.ok(
+      stateRules.some(({ selector }) =>
+        selector.includes(`.system-case[data-state="${state}"]`),
+      ),
+      `expected a CSS state for ${state} slides`,
+    );
+  }
+  for (const direction of ["next", "previous"]) {
+    assert.match(page, new RegExp(`["']${direction}["']`));
+    assert.ok(
+      stateRules.some(({ selector }) =>
+        selector.includes(`[data-direction="${direction}"]`),
+      ),
+      `expected ${direction} direction-specific slide motion`,
+    );
+  }
+
+  assert.ok(trackRule, "expected a carousel track rule");
+  assert.match(trackRule, /display:\s*grid/);
+  assert.doesNotMatch(trackRule, /\btransform\s*:/);
+  assert.doesNotMatch(trackRule, /transition[^;]*transform/);
+
+  assert.ok(slideRule, "expected a system-case rule");
+  assert.match(slideRule, /grid-area:\s*1\s*\/\s*1/);
+  const transition = slideRule.match(/transition(?:-property)?\s*:\s*([^;]+)/)?.[1];
+  assert.ok(transition, "stacked slides should transition between states");
+  assert.match(transition, /opacity/);
+  assert.match(transition, /transform/);
+  assert.doesNotMatch(
+    transition,
+    /\b(?:left|right|top|bottom|width|height|margin|padding)\b/,
+    "slide motion should animate only compositor-friendly properties",
+  );
+
+  const directionalTransforms = stateRules
+    .filter(({ selector }) => selector.includes("[data-direction="))
+    .flatMap(({ body }) =>
+      [...body.matchAll(/\btransform\s*:\s*([^;]+)/g)].map(([, value]) => value),
+    );
+  assert.ok(
+    directionalTransforms.length >= 2,
+    "expected short transforms for both carousel directions",
+  );
+  for (const transform of directionalTransforms) {
+    assert.match(transform, /translate(?:3d|X)\(/);
+    assert.doesNotMatch(
+      transform,
+      /%|\b(?:vw|vh)\b|calc\(/,
+      "wrap transitions must use a fixed short distance, never a slide-width offset",
+    );
+    const pixelDistances = [...transform.matchAll(/(-?\d+(?:\.\d+)?)px/g)].map(
+      ([, value]) => Math.abs(Number(value)),
+    );
+    assert.ok(pixelDistances.length, "directional transforms should declare a pixel distance");
+    assert.ok(
+      pixelDistances.every((distance) => distance <= 48),
+      "carousel motion should stay within a subtle 48px travel distance",
+    );
+  }
+});
+
 test("every project has a visible purpose label and an informative local image", async () => {
   const [page, copy] = await Promise.all([
     read("app/page.tsx"),
@@ -111,6 +203,17 @@ test("rendered carousel retains all four cases and never sources case media exte
   assert.equal(
     (html.match(/class="system-case-image"/g) ?? []).length,
     4,
+  );
+  assert.equal((html.match(/data-state=/g) ?? []).length, 4);
+  assert.equal((html.match(/data-state="active"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-state="inactive"/g) ?? []).length, 3);
+  assert.match(
+    html,
+    /class="[^"]*\bcase-carousel\b[^"]*"[^>]*data-direction="next"/,
+  );
+  assert.doesNotMatch(
+    html,
+    /class="case-carousel-track"[^>]*style="[^"]*transform/i,
   );
 
   for (const id of projectIds) {
