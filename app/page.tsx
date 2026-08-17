@@ -1,107 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { siteCopy, type Locale } from "./site-copy";
 
-const collaborationBrief = `你好风雨，我想沟通一个 FDE / AI 落地项目。
+type Theme = "dark" | "light";
 
-业务场景：
-当前问题：
-期望结果：
-计划时间：`;
-
-const collaborationMailSubject = "FDE / AI 落地项目合作咨询";
+const LOCALE_STORAGE_KEY = "fengyu:locale:v1";
+const THEME_STORAGE_KEY = "fengyu:theme:v1";
 const contactEmails = [
   { label: "QQ MAIL", address: "837911722@qq.com" },
   { label: "GMAIL", address: "wmc837911722@gmail.com" },
 ];
 
-const services = [
-  {
-    number: "01",
-    tag: "DISCOVERY & STRATEGY",
-    title: "业务诊断与方案共创",
-    description:
-      "进入真实业务现场，和团队一起拆解目标、流程与约束，找到 AI 最值得落地的切入点。",
-    items: [
-      "业务流程与痛点访谈",
-      "AI 机会与风险识别",
-      "解决方案架构与价值定义",
-    ],
-  },
-  {
-    number: "02",
-    tag: "PROTOTYPE & VALIDATE",
-    title: "AI 原型与智能体验证",
-    description:
-      "用最短路径做出可用原型，在真实数据和用户反馈中验证效果，而不是停留在概念演示。",
-    items: ["工作流与智能体原型", "工具调用与数据接入", "效果评测与安全边界"],
-  },
-  {
-    number: "03",
-    tag: "INTEGRATE & DEPLOY",
-    title: "生产集成与工程交付",
-    description:
-      "把验证通过的方案接入现有系统、数据与权限体系，完成从原型到生产的最后一公里。",
-    items: ["全栈产品开发", "企业系统与模型集成", "测试、发布与可观测性"],
-  },
-  {
-    number: "04",
-    tag: "ADOPT & ITERATE",
-    title: "落地采用与持续迭代",
-    description:
-      "围绕真实使用结果持续优化体验、流程与模型，让解决方案被团队采用并长期产生价值。",
-    items: ["使用反馈与数据复盘", "流程与模型持续优化", "能力沉淀与团队交接"],
-  },
-];
-
-const capabilities = [
-  [
-    "01",
-    "业务现场共创",
-    "与一线用户和业务负责人并肩，把模糊诉求转成可验证问题。",
-  ],
-  ["02", "AI 快速原型", "把模型、工具和数据组合成可体验、可评测的工作流。"],
-  ["03", "全栈系统集成", "连接前端、后端、企业系统与 AI 能力，打通关键链路。"],
-  [
-    "04",
-    "生产级交付",
-    "覆盖权限、评测、日志、发布与迭代，让方案稳定进入生产。",
-  ],
-];
-
-const steps = [
-  [
-    "01",
-    "DISCOVER",
-    "深入现场，定义问题",
-    "对齐业务目标、用户流程、数据条件与成功标准。",
-  ],
-  [
-    "02",
-    "PROTOTYPE",
-    "快速构建，真实验证",
-    "用可工作的原型验证关键假设，尽早暴露风险。",
-  ],
-  [
-    "03",
-    "DEPLOY",
-    "接入系统，稳定上线",
-    "完成产品化、系统集成、测试发布与运行保障。",
-  ],
-  [
-    "04",
-    "ITERATE",
-    "观察使用，持续迭代",
-    "根据业务结果和真实反馈优化流程、体验与模型。",
-  ],
-];
-
 export default function Home() {
   const pageRef = useRef<HTMLElement>(null);
   const copyResetRef = useRef<number | null>(null);
+  const [locale, setLocale] = useState<Locale>("zh");
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [preferenceAnnouncement, setPreferenceAnnouncement] = useState("");
   const [copyState, setCopyState] = useState<
     "idle" | "copying" | "copied" | "failed"
   >("idle");
+  const copy = siteCopy[locale];
+  const collaborationBrief = copy.contact.mailTemplate;
 
   const copyCollaborationBrief = async () => {
     const fallbackCopy = () => {
@@ -144,6 +65,83 @@ export default function Home() {
     copyResetRef.current = window.setTimeout(() => setCopyState("idle"), 3200);
   };
 
+  const toggleLocale = () => {
+    const nextLocale: Locale = locale === "zh" ? "en" : "zh";
+    document.documentElement.lang = nextLocale === "zh" ? "zh-CN" : "en";
+    try {
+      window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale);
+    } catch {
+      // Storage can be unavailable in privacy-restricted browsers.
+    }
+    if (copyResetRef.current !== null) {
+      window.clearTimeout(copyResetRef.current);
+      copyResetRef.current = null;
+    }
+    setCopyState("idle");
+    setLocale(nextLocale);
+    setPreferenceAnnouncement(
+      siteCopy[nextLocale].preferences[
+        nextLocale === "en" ? "changedToEnglish" : "changedToChinese"
+      ],
+    );
+  };
+
+  const toggleTheme = () => {
+    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+    const root = document.documentElement;
+    root.dataset.theme = nextTheme;
+    root.style.colorScheme = nextTheme;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // The visible theme still changes when persistence is unavailable.
+    }
+    const themeColor = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+    if (themeColor) {
+      themeColor.content = nextTheme === "dark" ? "#080b12" : "#f7f7f2";
+    }
+    setTheme(nextTheme);
+  };
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const frame = window.requestAnimationFrame(() => {
+      setTheme(root.dataset.theme === "light" ? "light" : "dark");
+
+      try {
+        const savedLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+        if (savedLocale === "zh" || savedLocale === "en") {
+          setLocale(savedLocale);
+          root.lang = savedLocale === "zh" ? "zh-CN" : "en";
+        }
+      } catch {
+        // Keep the server-rendered Chinese default when storage is unavailable.
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    document.title = copy.seo.title;
+    const description = document.querySelector<HTMLMetaElement>(
+      'meta[name="description"]',
+    );
+    if (description) description.content = copy.seo.description;
+
+    let disposed = false;
+    const frame = window.requestAnimationFrame(() => {
+      void import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+        if (!disposed) ScrollTrigger.refresh();
+      });
+    });
+    return () => {
+      disposed = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [copy.seo.description, copy.seo.title, locale]);
+
   useEffect(
     () => () => {
       if (copyResetRef.current !== null) {
@@ -185,11 +183,9 @@ export default function Home() {
           if (reduceMotion) {
             gsap.set(
               select(
-                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card",
+                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card, .brand-tile",
               ),
-              {
-                clearProps: "all",
-              },
+              { clearProps: "all" },
             );
             return;
           }
@@ -301,6 +297,20 @@ export default function Home() {
             },
           });
 
+          gsap.from(select(".brand-tile"), {
+            autoAlpha: 0,
+            y: 28,
+            scale: 0.985,
+            duration: 0.55,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: select(".partner-wall")[0],
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          });
+
           gsap.fromTo(
             select(".about-mark"),
             { xPercent: -18, rotation: -8 },
@@ -359,21 +369,70 @@ export default function Home() {
       <div className="scroll-progress" aria-hidden="true" />
 
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="风雨首页">
+        <a className="wordmark" href="#top" aria-label={copy.header.home}>
           风雨<span>®</span>
         </a>
         <p className="availability">
-          <span /> AVAILABLE FOR FDE ENGAGEMENTS
+          <span /> {copy.header.availability}
         </p>
-        <nav aria-label="主导航">
-          <a href="#services">服务</a>
-          <a href="#case-study">案例</a>
-          <a href="#process">方法</a>
-          <a href="#about">关于</a>
-          <a className="nav-cta" href="#contact">
-            聊聊合作 <span aria-hidden="true">→</span>
-          </a>
-        </nav>
+        <div className="header-end">
+          <nav aria-label={copy.header.navLabel}>
+            <a href="#services">{copy.header.services}</a>
+            <a href="#partners">{copy.header.partners}</a>
+            <a href="#case-study">{copy.header.caseStudy}</a>
+            <a href="#process">{copy.header.process}</a>
+            <a href="#about">{copy.header.about}</a>
+            <a className="nav-cta" href="#contact">
+              <span className="nav-cta-full">{copy.header.contact}</span>
+              <span className="nav-cta-short">{copy.header.contactShort}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </nav>
+          <div
+            className="header-controls"
+            role="group"
+            aria-label={copy.preferences.group}
+          >
+            <button
+              className="preference-control language-control"
+              type="button"
+              onClick={toggleLocale}
+              aria-label={
+                locale === "zh"
+                  ? copy.preferences.switchToEnglish
+                  : copy.preferences.switchToChinese
+              }
+            >
+              <span aria-hidden="true" lang={locale === "zh" ? "en" : "zh-CN"}>
+                {locale === "zh" ? "EN" : "中"}
+              </span>
+            </button>
+            <button
+              className="preference-control theme-control"
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                theme === "dark"
+                  ? copy.preferences.switchToLight
+                  : copy.preferences.switchToDark
+              }
+              aria-pressed={theme === "light"}
+              title={
+                theme === "dark"
+                  ? copy.preferences.switchToLight
+                  : copy.preferences.switchToDark
+              }
+            >
+              <span
+                className={`theme-symbol theme-symbol--${theme}`}
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+        </div>
+        <span className="sr-only" role="status" aria-live="polite">
+          {preferenceAnnouncement}
+        </span>
       </header>
 
       <section className="hero" id="top">
@@ -382,58 +441,48 @@ export default function Home() {
           <span />
         </div>
         <p className="hero-index hero-reveal" aria-hidden="true">
-          DISCOVER / PROTOTYPE / DEPLOY / ITERATE — 2026
+          {copy.hero.index}
         </p>
         <div className="hero-kicker hero-reveal">
-          <span>FORWARD DEPLOYED ENGINEER / 前沿部署工程师</span>
-          <span>AI SOLUTIONS / PRODUCT / DELIVERY</span>
+          <span>{copy.hero.kicker}</span>
+          <span>{copy.hero.kickerAside}</span>
         </div>
         <h1>
-          <span className="hero-line-wrap">
-            <span className="hero-line">深入业务现场，</span>
-          </span>
-          <span className="hero-line-wrap">
-            <em className="hero-line">把 AI 变成</em>
-          </span>
-          <span className="hero-line-wrap">
-            <span className="hero-line">可运行的结果。</span>
-          </span>
+          {copy.hero.title.map((line, index) => (
+            <span className="hero-line-wrap" key={index}>
+              {line.outlined ? (
+                <em className="hero-line">{line.text}</em>
+              ) : (
+                <span className="hero-line">{line.text}</span>
+              )}
+            </span>
+          ))}
         </h1>
         <div className="hero-bottom">
           <div className="hero-copy">
-            <span className="copy-number">00 / INTRODUCTION</span>
-            <p>
-              我是风雨，一名
-              FDE。我与业务团队并肩，从问题定义到原型验证，再到生产系统集成，完成
-              AI 解决方案落地的最后一公里。
-            </p>
+            <span className="copy-number">{copy.hero.label}</span>
+            <p>{copy.hero.intro}</p>
           </div>
           <a className="primary-button" href="#services">
-            <span>查看 FDE 工作方式</span>
-            <span className="button-arrow" aria-hidden="true">
-              ↓
-            </span>
+            <span>{copy.hero.cta}</span>
+            <span className="button-arrow" aria-hidden="true">↓</span>
           </a>
         </div>
         <div className="scroll-cue hero-reveal" aria-hidden="true">
-          <span /> SCROLL TO EXPLORE
+          <span /> {copy.hero.scroll}
         </div>
       </section>
 
-      <section className="ticker" aria-label="核心能力">
+      <section className="ticker" aria-label={copy.ticker.aria}>
         <div className="ticker-track">
           {[0, 1, 2].map((group) => (
             <div className="ticker-group" key={group} aria-hidden={group > 0}>
-              <span>业务共创</span>
-              <i />
-              <span>AI 原型</span>
-              <i />
-              <span>系统集成</span>
-              <i />
-              <span>生产部署</span>
-              <i />
-              <span>持续迭代</span>
-              <i />
+              {copy.ticker.items.map((item, index) => (
+                <span className="ticker-item" key={`${group}-${index}`}>
+                  <span>{item}</span>
+                  <i aria-hidden="true" />
+                </span>
+              ))}
             </div>
           ))}
         </div>
@@ -443,28 +492,21 @@ export default function Home() {
         <div className="section-heading">
           <div className="section-label section-reveal">
             <span>01</span>
-            <p>
-              SERVICES
-              <br />
-              服务能力
-            </p>
+            <p>{copy.servicesSection.label}<br />{copy.servicesSection.labelLocal}</p>
           </div>
           <div className="section-title section-reveal">
-            <p className="kicker">FROM FIELD TO PRODUCTION</p>
-            <h2>
-              从业务现场出发，
-              <br />让 AI 真正进入生产。
-            </h2>
+            <p className="kicker">{copy.servicesSection.kicker}</p>
+            <h2>{copy.servicesSection.title[0]}<br />{copy.servicesSection.title[1]}</h2>
           </div>
         </div>
 
         <div className="service-list">
-          {services.map((service) => (
+          {copy.services.map((service) => (
             <a
               className="service-card"
               href="#contact"
-              key={service.number}
-              aria-label={`了解并咨询：${service.title}`}
+              key={service.id}
+              aria-label={`${copy.serviceAria}: ${service.title}`}
             >
               <div className="service-number">{service.number}</div>
               <div className="service-main">
@@ -473,9 +515,7 @@ export default function Home() {
                 <p>{service.description}</p>
               </div>
               <ul>
-                {service.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
+                {service.items.map((item, index) => <li key={index}>{item}</li>)}
               </ul>
               <span className="card-arrow" aria-hidden="true">
                 <span className="card-arrow-glyph">↗</span>
@@ -489,303 +529,180 @@ export default function Home() {
         <div className="capability-intro section-reveal">
           <div className="section-label dark-label">
             <span>02</span>
-            <p>
-              CAPABILITIES
-              <br />
-              核心能力
-            </p>
+            <p>{copy.capabilitiesSection.label}<br />{copy.capabilitiesSection.labelLocal}</p>
           </div>
-          <h2>
-            既能进入
-            <br />
-            业务现场，
-            <br />
-            也能走到生产。
-          </h2>
-          <p>
-            FDE 连接客户、业务、产品与工程。我把不确定的 AI
-            机会拆成可验证原型，再把有效原型做成稳定系统。
-          </p>
+          <h2>{copy.capabilitiesSection.title.map((line) => <span key={line}>{line}<br /></span>)}</h2>
+          <p>{copy.capabilitiesSection.intro}</p>
         </div>
         <div className="capability-grid">
-          {capabilities.map(([number, title, description]) => (
-            <article className="capability-card" key={number}>
-              <span>{number}</span>
+          {copy.capabilities.map((capability) => (
+            <article className="capability-card" key={capability.id}>
+              <span>{capability.number}</span>
               <div className="capability-dot" aria-hidden="true" />
-              <h3>{title}</h3>
-              <p>{description}</p>
+              <h3>{capability.title}</h3>
+              <p>{capability.description}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section
-        className="section case-study"
-        id="case-study"
-        aria-labelledby="case-study-title"
-      >
-        <div className="section-heading case-heading">
+      <section className="section partners" id="partners" aria-labelledby="partners-title">
+        <div className="section-heading partner-heading">
           <div className="section-label section-reveal">
             <span>03</span>
-            <p>
-              PARTICIPATED WORK
-              <br />
-              参与案例
-            </p>
+            <p>{copy.partners.label}<br />{copy.partners.labelLocal}</p>
           </div>
           <div className="section-title section-reveal">
-            <p className="kicker">PUBLIC PROJECT / VERIFIED ONLINE</p>
-            <h2 id="case-study-title">
-              不只讲能力，
-              <br />
-              也展示参与过的项目。
-            </h2>
+            <p className="kicker">{copy.partners.kicker}</p>
+            <h2 id="partners-title">{copy.partners.title[0]}<br />{copy.partners.title[1]}</h2>
+            <p className="partner-intro">{copy.partners.intro}</p>
+          </div>
+        </div>
+        <div className="partner-wall" aria-label={copy.partners.aria}>
+          {copy.partners.tiles.map((tile) => {
+            const content = (
+              <>
+                <span className="brand-eyebrow">{tile.eyebrow}</span>
+                <strong className="brand-mark">{tile.mark}</strong>
+                <span className="brand-name">{tile.name}</span>
+                <small>{tile.note}</small>
+                {tile.kind === "cta" ? <span className="brand-arrow" aria-hidden="true">→</span> : null}
+              </>
+            );
+            return tile.kind === "cta" ? (
+              <a className="brand-tile brand-tile--cta" href="#contact" key={tile.id}>{content}</a>
+            ) : (
+              <article className={`brand-tile brand-tile--${tile.kind}`} key={tile.id}>{content}</article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="section case-study" id="case-study" aria-labelledby="case-study-title">
+        <div className="section-heading case-heading">
+          <div className="section-label section-reveal">
+            <span>04</span>
+            <p>{copy.caseStudy.label}<br />{copy.caseStudy.labelLocal}</p>
+          </div>
+          <div className="section-title section-reveal">
+            <p className="kicker">{copy.caseStudy.kicker}</p>
+            <h2 id="case-study-title">{copy.caseStudy.title[0]}<br />{copy.caseStudy.title[1]}</h2>
           </div>
         </div>
 
         <article className="case-feature">
-          <a
-            className="case-preview-link section-reveal"
-            href="https://cs-wude.github.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="访问 WUDE Personal Site 参与案例（新窗口打开）"
-          >
+          <a className="case-preview-link section-reveal" href="#wude-case-details" aria-label={copy.caseStudy.previewAria}>
             <div className="case-preview-bar" aria-hidden="true">
-              <span className="case-preview-dots">
-                <i />
-                <i />
-                <i />
-              </span>
-              <span>cs-wude.github.io</span>
-              <strong>LIVE ↗</strong>
+              <span className="case-preview-dots"><i /><i /><i /></span>
+              <span>{copy.caseStudy.previewTop}</span>
+              <strong>{copy.caseStudy.previewBadge}</strong>
             </div>
             <div className="case-preview-canvas" aria-hidden="true">
-              <p>ENGINEERING PORTFOLIO / 2025—2026</p>
-              <div className="case-preview-title">
-                <span>WUDE</span>
-                <strong>PERSONAL SITE</strong>
-              </div>
-              <div className="case-preview-rail">
-                <span>PROJECTS</span>
-                <span>NOTES</span>
-                <span>UPDATES</span>
-              </div>
+              <p>{copy.caseStudy.previewMeta}</p>
+              <div className="case-preview-title"><span>WUDE</span><strong>{copy.caseStudy.previewTitle}</strong></div>
+              <div className="case-preview-rail">{copy.caseStudy.previewRail.map((item) => <span key={item}>{item}</span>)}</div>
               <div className="case-preview-flow">
-                <span>SOURCE</span>
-                <i>→</i>
-                <span>SNAPSHOT</span>
-                <i>→</i>
-                <span>PUBLISH</span>
+                {copy.caseStudy.previewFlow.map((item, index) => (
+                  <span className="case-flow-item" key={item}>
+                    <span>{item}</span>{index < copy.caseStudy.previewFlow.length - 1 ? <i>→</i> : null}
+                  </span>
+                ))}
               </div>
             </div>
           </a>
 
           <div className="case-info section-reveal">
-            <p className="case-kicker">WUDE / PERSONAL SITE · GITHUB PAGES</p>
-            <h3>
-              把项目经验、技术判断与工程手记，沉淀成可持续更新的个人站。
-            </h3>
-            <p className="case-summary">
-              这是一个使用原生 HTML、CSS 和 JavaScript
-              构建的工程作品集。站点通过 GitHub Actions
-              生成静态内容快照并发布到 GitHub Pages，访客浏览时不依赖在线后端。
-            </p>
-
+            <p className="case-kicker">{copy.caseStudy.caseKicker}</p>
+            <h3>{copy.caseStudy.caseTitle}</h3>
+            <p className="case-summary">{copy.caseStudy.summary}</p>
             <div className="case-role">
-              <span>MY ROLE / 我的角色</span>
-              <strong>项目参与者</strong>
-              <p>参与关系由风雨本人确认；具体职责范围尚未在公开资料中披露。</p>
+              <span>{copy.caseStudy.roleLabel}</span>
+              <strong>{copy.caseStudy.role}</strong>
+              <p>{copy.caseStudy.roleNote}</p>
             </div>
-
             <ul className="case-facts">
-              <li>
-                <span>01</span>
-                <div>
-                  <strong>原生静态架构</strong>
-                  <p>HTML / CSS / JavaScript，同源资源减少外部依赖。</p>
-                </div>
-              </li>
-              <li>
-                <span>02</span>
-                <div>
-                  <strong>自动内容快照</strong>
-                  <p>由 GitHub Actions 生成更新数据并完成自动发布。</p>
-                </div>
-              </li>
-              <li>
-                <span>03</span>
-                <div>
-                  <strong>持续内容体系</strong>
-                  <p>覆盖项目索引、技术手记、动态与个人介绍。</p>
-                </div>
-              </li>
+              {copy.caseStudy.facts.map((fact) => (
+                <li key={fact.id}><span>{fact.number}</span><div><strong>{fact.title}</strong><p>{fact.description}</p></div></li>
+              ))}
             </ul>
-
             <div className="case-actions">
-              <a
-                href="https://cs-wude.github.io/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                查看线上项目 <span aria-hidden="true">↗</span>
-              </a>
-              <a
-                href="https://github.com/CS-wude/CS-wude.github.io"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                查看公开仓库 <span aria-hidden="true">↗</span>
-              </a>
-              <a href="#contact">
-                沟通类似项目 <span aria-hidden="true">→</span>
-              </a>
+              <a href="#wude-case-details">{copy.caseStudy.viewDetails}<span aria-hidden="true">↓</span></a>
+              <a href="#contact">{copy.caseStudy.discuss}<span aria-hidden="true">→</span></a>
             </div>
-            <p className="case-disclosure">
-              项目技术与发布信息来自公开网站及代码仓库；参与关系由风雨本人确认。
-            </p>
+            <p className="case-disclosure">{copy.caseStudy.disclosure}</p>
+          </div>
+
+          <div className="case-details" id="wude-case-details">
+            {copy.caseStudy.details.map((detail) => (
+              <section className="case-detail" key={detail.id}>
+                <span>{detail.number}</span>
+                <h4>{detail.title}</h4>
+                <p>{detail.description}</p>
+              </section>
+            ))}
           </div>
         </article>
       </section>
 
       <section className="section process" id="process">
         <div className="section-heading compact">
-          <div className="section-label section-reveal">
-            <span>04</span>
-            <p>
-              PROCESS
-              <br />
-              合作流程
-            </p>
-          </div>
-          <div className="section-title section-reveal">
-            <p className="kicker">DISCOVER. PROTOTYPE. DEPLOY. ITERATE.</p>
-            <h2>
-              一条从现场问题到
-              <br />
-              生产结果的闭环。
-            </h2>
-          </div>
+          <div className="section-label section-reveal"><span>05</span><p>{copy.process.label}<br />{copy.process.labelLocal}</p></div>
+          <div className="section-title section-reveal"><p className="kicker">{copy.process.kicker}</p><h2>{copy.process.title[0]}<br />{copy.process.title[1]}</h2></div>
         </div>
         <ol className="steps">
-          {steps.map(([number, tag, title, description]) => (
-            <li className="section-reveal" key={number}>
-              <span className="step-number">{number}</span>
-              <span className="step-tag">{tag}</span>
-              <div>
-                <h3>{title}</h3>
-                <p>{description}</p>
-              </div>
+          {copy.process.steps.map((step) => (
+            <li className="section-reveal" key={step.id}>
+              <span className="step-number">{step.number}</span><span className="step-tag">{step.tag}</span>
+              <div><h3>{step.title}</h3><p>{step.description}</p></div>
             </li>
           ))}
         </ol>
       </section>
 
       <section className="about" id="about">
-        <p className="about-mark" aria-hidden="true">
-          风雨
-        </p>
+        <p className="about-mark" aria-hidden="true">风雨</p>
         <div className="about-copy section-reveal">
-          <div className="section-label blue-label">
-            <span>05</span>
-            <p>
-              PHILOSOPHY
-              <br />
-              我的理念
-            </p>
-          </div>
-          <blockquote>
-            “FDE 的价值，不是带着标准答案，而是和团队一起把答案跑通。”
-          </blockquote>
-          <p>
-            我相信 AI
-            落地是一项跨越业务、产品和工程的协作工作。好的方案既要理解人的需求与组织现实，也要经得起数据、权限、稳定性和长期维护的检验。
-          </p>
+          <div className="section-label blue-label"><span>06</span><p>{copy.about.label}<br />{copy.about.labelLocal}</p></div>
+          <blockquote>{copy.about.quote}</blockquote>
+          <p>{copy.about.body}</p>
         </div>
       </section>
 
       <section className="contact" id="contact">
         <div className="cursor-glow" aria-hidden="true" />
         <div className="contact-head section-reveal">
-          <div className="section-label dark-label">
-            <span>06</span>
-            <p>
-              CONTACT
-              <br />
-              开始合作
-            </p>
-          </div>
-          <p className="contact-status">
-            <span /> OPEN FOR CONVERSATION
-          </p>
+          <div className="section-label dark-label"><span>07</span><p>{copy.contact.label}<br />{copy.contact.labelLocal}</p></div>
+          <p className="contact-status"><span /> {copy.contact.status}</p>
         </div>
-        <h2 className="section-reveal">
-          有一个 AI 场景，
-          <br />
-          需要<em>真正落地</em>？
-        </h2>
+        <h2 className="section-reveal">{copy.contact.titleStart}<br /><em>{copy.contact.titleEnd}</em></h2>
         <div className="contact-bottom section-reveal">
           <div className="contact-copy">
-            <p>
-              无论是尚未验证的 AI
-              机会，还是卡在原型、集成或上线阶段的项目，都可以先聊聊。直接发邮件，或先复制一份简洁的合作沟通模板。
-            </p>
-            <div className="contact-email-list" aria-label="联系邮箱">
+            <p>{copy.contact.body}</p>
+            <div className="contact-email-list" aria-label={copy.contact.emailListLabel}>
               {contactEmails.map(({ label, address }) => (
                 <a
                   className="contact-email"
-                  href={`mailto:${address}?subject=${encodeURIComponent(collaborationMailSubject)}&body=${encodeURIComponent(collaborationBrief)}`}
+                  href={`mailto:${address}?subject=${encodeURIComponent(copy.contact.mailSubject)}&body=${encodeURIComponent(collaborationBrief)}`}
                   key={address}
-                  aria-label={`通过 ${label} 发送合作邮件到 ${address}`}
+                  aria-label={`${copy.contact.emailAria} ${address} (${label})`}
                 >
-                  <span className="contact-email-label">{label}</span>
-                  <strong>{address}</strong>
-                  <span className="contact-email-arrow" aria-hidden="true">
-                    ↗
-                  </span>
+                  <span className="contact-email-label">{label}</span><strong>{address}</strong><span className="contact-email-arrow" aria-hidden="true">↗</span>
                 </a>
               ))}
             </div>
           </div>
-          <button
-            className="contact-link"
-            type="button"
-            onClick={copyCollaborationBrief}
-            disabled={copyState === "copying"}
-          >
-            <span>
-              {copyState === "copied"
-                ? "合作模板已复制"
-                : copyState === "failed"
-                  ? "复制失败，请重试"
-                  : copyState === "copying"
-                    ? "正在复制合作模板"
-                  : "复制合作沟通模板"}
-            </span>
-            <span className="contact-action-code" aria-hidden="true">
-              {copyState === "copied"
-                ? "COPIED"
-                : copyState === "failed"
-                  ? "RETRY"
-                  : copyState === "copying"
-                    ? "COPYING"
-                  : "COPY BRIEF"}
-            </span>
+          <button className="contact-link" type="button" onClick={copyCollaborationBrief} disabled={copyState === "copying"}>
+            <span>{copyState === "copied" ? copy.contact.copyDone : copyState === "failed" ? copy.contact.copyFailed : copyState === "copying" ? copy.contact.copyWorking : copy.contact.copyIdle}</span>
+            <span className="contact-action-code" aria-hidden="true">{copyState === "copied" ? copy.contact.copyCodeDone : copyState === "failed" ? copy.contact.copyCodeFailed : copyState === "copying" ? copy.contact.copyCodeWorking : copy.contact.copyCodeIdle}</span>
           </button>
-          <span className="sr-only" role="status" aria-live="polite">
-            {copyState === "copied"
-              ? "合作沟通模板已复制到剪贴板"
-              : copyState === "failed"
-                ? "复制失败，请重试"
-                : ""}
-          </span>
+          <span className="sr-only" role="status" aria-live="polite">{copyState === "copied" ? copy.contact.liveDone : copyState === "failed" ? copy.contact.liveFailed : ""}</span>
         </div>
       </section>
 
       <footer>
         <p>风雨® — FORWARD DEPLOYED ENGINEER</p>
-        <p>把 AI 部署进真实业务现场。</p>
-        <a href="#top">BACK TO TOP ↑</a>
+        <p>{copy.footer.tagline}</p>
+        <a href="#top">{copy.footer.backToTop}</a>
       </footer>
     </main>
   );

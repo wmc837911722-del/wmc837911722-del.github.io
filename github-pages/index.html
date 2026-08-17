@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" data-motion="pending">
+<html lang="zh-CN" data-theme="dark" data-motion="pending">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +8,26 @@
       content="深入业务现场，从 AI 机会定义、原型验证到系统集成与生产部署，完成解决方案落地的最后一公里。"
     />
     <meta name="theme-color" content="#080b12" />
+    <script>
+      (function () {
+        try {
+          var key = "fengyu:theme:v1";
+          var saved = localStorage.getItem(key);
+          var theme =
+            saved === "light" || saved === "dark"
+              ? saved
+              : matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+          document.querySelector('meta[name="theme-color"]').content =
+            theme === "dark" ? "#080b12" : "#f7f7f2";
+        } catch (error) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
     <link rel="canonical" href="https://wmc837911722-del.github.io/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />

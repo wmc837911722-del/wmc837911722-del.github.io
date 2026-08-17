@@ -15,6 +15,8 @@ test("GitHub Pages metadata and assets have no blocked external dependency", asy
   const html = await read("github-pages/index.html");
 
   assert.match(html, /<html lang="zh-CN"/);
+  assert.match(html, /data-theme="dark"/);
+  assert.match(html, /fengyu:theme:v1/);
   assert.match(html, /风雨 — Forward Deployed Engineer/);
   assert.match(html, /rel="canonical" href="https:\/\/wmc837911722-del\.github\.io\/"/);
   assert.doesNotMatch(html, /fonts\.googleapis|fonts\.gstatic|unpkg|jsdelivr/i);
@@ -36,9 +38,14 @@ test("GitHub Pages output contains pre-rendered portfolio content", async () => 
   assert.match(html, /深入业务现场/);
   assert.match(html, /id="services"/);
   assert.match(html, /class="capability-section"/);
+  assert.match(html, /id="partners"/);
+  assert.match(html, /WUDE 项目团队/);
   assert.match(html, /id="case-study"/);
   assert.match(html, /WUDE \/ PERSONAL SITE/);
-  assert.match(html, /https:\/\/cs-wude\.github\.io\//);
+  assert.match(html, /id="wude-case-details"/);
+  assert.match(html, /class="preference-control language-control"/);
+  assert.match(html, /class="preference-control theme-control"/);
+  assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude/i);
   assert.match(html, /id="process"/);
   assert.match(html, /id="contact"/);
   assert.doesNotMatch(html, /chatgpt\.site/);

@@ -1,0 +1,49 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("the locale dictionary covers the full commercial page in both languages", async () => {
+  const copy = await read("app/site-copy.ts");
+
+  assert.match(copy, /export type Locale = "zh" \| "en"/);
+  assert.match(copy, /zh:\s*\{/);
+  assert.match(copy, /en:\s*\{/);
+  assert.match(copy, /Business discovery & solution design/);
+  assert.match(copy, /Selected partners/);
+  assert.match(copy, /The complete case lives here/);
+  assert.match(copy, /FDE \/ AI delivery project inquiry/);
+});
+
+test("preferences restore safely after hydration and persist explicit choices", async () => {
+  const [page, layout, githubHtml] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/layout.tsx"),
+    read("github-pages/index.html"),
+  ]);
+
+  assert.match(page, /useState<Locale>\("zh"\)/);
+  assert.match(page, /useState<Theme>\("dark"\)/);
+  assert.doesNotMatch(page, /useState\(\(\)\s*=>[\s\S]{0,100}localStorage/);
+  assert.match(page, /savedLocale === "zh" \|\| savedLocale === "en"/);
+  assert.match(page, /window\.localStorage\.setItem\(LOCALE_STORAGE_KEY/);
+  assert.match(page, /window\.localStorage\.setItem\(THEME_STORAGE_KEY/);
+  assert.match(layout, /data-theme="dark"/);
+  assert.match(layout, /prefers-color-scheme: light/);
+  assert.match(githubHtml, /data-theme="dark"/);
+  assert.match(githubHtml, /prefers-color-scheme: light/);
+});
+
+test("the public project never sends visitors to the source owner's pages", async () => {
+  const sources = await Promise.all([
+    read("app/page.tsx"),
+    read("app/site-copy.ts"),
+    read("README.md"),
+    read("work/github-profile/README.md"),
+  ]);
+
+  for (const source of sources) {
+    assert.doesNotMatch(source, /cs-wude\.github\.io|github\.com\/CS-wude/i);
+  }
+});
