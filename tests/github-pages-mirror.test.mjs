@@ -17,7 +17,15 @@ test("GitHub Pages metadata and assets have no blocked external dependency", asy
   assert.match(html, /<html lang="zh-CN"/);
   assert.match(html, /data-theme="dark"/);
   assert.match(html, /fengyu:theme:v1/);
-  assert.match(html, /风雨 — Forward Deployed Engineer/);
+  assert.match(html, /<title>风雨｜FDE · AI 产品落地与系统交付<\/title>/);
+  assert.match(
+    html,
+    /<meta property="og:title" content="风雨｜FDE · AI 产品落地与系统交付" \/>/,
+  );
+  assert.match(
+    html,
+    /<meta name="twitter:title" content="风雨｜FDE · AI 产品落地与系统交付" \/>/,
+  );
   assert.match(html, /rel="canonical" href="https:\/\/wmc837911722-del\.github\.io\/"/);
   assert.doesNotMatch(html, /fonts\.googleapis|fonts\.gstatic|unpkg|jsdelivr/i);
 });
@@ -35,11 +43,12 @@ test("GitHub Actions deploys the dedicated static build", async () => {
 test("GitHub Pages output contains pre-rendered portfolio content", async () => {
   const html = await read("dist-github-pages/index.html");
 
-  assert.match(html, /深入业务现场/);
+  assert.match(html, /把业务难题/);
   assert.match(html, /id="services"/);
   assert.match(html, /class="capability-section"/);
   assert.match(html, /id="partners"/);
   assert.match(html, /WUDE 项目团队/);
+  assert.match(html, /这里只展示获得许可的合作信息/);
   assert.match(html, /id="case-study"/);
   assert.match(html, /大白 AI 心理健康平台/);
   assert.match(html, /工业合规知识平台/);

@@ -76,7 +76,7 @@ test(
         /^text\/html\b/i,
       );
       assert.doesNotMatch(html, /This page couldn.t load|id="__next_error__"/i);
-      assert.match(html, /深入业务现场/);
+      assert.match(html, /把业务难题/);
     } finally {
       await stop(child);
     }

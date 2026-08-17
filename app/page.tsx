@@ -517,7 +517,7 @@ export default function Home() {
             <span className="copy-number">{copy.hero.label}</span>
             <p>{copy.hero.intro}</p>
           </div>
-          <a className="primary-button" href="#services">
+          <a className="primary-button" href="#contact">
             <span>{copy.hero.cta}</span>
             <span className="button-arrow" aria-hidden="true">↓</span>
           </a>

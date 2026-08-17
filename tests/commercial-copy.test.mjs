@@ -1,0 +1,128 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import ts from "typescript";
+
+const sourceUrl = new URL("../app/site-copy.ts", import.meta.url);
+
+async function loadSiteCopy() {
+  const source = await readFile(sourceUrl, "utf8");
+  const output = ts.transpileModule(source, {
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+  }).outputText;
+  const moduleUrl = `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`;
+  return (await import(moduleUrl)).siteCopy;
+}
+
+function assertUsefulText(value, label) {
+  assert.equal(typeof value, "string", `${label} should be text`);
+  assert.ok(value.trim().length >= 2, `${label} should not be empty`);
+}
+
+function commercialClaims(copy) {
+  return [
+    copy.seo.description,
+    copy.hero.intro,
+    ...copy.services.map(({ description }) => description),
+    copy.capabilitiesSection.intro,
+    ...copy.capabilities.map(({ description }) => description),
+    ...copy.partners.title,
+    copy.partners.intro,
+    ...copy.partners.tiles.flatMap(({ name, note }) => [name, note]),
+    ...copy.caseStudy.title,
+    copy.caseStudy.intro,
+    copy.caseStudy.disclosure,
+    ...copy.caseStudy.projects.flatMap(({ summary, roleNote }) => [summary, roleNote]),
+    ...copy.process.title,
+    ...copy.process.steps.map(({ description }) => description),
+    copy.about.quote,
+    copy.about.body,
+    copy.contact.titleStart,
+    copy.contact.titleEnd,
+    copy.contact.body,
+  ].join("\n");
+}
+
+test("Chinese case-study heading does not hard-code the project count", async () => {
+  const { zh } = await loadSiteCopy();
+
+  assert.doesNotMatch(zh.caseStudy.title.join(""), /四个/);
+});
+
+test("English case-study heading does not hard-code the project count", async () => {
+  const { en } = await loadSiteCopy();
+
+  assert.doesNotMatch(en.caseStudy.title.join(" "), /\bfour\b/i);
+});
+
+test("every commercial section has useful bilingual copy and a clear next action", async () => {
+  const siteCopy = await loadSiteCopy();
+
+  for (const locale of ["zh", "en"]) {
+    const copy = siteCopy[locale];
+    const sectionCopy = {
+      services: [copy.servicesSection.title.join(" "), ...copy.services.map(({ description }) => description)],
+      capabilities: [copy.capabilitiesSection.title.join(" "), copy.capabilitiesSection.intro],
+      partners: [copy.partners.title.join(" "), copy.partners.intro],
+      cases: [copy.caseStudy.title.join(" "), copy.caseStudy.intro],
+      process: [copy.process.title.join(" "), ...copy.process.steps.map(({ description }) => description)],
+      about: [copy.about.quote, copy.about.body],
+      contact: [`${copy.contact.titleStart} ${copy.contact.titleEnd}`, copy.contact.body],
+    };
+
+    for (const [section, values] of Object.entries(sectionCopy)) {
+      assert.ok(values.length > 0, `${locale}.${section} should contain commercial copy`);
+      values.forEach((value, index) =>
+        assertUsefulText(value, `${locale}.${section}[${index}]`),
+      );
+    }
+
+    const nextActions = {
+      header: copy.header.contact,
+      hero: copy.hero.cta,
+      services: copy.serviceAria,
+      partners: copy.partners.tiles.find(({ kind }) => kind === "cta")?.name,
+      cases: copy.caseStudy.discuss,
+      contact: copy.contact.copyIdle,
+    };
+
+    for (const [section, action] of Object.entries(nextActions)) {
+      assertUsefulText(action, `${locale}.${section} CTA`);
+    }
+  }
+});
+
+test("commercial copy does not invent quantified outcomes or undisclosed clients", async () => {
+  const siteCopy = await loadSiteCopy();
+  const quantifiedOutcome = /\d+(?:\.\d+)?\s*(?:%|％|x\b|×|倍|万|亿|million\b|billion\b)/i;
+  const unverifiedClientClaim = /服务过|合作客户|客户包括|知名客户|头部客户|世界\s*500\s*强|\bserved\b|\btrusted by\b|\bclients include\b|\bleading clients\b|\bfortune\s*500\b/i;
+
+  for (const locale of ["zh", "en"]) {
+    const copy = siteCopy[locale];
+    const claims = commercialClaims(copy);
+
+    assert.doesNotMatch(claims, quantifiedOutcome);
+    assert.doesNotMatch(claims, unverifiedClientClaim);
+    for (const project of copy.caseStudy.projects) {
+      assert.equal("client" in project, false, `${locale}.${project.id} should not name a client`);
+      assert.equal("customer" in project, false, `${locale}.${project.id} should not name a customer`);
+    }
+  }
+
+  assert.deepEqual(
+    siteCopy.zh.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
+    ["wude"],
+  );
+  assert.deepEqual(
+    siteCopy.en.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
+    ["wude"],
+  );
+  assert.match(siteCopy.zh.partners.intro, /获得(?:授权|许可)/);
+  assert.match(
+    siteCopy.en.partners.intro,
+    /explicit permission|approved (?:for disclosure|information)|only with permission/i,
+  );
+});

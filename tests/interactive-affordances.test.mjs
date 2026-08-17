@@ -113,11 +113,12 @@ test("language and theme controls are accessible buttons with 44px targets", () 
   assert.match(css, /html\[data-theme="light"\]/);
 });
 
-test("partner wall only presents confirmed or explicitly unfilled disclosure", () => {
+test("partner wall presents confirmed collaboration with explicit disclosure boundaries", () => {
   assert.match(page, /id="partners"/);
   assert.match(page, /className="partner-wall"/);
   assert.match(copy, /WUDE 项目团队/);
-  assert.match(copy, /公司客户名称与 Logo 仅在获得授权后加入/);
+  assert.match(copy, /这里只展示获得许可的合作信息/);
+  assert.match(copy, /只有获得明确许可才公开展示/);
   assert.match(page, /brand-tile--cta/);
   assert.match(css, /\.partner-wall\s*\{[^}]*repeat\(3,minmax\(0,1fr\)\)/s);
 });

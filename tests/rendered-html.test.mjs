@@ -30,12 +30,13 @@ test("server-renders the complete FDE portfolio", async () => {
 
   const html = await response.text();
   assert.match(html, /<html lang="zh-CN" data-theme="dark" data-motion="pending">/);
-  assert.match(html, /<title>风雨 — Forward Deployed Engineer<\/title>/);
-  assert.match(html, /深入业务现场/);
+  assert.match(html, /<title>风雨｜FDE · AI 产品落地与系统交付<\/title>/);
+  assert.match(html, /把业务难题/);
   assert.match(html, /id="services"/);
   assert.match(html, /id="partners"/);
   assert.match(html, /合作品牌/);
   assert.match(html, /WUDE 项目团队/);
+  assert.match(html, /这里只展示获得许可的合作信息/);
   assert.match(html, /id="case-study"/);
   assert.match(html, /大白 AI 心理健康平台/);
   assert.match(html, /工业合规知识平台/);
@@ -52,7 +53,7 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /id="about"/);
   assert.match(html, /id="contact"/);
   assert.match(html, /聊聊合作/);
-  assert.match(html, /我是风雨，一名前沿部署工程师/);
+  assert.match(html, /我是风雨，前沿部署工程师/);
   assert.match(html, /class="preference-control language-control"/);
   assert.match(html, /class="preference-control theme-control"/);
   assert.doesNotMatch(html, /FENGYU|Feng Yu/);

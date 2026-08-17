@@ -10,8 +10,10 @@ test("the locale dictionary covers the full commercial page in both languages", 
   assert.match(copy, /export type Locale = "zh" \| "en"/);
   assert.match(copy, /zh:\s*\{/);
   assert.match(copy, /en:\s*\{/);
-  assert.match(copy, /Business discovery & solution design/);
-  assert.match(copy, /Selected partners/);
+  assert.match(copy, /Fengyu \| FDE for AI Product Delivery/);
+  assert.match(copy, /AI use-case discovery & roadmap/);
+  assert.match(copy, /Collaboration and disclosure/);
+  assert.match(copy, /Published only with explicit permission/);
   assert.match(copy, /Dabai AI Mental Health Platform/);
   assert.match(copy, /Industrial Compliance Knowledge Platform/);
   assert.match(copy, /Intelligent SRE Operations Assistant/);
@@ -21,7 +23,7 @@ test("the locale dictionary covers the full commercial page in both languages", 
     copy,
     /specific responsibilities, duration and measured outcomes are not publicly disclosed/i,
   );
-  assert.match(copy, /FDE \/ AI delivery project inquiry/);
+  assert.match(copy, /AI delivery project \| Initial use-case discussion/);
 });
 
 test("preferences restore safely after hydration and persist explicit choices", async () => {

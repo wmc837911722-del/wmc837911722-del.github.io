@@ -409,6 +409,7 @@ html[data-theme="light"] footer { color: #5c6471; }
   .hero-kicker { display: block; }
   .hero-kicker span:last-child { display: none; }
   h1 { margin: 72px 0 58px; font-size: clamp(52px,15.4vw,84px); line-height: .91; }
+  html[lang="en"] h1 { font-size: clamp(32px,9.5vw,56px); line-height: .96; letter-spacing: -.052em; }
   h1 em { padding-left: 0; }
   .hero-bottom { grid-template-columns: 1fr; padding-right: 0; }
   .hero-copy { max-width: 510px; }
@@ -456,6 +457,8 @@ html[data-theme="light"] footer { color: #5c6471; }
 }
 
 @media (max-width: 380px) {
+  h1 { font-size: 13.5vw; line-height: .94; }
+  html[lang="en"] h1 { font-size: 9.5vw; line-height: .98; }
   .site-header { padding-inline: 12px; gap: 8px; }
   .header-end, .header-controls { gap: 6px; }
   .language-control { min-width: 44px; }
