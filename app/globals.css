@@ -272,6 +272,7 @@ html[lang="en"] .case-heading .section-title h2 { font-size: clamp(38px,4.7vw,70
 .case-carousel-bar { min-width: 0; display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: stretch; border-bottom: 1px solid var(--line-light); }
 .case-carousel-button { width: 64px; min-width: 44px; height: 64px; min-height: 44px; padding: 0; display: grid; place-items: center; color: var(--interactive-fg); background: var(--interactive-bg); border: 0; cursor: pointer; font: 24px var(--font-geist-mono), monospace; transition: color .2s ease, background-color .2s ease; }
 .case-carousel-button:hover { color: var(--fixed-night); background: var(--blue-bright); }
+.case-carousel-button:focus-visible { outline-offset: -5px; }
 .case-carousel-position { min-width: 0; padding: 12px 20px; display: flex; justify-content: center; align-items: center; gap: 16px; text-align: center; }
 .case-carousel-position span { flex: 0 0 auto; color: var(--blue); font: 9px var(--font-geist-mono), monospace; letter-spacing: .12em; }
 .case-carousel-position strong { min-width: 0; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
