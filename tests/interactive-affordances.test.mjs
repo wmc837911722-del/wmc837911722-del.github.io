@@ -48,8 +48,9 @@ test("non-interactive capability and process rows do not mimic buttons", () => {
 test("all four participation cases are complete on-site and never link to the source site", () => {
   assert.match(page, /<a href="#case-study">\{copy\.header\.caseStudy\}<\/a>/);
   assert.match(page, /id="case-study"/);
-  assert.match(page, /className="case-grid"/);
-  assert.match(page, /copy\.caseStudy\.projects\.map\(\(project\) =>/);
+  assert.match(page, /className="[^"]*\bcase-carousel\b[^"]*"/);
+  assert.match(page, /id="case-carousel-track"/);
+  assert.match(page, /copy\.caseStudy\.projects\.map\(\(project(?:,\s*index)?\) =>/);
   assert.match(page, /data-case-id=\{project\.id\}/);
   assert.match(page, /className="system-case-role"/);
   assert.match(
@@ -75,17 +76,18 @@ test("all four participation cases are complete on-site and never link to the so
   assert.doesNotMatch(copy, /role:\s*"(?:独立开发者|项目负责人|Project owner|Sole owner)"/i);
 });
 
-test("participation case grid is responsive and prevents fixed-width overflow", () => {
-  assert.match(css, /\.case-grid\s*\{[^}]*repeat\(2,minmax\(0,1fr\)\)/s);
+test("participation case carousel is responsive and prevents fixed-width overflow", () => {
+  assert.match(css, /\.case-carousel\s*\{[^}]*min-width:\s*0/s);
+  assert.match(css, /\.case-carousel-viewport\s*\{[^}]*overflow:\s*hidden/s);
+  assert.match(css, /\.case-carousel-track\s*\{[^}]*min-width:\s*0/s);
   assert.match(css, /\.system-case\s*\{[^}]*min-width:\s*0/s);
-  assert.match(css, /\.system-case-visual\s*\{[^}]*overflow:\s*hidden/s);
   assert.match(
     css,
-    /@media\s*\(max-width:\s*\d+px\)[\s\S]*?\.case-grid\s*\{[^}]*grid-template-columns:\s*1fr/s,
+    /@media\s*\(max-width:\s*\d+px\)[\s\S]*?\.system-case\s*\{[^}]*grid-template-columns:\s*1fr/s,
   );
   assert.doesNotMatch(
     css,
-    /\.(?:case-grid|system-case|system-case-visual|system-case-content)[^{]*\{[^}]*width:\s*100vw/s,
+    /\.(?:case-carousel|case-carousel-viewport|case-carousel-track|system-case|system-case-visual|system-case-content)[^{]*\{[^}]*width:\s*100vw/s,
   );
 });
 

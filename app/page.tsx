@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { siteCopy, type Locale } from "./site-copy";
 
 type Theme = "dark" | "light";
@@ -18,11 +18,38 @@ export default function Home() {
   const [locale, setLocale] = useState<Locale>("zh");
   const [theme, setTheme] = useState<Theme>("dark");
   const [preferenceAnnouncement, setPreferenceAnnouncement] = useState("");
+  const [activeCaseIndex, setActiveCaseIndex] = useState(0);
+  const [caseAnnouncement, setCaseAnnouncement] = useState("");
   const [copyState, setCopyState] = useState<
     "idle" | "copying" | "copied" | "failed"
   >("idle");
   const copy = siteCopy[locale];
   const collaborationBrief = copy.contact.mailTemplate;
+  const caseCount = copy.caseStudy.projects.length;
+
+  const goToCase = (index: number) => {
+    const nextIndex = ((index % caseCount) + caseCount) % caseCount;
+    setActiveCaseIndex(nextIndex);
+    setCaseAnnouncement(
+      `${String(nextIndex + 1).padStart(2, "0")} / ${String(caseCount).padStart(2, "0")}: ${copy.caseStudy.projects[nextIndex].title}`,
+    );
+  };
+
+  const handleCaseCarouselKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.currentTarget !== event.target) return;
+
+    const destinations: Record<string, number> = {
+      "ArrowLeft": activeCaseIndex - 1,
+      "ArrowRight": activeCaseIndex + 1,
+      "Home": 0,
+      "End": caseCount - 1,
+    };
+    const destination = destinations[event.key];
+    if (destination === undefined) return;
+
+    event.preventDefault();
+    goToCase(destination);
+  };
 
   const copyCollaborationBrief = async () => {
     const fallbackCopy = () => {
@@ -78,6 +105,7 @@ export default function Home() {
       copyResetRef.current = null;
     }
     setCopyState("idle");
+    setCaseAnnouncement("");
     setLocale(nextLocale);
     setPreferenceAnnouncement(
       siteCopy[nextLocale].preferences[
@@ -183,7 +211,7 @@ export default function Home() {
           if (reduceMotion) {
             gsap.set(
               select(
-                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card, .brand-tile, .system-case",
+                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card, .brand-tile",
               ),
               { clearProps: "all" },
             );
@@ -307,20 +335,6 @@ export default function Home() {
             scrollTrigger: {
               trigger: select(".partner-wall")[0],
               start: "top 82%",
-              toggleActions: "play none none reverse",
-            },
-          });
-
-          gsap.from(select(".system-case"), {
-            autoAlpha: 0,
-            y: 24,
-            scale: 0.99,
-            duration: 0.55,
-            stagger: { each: 0.07, from: "start", grid: "auto" },
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: select(".case-grid")[0],
-              start: "top 84%",
               toggleActions: "play none none reverse",
             },
           });
@@ -605,68 +619,136 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="case-grid" aria-label={copy.caseStudy.aria} role="list">
-          {copy.caseStudy.projects.map((project) => (
-            <article
-              className="system-case"
-              id={`case-${project.id}`}
-              data-case-id={project.id}
-              key={project.id}
-              role="listitem"
+        <div
+          className="case-carousel section-reveal"
+          role="region"
+          aria-roledescription="carousel"
+          aria-labelledby="case-study-title"
+        >
+          <p className="sr-only" id="case-carousel-instructions">
+            {copy.caseStudy.keyboardHint}
+          </p>
+          <div className="case-carousel-bar">
+            <button
+              className="case-carousel-button case-carousel-prev"
+              type="button"
+              aria-label={copy.caseStudy.previous}
+              aria-controls="case-carousel-track"
+              aria-describedby="case-carousel-instructions"
+              onClick={() => goToCase(activeCaseIndex - 1)}
+              onKeyDown={handleCaseCarouselKeyDown}
+              aria-keyshortcuts="ArrowLeft ArrowRight Home End"
             >
-              <div className="system-case-visual" aria-hidden="true">
-                <div className="system-case-visual-meta">
-                  <span>{project.number}</span>
-                  <span>{project.year}</span>
-                </div>
-                <strong className="system-case-mark">{project.visualMark}</strong>
-                <div className="system-case-flow">
-                  {project.flow.map((node, index) => (
-                    <span className="system-case-flow-item" key={node}>
-                      <span>{node}</span>
-                      {index < project.flow.length - 1 ? <i>→</i> : null}
-                    </span>
-                  ))}
-                </div>
-                <p>{project.category}</p>
-              </div>
+              <span aria-hidden="true">←</span>
+            </button>
+            <div className="case-carousel-position" aria-hidden="true">
+              <span>{String(activeCaseIndex + 1).padStart(2, "0")} / {String(caseCount).padStart(2, "0")}</span>
+              <strong>{copy.caseStudy.projects[activeCaseIndex].purpose}</strong>
+            </div>
+            <button
+              className="case-carousel-button case-carousel-next"
+              type="button"
+              aria-label={copy.caseStudy.next}
+              aria-controls="case-carousel-track"
+              aria-describedby="case-carousel-instructions"
+              onClick={() => goToCase(activeCaseIndex + 1)}
+              onKeyDown={handleCaseCarouselKeyDown}
+              aria-keyshortcuts="ArrowLeft ArrowRight Home End"
+            >
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
 
-              <div className="system-case-content">
-                <p className="system-case-eyebrow">
-                  {project.number} / {project.year} / {project.category}
-                </p>
-                <h3>{project.title}</h3>
-                <p className="system-case-summary">{project.summary}</p>
-
-                <dl className="system-case-facts">
-                  {project.facts.map((fact) => (
-                    <div key={fact.id}>
-                      <dt>{fact.label}</dt>
-                      <dd>{fact.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-
-                <div className="system-case-role">
-                  <span>{copy.caseStudy.roleLabel}</span>
-                  <strong>{project.role}</strong>
-                  <p>{project.roleNote}</p>
-                </div>
-
-                <ul className="system-case-tags" aria-label={project.tagsLabel}>
-                  {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                </ul>
-
-                <a
-                  className="system-case-cta"
-                  href="#contact"
-                  aria-label={`${copy.caseStudy.discuss}: ${project.title}`}
+          <div className="case-carousel-viewport">
+            <div
+              className="case-carousel-track"
+              id="case-carousel-track"
+              style={{ transform: `translate3d(-${activeCaseIndex * 100}%, 0, 0)` }}
+            >
+              {copy.caseStudy.projects.map((project, index) => (
+                <article
+                  className="system-case"
+                  id={`case-${project.id}`}
+                  data-case-id={project.id}
+                  data-active={index === activeCaseIndex ? "true" : "false"}
+                  key={project.id}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${index + 1} / ${caseCount}: ${project.title}`}
+                  aria-hidden={index !== activeCaseIndex}
                 >
-                  {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-          ))}
+                  <figure className="system-case-media">
+                    <div className="system-case-media-meta">
+                      <span>{copy.caseStudy.imageLabel}</span>
+                      <span>{project.number} / {project.year}</span>
+                    </div>
+                    <div className="system-case-image-frame">
+                      {/* A plain image keeps the same self-hosted asset path in both the Sites and GitHub Pages builds. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className="system-case-image"
+                        src={project.imageSrc}
+                        alt={project.imageAlt}
+                        width={project.imageWidth}
+                        height={project.imageHeight}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                      />
+                    </div>
+                    <div className="system-case-flow" aria-hidden="true">
+                      {project.flow.map((node, flowIndex) => (
+                        <span className="system-case-flow-item" key={node}>
+                          <span>{node}</span>
+                          {flowIndex < project.flow.length - 1 ? <i>→</i> : null}
+                        </span>
+                      ))}
+                    </div>
+                    <figcaption>{project.imageNote}</figcaption>
+                  </figure>
+
+                  <div className="system-case-content">
+                    <span className="system-case-purpose">{project.purpose}</span>
+                    <p className="system-case-eyebrow">
+                      {project.number} / {project.year} / {project.category}
+                    </p>
+                    <h3>{project.title}</h3>
+                    <p className="system-case-summary">{project.summary}</p>
+
+                    <dl className="system-case-facts">
+                      {project.facts.map((fact) => (
+                        <div key={fact.id}>
+                          <dt>{fact.label}</dt>
+                          <dd>{fact.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+
+                    <div className="system-case-role">
+                      <span>{copy.caseStudy.roleLabel}</span>
+                      <strong>{project.role}</strong>
+                      <p>{project.roleNote}</p>
+                    </div>
+
+                    <ul className="system-case-tags" aria-label={project.tagsLabel}>
+                      {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                    </ul>
+
+                    <a
+                      className="system-case-cta"
+                      href="#contact"
+                      aria-label={`${copy.caseStudy.discuss}: ${project.title}`}
+                      tabIndex={index === activeCaseIndex ? 0 : -1}
+                    >
+                      {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+          <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {caseAnnouncement}
+          </p>
         </div>
         <p className="case-disclosure section-reveal">{copy.caseStudy.disclosure}</p>
       </section>
