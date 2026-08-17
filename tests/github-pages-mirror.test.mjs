@@ -24,10 +24,10 @@ test("GitHub Actions deploys the dedicated static build", async () => {
   const workflow = await read(".github/workflows/deploy-pages.yml");
 
   assert.match(workflow, /npm run build:github-pages/);
-  assert.match(workflow, /actions\/configure-pages@v5/);
-  assert.match(workflow, /actions\/upload-pages-artifact@v3/);
+  assert.match(workflow, /actions\/configure-pages@v6/);
+  assert.match(workflow, /actions\/upload-pages-artifact@v5/);
   assert.match(workflow, /path: dist-github-pages/);
-  assert.match(workflow, /actions\/deploy-pages@v4/);
+  assert.match(workflow, /actions\/deploy-pages@v5/);
 });
 
 test("GitHub Pages output contains pre-rendered portfolio content", async () => {
