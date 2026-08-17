@@ -2,6 +2,13 @@
 
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { siteCopy, type Locale } from "./site-copy";
+import {
+  GITHUB_PROFILE_URL,
+  casePath,
+  homeStructuredData,
+  jsonLd,
+  localePaths,
+} from "./seo";
 
 type Theme = "dark" | "light";
 type CaseDirection = "next" | "previous";
@@ -13,11 +20,15 @@ const contactEmails = [
   { label: "GMAIL", address: "wmc837911722@gmail.com" },
 ];
 
-export default function Home() {
+type HomeProps = {
+  initialLocale?: Locale;
+};
+
+export default function Home({ initialLocale = "zh" }: HomeProps) {
   const pageRef = useRef<HTMLElement>(null);
   const copyResetRef = useRef<number | null>(null);
   const caseTransitionRef = useRef<number | null>(null);
-  const [locale, setLocale] = useState<Locale>("zh");
+  const [locale, setLocale] = useState<Locale>(initialLocale);
   const [theme, setTheme] = useState<Theme>("dark");
   const [preferenceAnnouncement, setPreferenceAnnouncement] = useState("");
   const [activeCaseIndex, setActiveCaseIndex] = useState(0);
@@ -28,6 +39,7 @@ export default function Home() {
     "idle" | "copying" | "copied" | "failed"
   >("idle");
   const copy = siteCopy[locale];
+  const structuredData = homeStructuredData(locale);
   const collaborationBrief = copy.contact.mailTemplate;
   const caseCount = copy.caseStudy.projects.length;
 
@@ -135,6 +147,7 @@ export default function Home() {
         nextLocale === "en" ? "changedToEnglish" : "changedToChinese"
       ],
     );
+    window.location.assign(`${localePaths[nextLocale]}${window.location.hash}`);
   };
 
   const toggleTheme = () => {
@@ -160,19 +173,10 @@ export default function Home() {
     const root = document.documentElement;
     const frame = window.requestAnimationFrame(() => {
       setTheme(root.dataset.theme === "light" ? "light" : "dark");
-
-      try {
-        const savedLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
-        if (savedLocale === "zh" || savedLocale === "en") {
-          setLocale(savedLocale);
-          root.lang = savedLocale === "zh" ? "zh-CN" : "en";
-        }
-      } catch {
-        // Keep the server-rendered Chinese default when storage is unavailable.
-      }
+      root.lang = initialLocale === "zh" ? "zh-CN" : "en";
     });
     return () => window.cancelAnimationFrame(frame);
-  }, []);
+  }, [initialLocale]);
 
   useEffect(() => {
     document.title = copy.seo.title;
@@ -419,7 +423,11 @@ export default function Home() {
   }, []);
 
   return (
-    <main ref={pageRef}>
+    <main ref={pageRef} lang={locale === "zh" ? "zh-CN" : "en"}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
+      />
       <div className="scroll-progress" aria-hidden="true" />
 
       <header className="site-header">
@@ -767,14 +775,23 @@ export default function Home() {
                       {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
                     </ul>
 
-                    <a
-                      className="system-case-cta"
-                      href="#contact"
-                      aria-label={`${copy.caseStudy.discuss}: ${project.title}`}
-                      tabIndex={index === activeCaseIndex ? 0 : -1}
-                    >
-                      {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
-                    </a>
+                    <div className="system-case-actions">
+                      <a
+                        className="system-case-detail-link"
+                        href={casePath(project.id)}
+                        tabIndex={index === activeCaseIndex ? 0 : -1}
+                      >
+                        {locale === "zh" ? "查看完整案例" : "Read the full case"}<span aria-hidden="true">↗</span>
+                      </a>
+                      <a
+                        className="system-case-cta"
+                        href="#contact"
+                        aria-label={`${copy.caseStudy.discuss}: ${project.title}`}
+                        tabIndex={index === activeCaseIndex ? 0 : -1}
+                      >
+                        {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
+                      </a>
+                    </div>
                   </div>
                   </article>
                 );
@@ -806,6 +823,7 @@ export default function Home() {
       <section className="about" id="about">
         <p className="about-mark" aria-hidden="true">风雨</p>
         <div className="about-copy section-reveal">
+          <h2 className="sr-only">{copy.about.labelLocal}</h2>
           <div className="section-label blue-label"><span>06</span><p>{copy.about.label}<br />{copy.about.labelLocal}</p></div>
           <blockquote>{copy.about.quote}</blockquote>
           <p>{copy.about.body}</p>
@@ -865,7 +883,10 @@ export default function Home() {
       <footer>
         <p>风雨® — FORWARD DEPLOYED ENGINEER</p>
         <p>{copy.footer.tagline}</p>
-        <a href="#top">{copy.footer.backToTop}</a>
+        <div className="footer-links">
+          <a href={GITHUB_PROFILE_URL} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a href="#top">{copy.footer.backToTop}</a>
+        </div>
       </footer>
     </main>
   );

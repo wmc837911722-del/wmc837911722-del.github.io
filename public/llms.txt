@@ -1,0 +1,24 @@
+# 风雨 / Fengyu — Forward Deployed Engineer
+
+> 风雨帮助团队识别值得投入的 AI 场景，完成可用原型、系统集成、生产上线与持续优化。
+
+Canonical website: https://wmc837911722-del.github.io/
+English overview: https://wmc837911722-del.github.io/en/
+Contact: https://wmc837911722-del.github.io/#contact
+GitHub profile: https://github.com/wmc837911722-del
+
+## Services
+
+- AI 场景诊断与路线设计
+- 可用原型与价值验证
+- 系统集成与生产上线
+- 运行优化与团队交接
+
+## Public case studies
+
+- https://wmc837911722-del.github.io/cases/mental-health-platform/
+- https://wmc837911722-del.github.io/cases/industrial-compliance-platform/
+- https://wmc837911722-del.github.io/cases/sre-copilot/
+- https://wmc837911722-del.github.io/cases/content-orchestration/
+
+Only information approved for disclosure appears on the site. Undisclosed client data, team details, and measured outcomes remain confidential.

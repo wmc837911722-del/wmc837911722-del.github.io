@@ -26,19 +26,21 @@ test("the locale dictionary covers the full commercial page in both languages", 
   assert.match(copy, /AI delivery project \| Initial use-case discussion/);
 });
 
-test("preferences restore safely after hydration and persist explicit choices", async () => {
+test("theme restores safely while language choices navigate to indexable routes", async () => {
   const [page, layout, githubHtml] = await Promise.all([
     read("app/page.tsx"),
     read("app/layout.tsx"),
     read("github-pages/index.html"),
   ]);
 
-  assert.match(page, /useState<Locale>\("zh"\)/);
+  assert.match(page, /initialLocale\s*=\s*"zh"/);
+  assert.match(page, /useState<Locale>\(initialLocale\)/);
   assert.match(page, /useState<Theme>\("dark"\)/);
   assert.doesNotMatch(page, /useState\(\(\)\s*=>[\s\S]{0,100}localStorage/);
-  assert.match(page, /savedLocale === "zh" \|\| savedLocale === "en"/);
+  assert.doesNotMatch(page, /savedLocale === "zh" \|\| savedLocale === "en"/);
   assert.match(page, /window\.localStorage\.setItem\(LOCALE_STORAGE_KEY/);
   assert.match(page, /window\.localStorage\.setItem\(THEME_STORAGE_KEY/);
+  assert.match(page, /window\.location\.assign\(`\$\{localePaths\[nextLocale\]\}/);
   assert.match(layout, /data-theme="dark"/);
   assert.match(layout, /prefers-color-scheme: light/);
   assert.match(githubHtml, /data-theme="dark"/);

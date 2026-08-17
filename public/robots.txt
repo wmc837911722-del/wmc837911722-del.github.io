@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wmc837911722-del.github.io/sitemap.xml
