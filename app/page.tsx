@@ -367,6 +367,7 @@ export default function Home() {
         </p>
         <nav aria-label="主导航">
           <a href="#services">服务</a>
+          <a href="#case-study">案例</a>
           <a href="#process">方法</a>
           <a href="#about">关于</a>
           <a className="nav-cta" href="#contact">
@@ -400,7 +401,7 @@ export default function Home() {
         </h1>
         <div className="hero-bottom">
           <div className="hero-copy">
-            <span className="copy-number">01 / INTRODUCTION</span>
+            <span className="copy-number">00 / INTRODUCTION</span>
             <p>
               我是风雨，一名
               FDE。我与业务团队并肩，从问题定义到原型验证，再到生产系统集成，完成
@@ -518,10 +519,139 @@ export default function Home() {
         </div>
       </section>
 
+      <section
+        className="section case-study"
+        id="case-study"
+        aria-labelledby="case-study-title"
+      >
+        <div className="section-heading case-heading">
+          <div className="section-label section-reveal">
+            <span>03</span>
+            <p>
+              PARTICIPATED WORK
+              <br />
+              参与案例
+            </p>
+          </div>
+          <div className="section-title section-reveal">
+            <p className="kicker">PUBLIC PROJECT / VERIFIED ONLINE</p>
+            <h2 id="case-study-title">
+              不只讲能力，
+              <br />
+              也展示参与过的项目。
+            </h2>
+          </div>
+        </div>
+
+        <article className="case-feature">
+          <a
+            className="case-preview-link section-reveal"
+            href="https://cs-wude.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="访问 WUDE Personal Site 参与案例（新窗口打开）"
+          >
+            <div className="case-preview-bar" aria-hidden="true">
+              <span className="case-preview-dots">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span>cs-wude.github.io</span>
+              <strong>LIVE ↗</strong>
+            </div>
+            <div className="case-preview-canvas" aria-hidden="true">
+              <p>ENGINEERING PORTFOLIO / 2025—2026</p>
+              <div className="case-preview-title">
+                <span>WUDE</span>
+                <strong>PERSONAL SITE</strong>
+              </div>
+              <div className="case-preview-rail">
+                <span>PROJECTS</span>
+                <span>NOTES</span>
+                <span>UPDATES</span>
+              </div>
+              <div className="case-preview-flow">
+                <span>SOURCE</span>
+                <i>→</i>
+                <span>SNAPSHOT</span>
+                <i>→</i>
+                <span>PUBLISH</span>
+              </div>
+            </div>
+          </a>
+
+          <div className="case-info section-reveal">
+            <p className="case-kicker">WUDE / PERSONAL SITE · GITHUB PAGES</p>
+            <h3>
+              把项目经验、技术判断与工程手记，沉淀成可持续更新的个人站。
+            </h3>
+            <p className="case-summary">
+              这是一个使用原生 HTML、CSS 和 JavaScript
+              构建的工程作品集。站点通过 GitHub Actions
+              生成静态内容快照并发布到 GitHub Pages，访客浏览时不依赖在线后端。
+            </p>
+
+            <div className="case-role">
+              <span>MY ROLE / 我的角色</span>
+              <strong>项目参与者</strong>
+              <p>参与关系由风雨本人确认；具体职责范围尚未在公开资料中披露。</p>
+            </div>
+
+            <ul className="case-facts">
+              <li>
+                <span>01</span>
+                <div>
+                  <strong>原生静态架构</strong>
+                  <p>HTML / CSS / JavaScript，同源资源减少外部依赖。</p>
+                </div>
+              </li>
+              <li>
+                <span>02</span>
+                <div>
+                  <strong>自动内容快照</strong>
+                  <p>由 GitHub Actions 生成更新数据并完成自动发布。</p>
+                </div>
+              </li>
+              <li>
+                <span>03</span>
+                <div>
+                  <strong>持续内容体系</strong>
+                  <p>覆盖项目索引、技术手记、动态与个人介绍。</p>
+                </div>
+              </li>
+            </ul>
+
+            <div className="case-actions">
+              <a
+                href="https://cs-wude.github.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                查看线上项目 <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href="https://github.com/CS-wude/CS-wude.github.io"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                查看公开仓库 <span aria-hidden="true">↗</span>
+              </a>
+              <a href="#contact">
+                沟通类似项目 <span aria-hidden="true">→</span>
+              </a>
+            </div>
+            <p className="case-disclosure">
+              项目技术与发布信息来自公开网站及代码仓库；参与关系由风雨本人确认。
+            </p>
+          </div>
+        </article>
+      </section>
+
       <section className="section process" id="process">
         <div className="section-heading compact">
           <div className="section-label section-reveal">
-            <span>03</span>
+            <span>04</span>
             <p>
               PROCESS
               <br />
@@ -557,7 +687,7 @@ export default function Home() {
         </p>
         <div className="about-copy section-reveal">
           <div className="section-label blue-label">
-            <span>04</span>
+            <span>05</span>
             <p>
               PHILOSOPHY
               <br />
@@ -578,7 +708,7 @@ export default function Home() {
         <div className="cursor-glow" aria-hidden="true" />
         <div className="contact-head section-reveal">
           <div className="section-label dark-label">
-            <span>05</span>
+            <span>06</span>
             <p>
               CONTACT
               <br />

@@ -38,3 +38,23 @@ test("non-interactive capability and process rows do not mimic buttons", () => {
   assert.doesNotMatch(css, /\.capability-card:hover\s*\{/);
   assert.doesNotMatch(css, /\.steps\s+li:hover\s*\{/);
 });
+
+test("participation case is discoverable and uses safe external links", () => {
+  assert.match(page, /<a href="#case-study">案例<\/a>/);
+  assert.match(page, /id="case-study"/);
+  assert.match(page, /<strong>项目参与者<\/strong>/);
+  assert.match(page, /href="https:\/\/cs-wude\.github\.io\/"/);
+  assert.match(
+    page,
+    /href="https:\/\/github\.com\/CS-wude\/CS-wude\.github\.io"/,
+  );
+  assert.match(page, /target="_blank"\s+rel="noopener noreferrer"/);
+  assert.doesNotMatch(page, /独立完成|独立开发 WUDE|主导 WUDE/);
+});
+
+test("participation case layout prevents fixed-width overflow", () => {
+  assert.match(css, /\.case-feature\s*\{[^}]*minmax\(0,1\.06fr\)[^}]*minmax\(0,\.94fr\)/s);
+  assert.match(css, /\.case-info\s*\{[^}]*min-width:\s*0/s);
+  assert.match(css, /\.case-preview-link\s*\{[^}]*overflow:\s*hidden/s);
+  assert.doesNotMatch(css, /\.case-(?:feature|info|preview-link)[^{]*\{[^}]*width:\s*100vw/s);
+});

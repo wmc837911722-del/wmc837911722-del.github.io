@@ -36,6 +36,9 @@ test("GitHub Pages output contains pre-rendered portfolio content", async () => 
   assert.match(html, /深入业务现场/);
   assert.match(html, /id="services"/);
   assert.match(html, /class="capability-section"/);
+  assert.match(html, /id="case-study"/);
+  assert.match(html, /WUDE \/ PERSONAL SITE/);
+  assert.match(html, /https:\/\/cs-wude\.github\.io\//);
   assert.match(html, /id="process"/);
   assert.match(html, /id="contact"/);
   assert.doesNotMatch(html, /chatgpt\.site/);

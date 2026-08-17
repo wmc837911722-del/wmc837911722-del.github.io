@@ -33,6 +33,11 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /<title>风雨 — Forward Deployed Engineer<\/title>/);
   assert.match(html, /深入业务现场/);
   assert.match(html, /id="services"/);
+  assert.match(html, /id="case-study"/);
+  assert.match(html, /WUDE \/ PERSONAL SITE/);
+  assert.match(html, /项目参与者/);
+  assert.match(html, /https:\/\/cs-wude\.github\.io\//);
+  assert.match(html, /https:\/\/github\.com\/CS-wude\/CS-wude\.github\.io/);
   assert.match(html, /id="process"/);
   assert.match(html, /id="about"/);
   assert.match(html, /id="contact"/);

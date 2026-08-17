@@ -118,6 +118,19 @@ FDE 的工作，就是进入这些不确定性中，把模糊问题拆成可验�
 
 [访问线上网站](https://wmc837911722-del.github.io/) · [查看源码](https://github.com/wmc837911722-del/wmc837911722-del.github.io)
 
+### WUDE Personal Site｜参与项目
+
+据风雨本人确认，我参与过 WUDE Personal Site 项目。该项目是一个持续更新的工程作品与技术内容站：
+
+- 使用原生 HTML、CSS 与 JavaScript 构建
+- 通过 GitHub Actions 生成静态内容快照并自动发布
+- 部署在 GitHub Pages，页面运行时不依赖在线后端
+- 内容覆盖项目索引、技术手记、动态与个人介绍
+
+目前公开资料没有披露我负责的具体模块，因此这里只陈述参与关系和可验证的项目事实，不把团队成果表述为个人独立成果。
+
+[访问 WUDE 项目](https://cs-wude.github.io/) · [查看公开仓库](https://github.com/CS-wude/CS-wude.github.io)
+
 ## 发起合作
 
 如果你有一个尚未验证的 AI 机会，或项目正卡在原型、系统集成、上线和迭代阶段，可以直接联系我。
