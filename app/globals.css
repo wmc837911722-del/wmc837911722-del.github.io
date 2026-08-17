@@ -176,6 +176,12 @@ nav > a:not(.nav-cta):hover::after { transform: scaleX(1); transform-origin: lef
 .hero-kicker { display: flex; justify-content: space-between; gap: 28px; max-width: 830px; color: #aeb5c1; font: 10px var(--font-geist-mono), monospace; letter-spacing: .15em; }
 .hero-kicker span:first-child { color: var(--ice); }
 h1 { max-width: 1180px; margin: clamp(60px,8vh,96px) 0 clamp(58px,7vh,86px); font-size: clamp(54px,8.5vw,136px); line-height: .88; letter-spacing: -.078em; font-weight: 760; }
+html[lang="zh-CN"] h1 {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+  font-weight: 650;
+}
 .hero-line-wrap { display: block; overflow: hidden; padding: 0 .12em .16em 0; margin: 0 -.12em -.16em 0; }
 .hero-line { display: block; will-change: transform; }
 h1 em { padding-left: .65em; color: transparent; -webkit-text-stroke: 1.35px var(--ice); font-style: normal; }

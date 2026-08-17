@@ -11,6 +11,24 @@
     <script>
       (function () {
         try {
+          var reset = function () {
+            if (!location.hash) {
+              history.scrollRestoration = "manual";
+              scrollTo(0, 0);
+            }
+          };
+          reset();
+          addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+              reset();
+            }
+          });
+        } catch (error) {}
+      })();
+    </script>
+    <script>
+      (function () {
+        try {
           var key = "fengyu:theme:v1";
           var saved = localStorage.getItem(key);
           var theme =
