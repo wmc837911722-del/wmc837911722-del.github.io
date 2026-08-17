@@ -18,11 +18,7 @@
             }
           };
           reset();
-          addEventListener("pageshow", function (event) {
-            if (event.persisted) {
-              reset();
-            }
-          });
+          addEventListener("pageshow", reset);
         } catch (error) {}
       })();
     </script>

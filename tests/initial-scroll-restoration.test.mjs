@@ -98,9 +98,10 @@ test("the earliest boot script restores root pages to the top without overriding
       root.pageshow({ persisted: false });
       assert.deepEqual(
         root.scrollCalls,
-        [],
-        "a normal pageshow event should not trigger a second jump",
+        [[0, 0]],
+        "a normal pageshow event should win the race with late browser restoration",
       );
+      root.scrollCalls.length = 0;
       root.pageshow({ persisted: true });
       assert.deepEqual(
         root.scrollCalls,

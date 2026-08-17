@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 const { title, description } = siteCopy.zh.seo;
 const siteUrl = "https://fengyu-product-tech.mystic-ox-8159.chatgpt.site";
-const scrollBootScript = `(function(){try{var reset=function(){if(!location.hash){history.scrollRestoration='manual';scrollTo(0,0);}};reset();addEventListener('pageshow',function(event){if(event.persisted){reset();}});}catch(e){}})();`;
+const scrollBootScript = `(function(){try{var reset=function(){if(!location.hash){history.scrollRestoration='manual';scrollTo(0,0);}};reset();addEventListener('pageshow',reset);}catch(e){}})();`;
 const themeBootScript = `(function(){try{var key='fengyu:theme:v1';var saved=localStorage.getItem(key);var theme=saved==='light'||saved==='dark'?saved:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;}catch(e){document.documentElement.dataset.theme='dark';}})();`;
 
 export const metadata: Metadata = {
