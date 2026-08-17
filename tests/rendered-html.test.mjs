@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
+async function render(path = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
+    new Request(new URL(path, "http://localhost/"), {
       headers: { accept: "text/html" },
     }),
     {
@@ -22,6 +22,19 @@ async function render() {
     },
   );
 }
+
+test("server-renders the English route with an English root document", async () => {
+  const response = await render("/en/");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+  assert.match(html, /<html lang="en" data-theme="dark" data-motion="pending">/);
+  assert.match(html, /<main[^>]*lang="en"/);
+  assert.match(html, /<title>Fengyu \| FDE for AI Product Delivery<\/title>/);
+  assert.match(html, /Turn real problems/);
+  assert.doesNotMatch(html, /document\.documentElement\.lang\s*=/);
+});
 
 test("server-renders the complete FDE portfolio", async () => {
   const response = await render();
@@ -63,7 +76,7 @@ test("server-renders the complete FDE portfolio", async () => {
 
 test("loads GSAP after mount and cleans up responsive animations", async () => {
   const [page, css] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/home.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 

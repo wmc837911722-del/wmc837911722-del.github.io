@@ -20,7 +20,7 @@ const contactEmails = [
   { label: "GMAIL", address: "wmc837911722@gmail.com" },
 ];
 
-type HomeProps = {
+export type HomeProps = {
   initialLocale?: Locale;
 };
 
@@ -779,9 +779,10 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
                       <a
                         className="system-case-detail-link"
                         href={casePath(project.id)}
+                        hrefLang="zh-CN"
                         tabIndex={index === activeCaseIndex ? 0 : -1}
                       >
-                        {locale === "zh" ? "查看完整案例" : "Read the full case"}<span aria-hidden="true">↗</span>
+                        {locale === "zh" ? "查看完整案例" : "Read the full case (Chinese)"}<span aria-hidden="true">↗</span>
                       </a>
                       <a
                         className="system-case-cta"

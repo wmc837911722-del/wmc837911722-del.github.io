@@ -7,7 +7,7 @@ const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 test("GitHub Pages entry reuses the existing portfolio", async () => {
   const entry = await read("github-pages/src/main.tsx");
 
-  assert.match(entry, /import Home from "\.\.\/\.\.\/app\/page"/);
+  assert.match(entry, /import Home from "\.\.\/\.\.\/app\/home"/);
   assert.match(entry, /import "\.\.\/\.\.\/app\/globals\.css"/);
 });
 
@@ -27,6 +27,8 @@ test("GitHub Pages metadata and assets have no blocked external dependency", asy
     /<meta name="twitter:title" content="风雨｜FDE · AI 产品落地与系统交付" \/>/,
   );
   assert.match(html, /rel="canonical" href="https:\/\/wmc837911722-del\.github\.io\/"/);
+  assert.match(html, /rel="icon" href="\/favicon\.svg"/);
+  assert.doesNotMatch(html, /rel="icon" href="\.\/favicon\.svg"/);
   assert.doesNotMatch(html, /fonts\.googleapis|fonts\.gstatic|unpkg|jsdelivr/i);
 });
 

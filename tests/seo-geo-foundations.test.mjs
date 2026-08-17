@@ -139,6 +139,16 @@ function canonicalHref(html) {
   return canonical ? attribute(canonical, "href") : undefined;
 }
 
+function faviconHref(html) {
+  const icon = tags(html, "link").find((tag) =>
+    (attribute(tag, "rel") ?? "")
+      .toLowerCase()
+      .split(/\s+/)
+      .includes("icon"),
+  );
+  return icon ? attribute(icon, "href") : undefined;
+}
+
 function alternateHrefs(html) {
   return new Map(
     tags(html, "link")
@@ -153,11 +163,10 @@ function documentTitle(html) {
 
 function assertDocument(html, specification) {
   const lang = tags(html, "html").map((tag) => attribute(tag, "lang"))[0];
-  const contentLang = metadataContent(html, "name", "content-language");
-  const mainLang = tags(html, "main").map((tag) => attribute(tag, "lang"))[0];
-  assert.ok(
-    lang === specification.lang || (contentLang === specification.lang && mainLang === specification.lang),
-    `${specification.route} should declare its document language`,
+  assert.equal(
+    lang,
+    specification.lang,
+    `${specification.route} should declare its language on the raw root document`,
   );
   assert.equal(documentTitle(html), specification.pageTitle ?? specification.title);
   assert.equal(metadataContent(html, "name", "description"), specification.description);
@@ -293,6 +302,37 @@ function assertFactualLinkedData(html) {
   }
 }
 
+function assertStableLocalizedEntities(html) {
+  const entities = collectTypedEntities(extractJsonLd(html));
+  const websites = entities.filter((entity) => hasType(entity, "WebSite"));
+  const creativeWorks = entities.filter((entity) => hasType(entity, "CreativeWork"));
+
+  assert.equal(websites.length, 1, "each localized home should expose one WebSite entity");
+  assert.equal(websites[0]["@id"], `${primaryRoot}#website`);
+  assert.equal(websites[0].url, primaryRoot);
+  assert.deepEqual(
+    [...websites[0].inLanguage].sort(),
+    ["en", "zh-CN"],
+    "the canonical WebSite entity should describe the two indexable home languages",
+  );
+
+  assert.equal(creativeWorks.length, cases.length);
+  assert.deepEqual(
+    creativeWorks.map((work) => work.name).sort(),
+    cases.map((project) => project.title).sort(),
+    "localized home pages should reference the canonical Chinese case entities",
+  );
+  for (const work of creativeWorks) {
+    assert.equal(
+      work.inLanguage,
+      "zh-CN",
+      `${work.name} should not claim an English case page that is not published`,
+    );
+  }
+
+  return websites[0];
+}
+
 let sitesWorkerPromise;
 
 async function sitesWorker() {
@@ -387,6 +427,27 @@ test("both generated roots expose factual WebSite, Person, Service and CreativeW
   assertFactualLinkedData(sitesHtml);
 });
 
+test("localized homes keep one stable WebSite entity and do not invent English case pages", async () => {
+  const githubChinese = await readRequiredFile("dist-github-pages/index.html", "GitHub Pages Chinese root");
+  const githubEnglish = await readRequiredFile("dist-github-pages/en/index.html", "GitHub Pages English root");
+  const [sitesChineseResponse, sitesEnglishResponse] = await Promise.all([
+    fetchSitesDocument("/"),
+    fetchSitesDocument("/en/"),
+  ]);
+  assert.equal(sitesChineseResponse.status, 200);
+  assert.equal(sitesEnglishResponse.status, 200);
+
+  const websites = [
+    assertStableLocalizedEntities(githubChinese),
+    assertStableLocalizedEntities(githubEnglish),
+    assertStableLocalizedEntities(await sitesChineseResponse.text()),
+    assertStableLocalizedEntities(await sitesEnglishResponse.text()),
+  ];
+  for (const website of websites.slice(1)) {
+    assert.deepEqual(website, websites[0], "the same WebSite @id must not change meaning by locale");
+  }
+});
+
 test("GitHub Pages pre-renders an English page and four independently indexable case pages", async (t) => {
   for (const specification of [rootPages.zh, rootPages.en, ...cases]) {
     await t.test(specification.route, async () => {
@@ -395,6 +456,11 @@ test("GitHub Pages pre-renders an English page and four independently indexable 
         `GitHub Pages output for ${specification.route}`,
       );
       assertDocument(html, specification);
+      assert.equal(
+        faviconHref(html),
+        "/favicon.svg",
+        `${specification.route} should resolve its favicon from the site root`,
+      );
       if ("slug" in specification) assertCaseSocialMetadata(html, specification);
     });
   }

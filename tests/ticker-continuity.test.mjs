@@ -4,7 +4,7 @@ import test from "node:test";
 
 test("ticker keeps enough repeated, viewport-wide content to avoid a blank tail", async () => {
   const [page, css] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/home.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 

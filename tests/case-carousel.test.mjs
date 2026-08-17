@@ -22,7 +22,7 @@ const caseSection = (html) => {
 };
 
 test("case carousel exposes operable previous and next controls", async () => {
-  const page = await read("app/page.tsx");
+  const page = await read("app/home.tsx");
   const buttonTag = (modifier) =>
     page.match(
       new RegExp(
@@ -47,7 +47,7 @@ test("case carousel exposes operable previous and next controls", async () => {
 });
 
 test("case carousel supports keyboard navigation instead of requiring a pointer", async () => {
-  const page = await read("app/page.tsx");
+  const page = await read("app/home.tsx");
 
   assert.match(page, /onKeyDown=\{handleCaseCarouselKeyDown\}/);
   for (const key of ["ArrowLeft", "ArrowRight", "Home", "End"]) {
@@ -58,7 +58,7 @@ test("case carousel supports keyboard navigation instead of requiring a pointer"
 
 test("case carousel wraps through short direction-aware stacked transitions", async () => {
   const [page, css] = await Promise.all([
-    read("app/page.tsx"),
+    read("app/home.tsx"),
     read("app/globals.css"),
   ]);
   const carouselTag = page.match(
@@ -150,7 +150,7 @@ test("case carousel wraps through short direction-aware stacked transitions", as
 
 test("every project has a visible purpose label and an informative local image", async () => {
   const [page, copy] = await Promise.all([
-    read("app/page.tsx"),
+    read("app/home.tsx"),
     read("app/site-copy.ts"),
   ]);
 

@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import Home from "../page";
-import { absoluteSiteUrl } from "../seo";
-import { siteCopy } from "../site-copy";
+import Home from "../../home";
+import { absoluteSiteUrl } from "../../seo";
+import { siteCopy } from "../../site-copy";
 
 const { title, description } = siteCopy.en.seo;
 
 export const metadata: Metadata = {
   title,
   description,
-  other: { "content-language": "en" },
   alternates: {
     canonical: absoluteSiteUrl("/en/"),
     languages: {

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import CaseDetail from "../../case-detail";
-import { caseMetadata, getProject } from "../../seo";
-import { siteCopy } from "../../site-copy";
+import CaseDetail from "../../../case-detail";
+import { caseMetadata, getProject } from "../../../seo";
+import { siteCopy } from "../../../site-copy";
 
 type CasePageProps = {
   params: Promise<{ slug: string }>;

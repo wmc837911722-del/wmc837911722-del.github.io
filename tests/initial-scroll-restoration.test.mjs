@@ -17,7 +17,7 @@ function firstGithubHeadScript(html) {
 
 function firstLayoutHeadScript(layout) {
   const head = layout.match(/<head\b[^>]*>([\s\S]*?)<\/head>/)?.[1];
-  assert.ok(head, "app/layout.tsx should render a head element");
+  assert.ok(head, "app/root-document.tsx should render a head element");
 
   const identifier = head.match(
     /<script\b[^>]*dangerouslySetInnerHTML=\{\{\s*__html:\s*([A-Za-z_$][\w$]*)\s*\}\}[^>]*\/>/,
@@ -78,7 +78,7 @@ function runBootScript(script, hash) {
 
 test("the earliest boot script restores root pages to the top without overriding hash navigation", async (t) => {
   const [layout, githubHtml] = await Promise.all([
-    read("app/layout.tsx"),
+    read("app/root-document.tsx"),
     read("github-pages/index.html"),
   ]);
   const entries = [

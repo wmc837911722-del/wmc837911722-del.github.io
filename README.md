@@ -176,4 +176,4 @@ npm run lint
 npm test
 ```
 
-`app/page.tsx` 与 `app/globals.css` 是两套部署共同使用的页面源码。推送到 `main` 后，GitHub Actions 会自动构建并发布。
+`app/home.tsx` 与 `app/globals.css` 是两套部署共同使用的页面源码。推送到 `main` 后，GitHub Actions 会自动构建并发布。

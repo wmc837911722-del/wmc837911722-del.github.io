@@ -40,7 +40,7 @@ test("contact copy includes a useful WeChat QR invitation in both languages", as
 });
 
 test("contact section renders one self-hosted, accessible and lazy WeChat QR image while retaining both emails", async () => {
-  const page = await read("app/page.tsx");
+  const page = await read("app/home.tsx");
   const contact = contactSection(page);
   const imageTag = contact.match(
     /<img\b(?=[^>]*className="contact-wechat-qr")[^>]*>/s,

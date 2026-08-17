@@ -39,18 +39,15 @@ export function caseMetadata(locale: Locale, caseId: string) {
   };
 }
 
-function personNode(locale: Locale) {
-  const copy = siteCopy[locale];
-  const isChinese = locale === "zh";
-
+function personNode() {
   return {
     "@type": "Person",
     "@id": `${PRIMARY_SITE_URL}/#person`,
-    name: isChinese ? "风雨" : "Fengyu",
-    alternateName: isChinese ? "Fengyu" : "风雨",
+    name: "风雨",
+    alternateName: "Fengyu",
     url: absoluteSiteUrl("/"),
-    jobTitle: isChinese ? "前沿部署工程师" : "Forward Deployed Engineer",
-    description: copy.seo.description,
+    jobTitle: ["前沿部署工程师", "Forward Deployed Engineer"],
+    description: siteCopy.zh.seo.description,
     email: ["837911722@qq.com", "wmc837911722@gmail.com"],
     sameAs: [GITHUB_PROFILE_URL],
     knowsAbout: [
@@ -63,41 +60,61 @@ function personNode(locale: Locale) {
     ],
     contactPoint: {
       "@type": "ContactPoint",
-      contactType: isChinese ? "AI 项目合作" : "AI project inquiries",
+      contactType: ["AI 项目合作", "AI project inquiries"],
       email: ["837911722@qq.com", "wmc837911722@gmail.com"],
       url: absoluteSiteUrl("/#contact"),
     },
   };
 }
 
-function websiteNode(locale: Locale) {
-  const copy = siteCopy[locale];
-
+function websiteNode() {
   return {
     "@type": "WebSite",
     "@id": `${PRIMARY_SITE_URL}/#website`,
-    url: absoluteSiteUrl(localePaths[locale]),
-    name: copy.seo.title,
-    description: copy.seo.description,
-    inLanguage: locale === "zh" ? "zh-CN" : "en",
+    url: absoluteSiteUrl("/"),
+    name: "风雨 FDE",
+    alternateName: "Fengyu FDE",
+    description: siteCopy.zh.seo.description,
+    inLanguage: ["zh-CN", "en"],
     creator: { "@id": `${PRIMARY_SITE_URL}/#person` },
   };
 }
 
-function serviceNodes(locale: Locale) {
-  return siteCopy[locale].services.map((service) => ({
-    "@type": "Service",
-    "@id": `${PRIMARY_SITE_URL}/#service-${service.id}`,
-    name: service.title,
-    description: service.description,
-    serviceType: service.tag,
-    provider: { "@id": `${PRIMARY_SITE_URL}/#person` },
-    url: absoluteSiteUrl("/#services"),
-  }));
+function webPageNode(locale: Locale) {
+  const copy = siteCopy[locale];
+  const url = absoluteSiteUrl(localePaths[locale]);
+
+  return {
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: copy.seo.title,
+    description: copy.seo.description,
+    inLanguage: locale === "zh" ? "zh-CN" : "en",
+    isPartOf: { "@id": `${PRIMARY_SITE_URL}/#website` },
+    about: { "@id": `${PRIMARY_SITE_URL}/#person` },
+  };
 }
 
-function projectNodes(locale: Locale) {
-  return siteCopy[locale].caseStudy.projects.map((project) => ({
+function serviceNodes() {
+  return siteCopy.zh.services.map((service, index) => {
+    const englishService = siteCopy.en.services[index];
+
+    return {
+      "@type": "Service",
+      "@id": `${PRIMARY_SITE_URL}/#service-${service.id}`,
+      name: service.title,
+      alternateName: englishService?.title,
+      description: [service.description, englishService?.description].filter(Boolean),
+      serviceType: [service.tag, englishService?.tag].filter(Boolean),
+      provider: { "@id": `${PRIMARY_SITE_URL}/#person` },
+      url: absoluteSiteUrl("/#services"),
+    };
+  });
+}
+
+function projectNodes() {
+  return siteCopy.zh.caseStudy.projects.map((project) => ({
     "@type": "CreativeWork",
     "@id": `${absoluteSiteUrl(casePath(project.id))}#case-study`,
     url: absoluteSiteUrl(casePath(project.id)),
@@ -105,7 +122,7 @@ function projectNodes(locale: Locale) {
     description: project.summary,
     about: project.purpose,
     image: absoluteSiteUrl(project.imageSrc),
-    inLanguage: ["zh-CN", "en"],
+    inLanguage: "zh-CN",
     keywords: project.tags,
     contributor: { "@id": `${PRIMARY_SITE_URL}/#person` },
     isPartOf: { "@id": `${PRIMARY_SITE_URL}/#website` },
@@ -116,10 +133,11 @@ export function homeStructuredData(locale: Locale) {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      personNode(locale),
-      websiteNode(locale),
-      ...serviceNodes(locale),
-      ...projectNodes(locale),
+      personNode(),
+      websiteNode(),
+      webPageNode(locale),
+      ...serviceNodes(),
+      ...projectNodes(),
     ],
   };
 }
@@ -132,7 +150,8 @@ export function caseStructuredData(locale: Locale, caseId: string) {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      personNode(locale),
+      personNode(),
+      websiteNode(),
       {
         "@type": "CreativeWork",
         "@id": `${canonical}#case-study`,

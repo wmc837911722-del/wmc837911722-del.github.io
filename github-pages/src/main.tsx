@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import CaseDetail from "../../app/case-detail";
-import Home from "../../app/page";
+import Home from "../../app/home";
 import { getProject } from "../../app/seo";
 import "../../app/globals.css";
 import "./github-pages.css";

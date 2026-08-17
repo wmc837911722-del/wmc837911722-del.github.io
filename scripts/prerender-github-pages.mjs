@@ -79,7 +79,7 @@ async function writeRoute(template, route, markup) {
 
 try {
   const [{ default: Home }, { default: CaseDetail }, copyModule, seoModule] = await Promise.all([
-    server.ssrLoadModule("/app/page.tsx"),
+    server.ssrLoadModule("/app/home.tsx"),
     server.ssrLoadModule("/app/case-detail.tsx"),
     server.ssrLoadModule("/app/site-copy.ts"),
     server.ssrLoadModule("/app/seo.ts"),

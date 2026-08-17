@@ -28,8 +28,8 @@ test("the locale dictionary covers the full commercial page in both languages", 
 
 test("theme restores safely while language choices navigate to indexable routes", async () => {
   const [page, layout, githubHtml] = await Promise.all([
-    read("app/page.tsx"),
-    read("app/layout.tsx"),
+    read("app/home.tsx"),
+    read("app/root-document.tsx"),
     read("github-pages/index.html"),
   ]);
 
@@ -49,7 +49,7 @@ test("theme restores safely while language choices navigate to indexable routes"
 
 test("the public project never sends visitors to the source owner's pages", async () => {
   const sources = await Promise.all([
-    read("app/page.tsx"),
+    read("app/home.tsx"),
     read("app/site-copy.ts"),
     read("README.md"),
     read("work/github-profile/README.md"),
