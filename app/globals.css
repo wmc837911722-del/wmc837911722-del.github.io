@@ -259,6 +259,7 @@ html[lang="en"] .hero-copy { grid-template-columns: 150px minmax(280px,520px); }
 .partner-marquee-toolbar { min-height: 44px; margin-bottom: 12px; display: flex; justify-content: flex-end; }
 .partner-marquee-toggle { min-width: 44px; min-height: 44px; padding: 0 16px; color: var(--interactive-fg); background: var(--interactive-bg); border: 1px solid var(--interactive-bg); cursor: pointer; font: 10px var(--font-geist-mono),monospace; letter-spacing: .08em; transition: color .2s ease, background-color .2s ease; }
 .partner-marquee-toggle:hover { color: var(--fixed-night); background: var(--blue-bright); }
+.partner-marquee-toggle[aria-pressed="true"] { color: var(--fixed-night); background: var(--blue-bright); }
 .partner-marquee-toggle:focus-visible { outline-offset: 3px; }
 .partner-marquee { overflow: hidden; background: var(--line-light); border: 1px solid var(--line-light); }
 .partner-marquee-track { min-width: max-content; display: flex; width: max-content; animation: partner-marquee-scroll 42s linear infinite; will-change: transform; }

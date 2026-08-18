@@ -137,8 +137,8 @@ test("partner wall scrolls only verified brands and explicit visual placeholders
   assert.match(page, /aria-controls="brand-marquee-track"/);
   assert.match(page, /aria-pressed=\{isPartnerMarqueePaused\}/);
   assert.match(page, /setIsPartnerMarqueePaused\(\(paused\) => !paused\)/);
-  assert.match(page, /copy\.partners\.resumeMotion/);
-  assert.match(page, /copy\.partners\.pauseMotion/);
+  assert.match(page, />\s*\{copy\.partners\.pauseMotion\}\s*<\/button>/);
+  assert.doesNotMatch(page, /copy\.partners\.resumeMotion/);
   assert.match(page, /className="partner-wall-footer"/);
   assert.doesNotMatch(copy, /\bwude\b|WUDE 项目团队|WUDE project team/i);
   assert.match(copy, /宁波复能稀土新材料股份有限公司/);

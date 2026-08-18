@@ -657,7 +657,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             aria-pressed={isPartnerMarqueePaused}
             onClick={() => setIsPartnerMarqueePaused((paused) => !paused)}
           >
-            {isPartnerMarqueePaused ? copy.partners.resumeMotion : copy.partners.pauseMotion}
+            {copy.partners.pauseMotion}
           </button>
         </div>
         <div className="partner-marquee-shell">

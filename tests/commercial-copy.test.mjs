@@ -140,8 +140,8 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
       assert.match(
         placeholder.note,
         locale === "zh"
-          ? /不代表.*(?:客户|品牌)/
-          : /does not identify a specific public brand.*not a client claim/i,
+          ? /不对应.*客户.*合作.*公开品牌.*不构成.*品牌背书/
+          : /does not identify a client, collaboration or public brand.*not an endorsement/i,
       );
     }
   }
@@ -150,11 +150,20 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     /\bwude\b|WUDE 项目团队|WUDE project team/i,
   );
   assert.match(siteCopy.zh.partners.intro, /获得(?:公开)?(?:授权|许可)/);
+  assert.match(siteCopy.zh.partners.intro, /纯视觉占位/);
+  assert.match(siteCopy.zh.partners.intro, /不对应.*客户.*合作.*公开品牌.*不构成.*品牌背书/);
+  assert.match(siteCopy.zh.partners.aria, /视觉占位.*不代表客户、合作或品牌背书/);
   assert.match(siteCopy.zh.partners.intro, /并未完整展示.*因保密约定/);
   assert.match(
     siteCopy.en.partners.intro,
     /explicit permission|approved (?:for disclosure|information)|only with permission/i,
   );
+  assert.match(siteCopy.en.partners.intro, /visual placeholders/i);
+  assert.match(
+    siteCopy.en.partners.intro,
+    /does not identify.*client, collaboration or public brand.*not an endorsement/i,
+  );
+  assert.match(siteCopy.en.partners.aria, /visual placeholders.*not client, collaboration or brand endorsements/i);
   assert.match(siteCopy.en.partners.intro, /not a complete record.*confidentiality agreements/i);
   for (const companyName of [
     "宁波复能稀土新材料股份有限公司",
