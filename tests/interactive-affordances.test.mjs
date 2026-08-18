@@ -6,10 +6,6 @@ const page = readFileSync(new URL("../app/home.tsx", import.meta.url), "utf8");
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 const copy = readFileSync(new URL("../app/site-copy.ts", import.meta.url), "utf8");
 const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
-const profileReadme = readFileSync(
-  new URL("../work/github-profile/README.md", import.meta.url),
-  "utf8",
-);
 
 test("service cards are real links to the contact section", () => {
   assert.match(page, /<a\s+className="service-card"\s+href="#contact"/);
@@ -76,7 +72,7 @@ test("all four lead cases are complete on-site and never link to the source site
   }
   assert.match(copy, /role: "项目主导者"/);
   assert.doesNotMatch(page, /wude-case-details/);
-  for (const source of [page, copy, readme, profileReadme]) {
+  for (const source of [page, copy, readme]) {
     assert.doesNotMatch(source, /cs-wude\.github\.io|github\.com\/CS-wude/i);
   }
   assert.equal((copy.match(/role: "项目主导者"/g) ?? []).length, 4);

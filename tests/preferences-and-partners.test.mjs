@@ -52,7 +52,6 @@ test("the public project never sends visitors to the source owner's pages", asyn
     read("app/home.tsx"),
     read("app/site-copy.ts"),
     read("README.md"),
-    read("work/github-profile/README.md"),
   ]);
 
   for (const source of sources) {

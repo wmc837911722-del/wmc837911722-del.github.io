@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
-const wrangler = fileURLToPath(
-  new URL("../node_modules/.bin/wrangler", import.meta.url),
+const wranglerCli = fileURLToPath(
+  new URL("../node_modules/wrangler/bin/wrangler.js", import.meta.url),
 );
 
 function waitForReady(child, output) {
@@ -53,8 +53,8 @@ test(
     const port = 32_000 + (process.pid % 1_000);
     const output = { text: "" };
     const child = spawn(
-      wrangler,
-      ["dev", "--config", "dist/server/wrangler.json", "--port", String(port)],
+      process.execPath,
+      [wranglerCli, "dev", "--config", "dist/server/wrangler.json", "--port", String(port)],
       {
         cwd: projectRoot,
         env: {
