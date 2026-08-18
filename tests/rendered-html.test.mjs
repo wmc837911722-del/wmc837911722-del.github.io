@@ -33,6 +33,7 @@ test("server-renders the English route with an English root document", async () 
   assert.match(html, /<main[^>]*lang="en"/);
   assert.match(html, /<title>Fengyu \| FDE for AI Product Delivery<\/title>/);
   assert.match(html, /Turn real problems/);
+  assert.doesNotMatch(html, /\bwude\b/i);
   assert.doesNotMatch(html, /document\.documentElement\.lang\s*=/);
 });
 
@@ -48,8 +49,10 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /id="services"/);
   assert.match(html, /id="partners"/);
   assert.match(html, /合作品牌/);
-  assert.match(html, /WUDE 项目团队/);
-  assert.match(html, /这里只展示获得许可的合作信息/);
+  assert.match(html, /宁波复能稀土新材料股份有限公司/);
+  assert.match(html, /温州橙绘科技有限公司/);
+  assert.match(html, /当前并未完整展示全部合作记录/);
+  assert.doesNotMatch(html, /\bwude\b/i);
   assert.match(html, /id="case-study"/);
   assert.match(html, /Lynkvis AI 室内设计出图平台/);
   assert.match(html, /电商选品与内容自动化 Agent/);

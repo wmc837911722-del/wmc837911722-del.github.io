@@ -4,6 +4,7 @@ import test from "node:test";
 import ts from "typescript";
 
 const sourceUrl = new URL("../app/site-copy.ts", import.meta.url);
+const lynkvisLogoUrl = new URL("../public/brands/lynkvis-ai-logo.png", import.meta.url);
 
 async function loadSiteCopy() {
   const source = await readFile(sourceUrl, "utf8");
@@ -114,15 +115,37 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
 
   assert.deepEqual(
     siteCopy.zh.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
-    ["wude"],
+    ["funeng-rare-earth", "chenghui-tech", "lynkvis-ai"],
   );
   assert.deepEqual(
     siteCopy.en.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
-    ["wude"],
+    ["funeng-rare-earth", "chenghui-tech", "lynkvis-ai"],
   );
-  assert.match(siteCopy.zh.partners.intro, /获得(?:授权|许可)/);
+  assert.doesNotMatch(
+    JSON.stringify(siteCopy),
+    /\bwude\b|WUDE 项目团队|WUDE project team/i,
+  );
+  assert.match(siteCopy.zh.partners.intro, /获得(?:公开)?(?:授权|许可)/);
+  assert.match(siteCopy.zh.partners.intro, /并未完整展示.*因保密约定/);
   assert.match(
     siteCopy.en.partners.intro,
     /explicit permission|approved (?:for disclosure|information)|only with permission/i,
+  );
+  assert.match(siteCopy.en.partners.intro, /not a complete record.*confidentiality agreements/i);
+  for (const companyName of [
+    "宁波复能稀土新材料股份有限公司",
+    "温州橙绘科技有限公司",
+    "Lynkvis AI",
+  ]) {
+    assert.match(siteCopy.zh.partners.tiles.map(({ name }) => name).join("\n"), new RegExp(companyName));
+    assert.match(siteCopy.en.partners.tiles.map(({ name }) => name).join("\n"), new RegExp(companyName));
+  }
+  const lynkvisTile = siteCopy.zh.partners.tiles.find(({ id }) => id === "lynkvis-ai");
+  assert.equal(lynkvisTile?.logoSrc, "/brands/lynkvis-ai-logo.png");
+  assert.match(lynkvisTile?.logoAlt ?? "", /Lynkvis AI/);
+  const logo = await readFile(lynkvisLogoUrl);
+  assert.deepEqual(
+    [...logo.subarray(0, 8)],
+    [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
   );
 });

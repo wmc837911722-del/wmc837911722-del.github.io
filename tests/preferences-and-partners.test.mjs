@@ -13,7 +13,8 @@ test("the locale dictionary covers the full commercial page in both languages", 
   assert.match(copy, /Fengyu \| FDE for AI Product Delivery/);
   assert.match(copy, /AI use-case discovery & roadmap/);
   assert.match(copy, /Collaboration and disclosure/);
-  assert.match(copy, /Published only with explicit permission/);
+  assert.match(copy, /remain undisclosed under confidentiality agreements/);
+  assert.doesNotMatch(copy, /\bwude\b|WUDE 项目团队|WUDE project team/i);
   assert.match(copy, /Dabai AI Mental Health Platform/);
   assert.match(copy, /Industrial Compliance Knowledge Platform/);
   assert.match(copy, /Intelligent SRE Operations Assistant/);

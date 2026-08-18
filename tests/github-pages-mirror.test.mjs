@@ -43,14 +43,20 @@ test("GitHub Actions deploys the dedicated static build", async () => {
 });
 
 test("GitHub Pages output contains pre-rendered portfolio content", async () => {
-  const html = await read("dist-github-pages/index.html");
+  const [html, englishHtml] = await Promise.all([
+    read("dist-github-pages/index.html"),
+    read("dist-github-pages/en/index.html"),
+  ]);
 
   assert.match(html, /把业务难题/);
   assert.match(html, /id="services"/);
   assert.match(html, /class="capability-section"/);
   assert.match(html, /id="partners"/);
-  assert.match(html, /WUDE 项目团队/);
-  assert.match(html, /这里只展示获得许可的合作信息/);
+  assert.match(html, /宁波复能稀土新材料股份有限公司/);
+  assert.match(html, /温州橙绘科技有限公司/);
+  assert.match(html, /当前并未完整展示全部合作记录/);
+  assert.doesNotMatch(html, /\bwude\b/i);
+  assert.doesNotMatch(englishHtml, /\bwude\b/i);
   assert.match(html, /id="case-study"/);
   assert.match(html, /Lynkvis AI 室内设计出图平台/);
   assert.match(html, /电商选品与内容自动化 Agent/);

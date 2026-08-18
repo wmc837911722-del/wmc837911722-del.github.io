@@ -122,9 +122,18 @@ test("language and theme controls are accessible buttons with 44px targets", () 
 test("partner wall presents confirmed collaboration with explicit disclosure boundaries", () => {
   assert.match(page, /id="partners"/);
   assert.match(page, /className="partner-wall"/);
-  assert.match(copy, /WUDE 项目团队/);
-  assert.match(copy, /这里只展示获得许可的合作信息/);
-  assert.match(copy, /只有获得明确许可才公开展示/);
+  assert.doesNotMatch(copy, /\bwude\b|WUDE 项目团队|WUDE project team/i);
+  assert.match(copy, /宁波复能稀土新材料股份有限公司/);
+  assert.match(copy, /温州橙绘科技有限公司/);
+  assert.match(copy, /当前并未完整展示全部合作记录/);
+  assert.match(copy, /因保密约定不公开名称、Logo、项目资料与业务数据/);
+  assert.match(page, /src=\{tile\.logoSrc\}/);
+  assert.match(page, /alt=\{tile\.logoAlt\}/);
+  assert.match(page, /loading="lazy"/);
   assert.match(page, /brand-tile--cta/);
   assert.match(css, /\.partner-wall\s*\{[^}]*repeat\(3,minmax\(0,1fr\)\)/s);
+  assert.match(css, /\.brand-tile--cta\s*\{[^}]*grid-column:\s*span 2/s);
+  assert.match(css, /@media \(min-width: 800px\) and \(max-width: 1099px\)\s*\{[^}]*\.partner-wall\s*\{[^}]*repeat\(2,minmax\(0,1fr\)\)/s);
+  assert.match(css, /@media \(max-width: 799px\)[\s\S]*\.brand-tile--cta\s*\{[^}]*grid-column:\s*auto/);
+  assert.match(css, /@media \(max-width: 799px\)[\s\S]*\.brand-tile--cta small\s*\{[^}]*padding-right:\s*72px/);
 });

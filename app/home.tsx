@@ -625,7 +625,20 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             const content = (
               <>
                 <span className="brand-eyebrow">{tile.eyebrow}</span>
-                <strong className="brand-mark">{tile.mark}</strong>
+                <strong className={`brand-mark${"logoSrc" in tile ? " brand-mark--logo" : ""}`}>
+                  {"logoSrc" in tile ? (
+                    // The official self-hosted asset is shared by the Sites and GitHub Pages builds.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={tile.logoSrc}
+                      alt={tile.logoAlt}
+                      width={tile.logoWidth}
+                      height={tile.logoHeight}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : tile.mark}
+                </strong>
                 <span className="brand-name">{tile.name}</span>
                 <small>{tile.note}</small>
                 {tile.kind === "cta" ? <span className="brand-arrow" aria-hidden="true">→</span> : null}
