@@ -49,7 +49,7 @@ const cases = [
     title: "Lynkvis AI 室内设计出图平台",
     summary:
       "面向室内设计师，将参考图导入、风格化出图、AI 生图/生视频、图像编辑、素材管理与 Agent 工作流放进统一 SaaS 产品。",
-    imagePath: "/cases/lynkvis-ai-workflow.png",
+    imagePath: "/cases/lynkvis-ai-live.webp",
     role: "独立全栈开发",
   },
   {
@@ -57,7 +57,7 @@ const cases = [
     title: "电商选品与内容自动化 Agent",
     summary:
       "从多平台用户讨论与长尾关键词中识别选品机会、用户痛点和内容方向，输出保留来源证据的 HTML/JSON 结构化报告。",
-    imagePath: "/cases/ecommerce-research-agent.png",
+    imagePath: "/cases/ecommerce-research-agent-concept.webp",
     role: "独立开发",
   },
   {
@@ -65,7 +65,7 @@ const cases = [
     title: "复能助手：企业级 RAG + MCP Agent",
     summary:
       "将企业文档、ERP 订单、WMS 库存与报表数据接入统一问答链路，支持业务查询、知识溯源和分析报告生成。",
-    imagePath: "/cases/enterprise-rag-mcp-assistant.png",
+    imagePath: "/cases/enterprise-rag-mcp-assistant-concept.webp",
     role: "全栈开发 / AI 应用开发",
   },
   {

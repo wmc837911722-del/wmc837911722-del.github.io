@@ -14,7 +14,7 @@ function contactSection(page) {
   return page.slice(start, end);
 }
 
-test("contact copy includes a useful WeChat QR invitation in both languages", async () => {
+test("contact copy identifies the QR as a personal WeChat contact without mislabeling profile region", async () => {
   const copy = await read("app/site-copy.ts");
 
   for (const key of ["wechatLabel", "wechatTitle", "wechatNote", "wechatImageAlt"]) {
@@ -26,7 +26,7 @@ test("contact copy includes a useful WeChat QR invitation in both languages", as
   }
 
   assert.match(copy, /wechatLabel:\s*"[^"]*微信[^"]*"/);
-  assert.match(copy, /wechatTitle:\s*"微信扫码联系"/);
+  assert.match(copy, /wechatTitle:\s*"扫码添加个人微信"/);
   assert.match(copy, /wechatNote:\s*"[^"]*(?:微信|扫码)[^"]*"/);
   assert.match(copy, /wechatImageAlt:\s*"[^"]*风雨[^"]*微信二维码[^"]*"/);
 
@@ -37,6 +37,9 @@ test("contact copy includes a useful WeChat QR invitation in both languages", as
     copy,
     /wechatImageAlt:\s*"[^"]*WeChat QR code[^"]*Fengyu[^"]*"/i,
   );
+  assert.doesNotMatch(copy, /显示名为|display name is/i);
+  assert.match(copy, /微信资料所在地：瑞典 西曼兰/);
+  assert.match(copy, /WeChat profile location: 瑞典 西曼兰/i);
 });
 
 test("contact section renders one self-hosted, accessible and lazy WeChat QR image while retaining both emails", async () => {
