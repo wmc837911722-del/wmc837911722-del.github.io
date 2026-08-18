@@ -119,9 +119,27 @@ test("language and theme controls are accessible buttons with 44px targets", () 
   assert.match(css, /html\[data-theme="light"\]/);
 });
 
-test("partner wall presents confirmed collaboration with explicit disclosure boundaries", () => {
+test("partner wall scrolls only verified brands and explicit visual placeholders", () => {
   assert.match(page, /id="partners"/);
-  assert.match(page, /className="partner-wall"/);
+  assert.match(page, /const \[isPartnerMarqueePaused, setIsPartnerMarqueePaused\] = useState\(false\)/);
+  assert.match(
+    page,
+    /const marqueeTiles = copy\.partners\.tiles\.filter\([\s\S]*?tile\.kind === "brand" \|\| tile\.kind === "placeholder"[\s\S]*?\);/,
+  );
+  assert.match(page, /className="partner-marquee-shell"/);
+  assert.match(page, /className=\{`partner-marquee\$\{isPartnerMarqueePaused \? " is-paused" : ""\}`\}/);
+  assert.match(page, /id="brand-marquee-track"/);
+  assert.match(page, /\{\[0, 1\]\.map\(\(groupIndex\) => \(/);
+  assert.match(page, /aria-hidden=\{groupIndex === 1\}/);
+  assert.match(page, /inert=\{groupIndex === 1 \? true : undefined\}/);
+  assert.match(page, /className="partner-marquee-toggle"/);
+  assert.match(page, /type="button"/);
+  assert.match(page, /aria-controls="brand-marquee-track"/);
+  assert.match(page, /aria-pressed=\{isPartnerMarqueePaused\}/);
+  assert.match(page, /setIsPartnerMarqueePaused\(\(paused\) => !paused\)/);
+  assert.match(page, /copy\.partners\.resumeMotion/);
+  assert.match(page, /copy\.partners\.pauseMotion/);
+  assert.match(page, /className="partner-wall-footer"/);
   assert.doesNotMatch(copy, /\bwude\b|WUDE 项目团队|WUDE project team/i);
   assert.match(copy, /宁波复能稀土新材料股份有限公司/);
   assert.match(copy, /温州橙绘科技有限公司/);
@@ -131,9 +149,22 @@ test("partner wall presents confirmed collaboration with explicit disclosure bou
   assert.match(page, /alt=\{tile\.logoAlt\}/);
   assert.match(page, /loading="lazy"/);
   assert.match(page, /brand-tile--cta/);
-  assert.match(css, /\.partner-wall\s*\{[^}]*repeat\(3,minmax\(0,1fr\)\)/s);
-  assert.match(css, /\.brand-tile--cta\s*\{[^}]*grid-column:\s*span 2/s);
-  assert.match(css, /@media \(min-width: 800px\) and \(max-width: 1099px\)\s*\{[^}]*\.partner-wall\s*\{[^}]*repeat\(2,minmax\(0,1fr\)\)/s);
-  assert.match(css, /@media \(max-width: 799px\)[\s\S]*\.brand-tile--cta\s*\{[^}]*grid-column:\s*auto/);
-  assert.match(css, /@media \(max-width: 799px\)[\s\S]*\.brand-tile--cta small\s*\{[^}]*padding-right:\s*72px/);
+  assert.match(css, /\.partner-marquee\s*\{[^}]*overflow:\s*(?:hidden|clip)/s);
+  assert.match(css, /\.partner-marquee-track\s*\{[^}]*animation:\s*partner-marquee-scroll\s+\d+s\s+linear\s+infinite/s);
+  assert.match(css, /@keyframes partner-marquee-scroll\s*\{[\s\S]*translate3d\(-50%,\s*0,\s*0\)/);
+  assert.match(css, /\.partner-marquee\.is-paused\s+\.partner-marquee-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /\.partner-marquee:hover\s+\.partner-marquee-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /\.partner-marquee-toggle\s*\{[^}]*min-width:\s*44px[^}]*min-height:\s*44px/s);
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-marquee-track\s*\{[^}]*animation:\s*none\s*!important[^}]*transform:\s*none\s*!important/s,
+  );
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-marquee-group\[aria-hidden="true"\]\s*\{[^}]*display:\s*none/s,
+  );
+  assert.doesNotMatch(
+    css,
+    /\.(?:partner-marquee|partner-marquee-track|partner-marquee-group)[^{]*\{[^}]*width:\s*100vw/s,
+  );
 });

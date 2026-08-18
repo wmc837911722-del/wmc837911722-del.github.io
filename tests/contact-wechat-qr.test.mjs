@@ -39,7 +39,7 @@ test("contact copy identifies the QR as a personal WeChat contact without mislab
   );
   assert.doesNotMatch(copy, /显示名为|display name is/i);
   assert.match(copy, /微信资料所在地：瑞典 西曼兰/);
-  assert.match(copy, /WeChat profile location: 瑞典 西曼兰/i);
+  assert.match(copy, /WeChat profile location: Västmanland, Sweden/i);
 });
 
 test("contact section renders one self-hosted, accessible and lazy WeChat QR image while retaining both emails", async () => {

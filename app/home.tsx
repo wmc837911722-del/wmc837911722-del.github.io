@@ -12,6 +12,17 @@ import {
 
 type Theme = "dark" | "light";
 type CaseDirection = "next" | "previous";
+type PartnerTile = {
+  eyebrow: string;
+  kind: string;
+  mark: string;
+  name: string;
+  note: string;
+  logoSrc?: string;
+  logoAlt?: string;
+  logoWidth?: number;
+  logoHeight?: number;
+};
 
 const LOCALE_STORAGE_KEY = "fengyu:locale:v1";
 const THEME_STORAGE_KEY = "fengyu:theme:v1";
@@ -19,6 +30,31 @@ const contactEmails = [
   { label: "QQ MAIL", address: "837911722@qq.com" },
   { label: "GMAIL", address: "wmc837911722@gmail.com" },
 ];
+
+function PartnerTileContent({ tile }: { tile: PartnerTile }) {
+  return (
+    <>
+      <span className="brand-eyebrow">{tile.eyebrow}</span>
+      <strong className={`brand-mark${tile.logoSrc ? " brand-mark--logo" : ""}`}>
+        {tile.logoSrc ? (
+          // The official self-hosted asset is shared by the Sites and GitHub Pages builds.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={tile.logoSrc}
+            alt={tile.logoAlt}
+            width={tile.logoWidth}
+            height={tile.logoHeight}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : tile.mark}
+      </strong>
+      <span className="brand-name">{tile.name}</span>
+      <small>{tile.note}</small>
+      {tile.kind === "cta" ? <span className="brand-arrow" aria-hidden="true">→</span> : null}
+    </>
+  );
+}
 
 export type HomeProps = {
   initialLocale?: Locale;
@@ -35,6 +71,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
   const [previousCaseIndex, setPreviousCaseIndex] = useState<number | null>(null);
   const [caseDirection, setCaseDirection] = useState<CaseDirection>("next");
   const [caseAnnouncement, setCaseAnnouncement] = useState("");
+  const [isPartnerMarqueePaused, setIsPartnerMarqueePaused] = useState(false);
   const [copyState, setCopyState] = useState<
     "idle" | "copying" | "copied" | "failed"
   >("idle");
@@ -42,6 +79,12 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
   const structuredData = homeStructuredData(locale);
   const collaborationBrief = copy.contact.mailTemplate;
   const caseCount = copy.caseStudy.projects.length;
+  const marqueeTiles = copy.partners.tiles.filter(
+    (tile) => tile.kind === "brand" || tile.kind === "placeholder",
+  );
+  const partnerFooterTiles = copy.partners.tiles.filter(
+    (tile) => tile.kind === "policy" || tile.kind === "cta",
+  );
 
   const goToCase = (index: number, direction: CaseDirection) => {
     const nextIndex = ((index % caseCount) + caseCount) % caseCount;
@@ -241,7 +284,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           if (reduceMotion) {
             gsap.set(
               select(
-                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card, .brand-tile",
+                ".hero-line, .hero-reveal, .section-reveal, .service-card, .capability-card",
               ),
               { clearProps: "all" },
             );
@@ -351,20 +394,6 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             scrollTrigger: {
               trigger: select(".capability-grid")[0],
               start: "top 78%",
-              toggleActions: "play none none reverse",
-            },
-          });
-
-          gsap.from(select(".brand-tile"), {
-            autoAlpha: 0,
-            y: 28,
-            scale: 0.985,
-            duration: 0.55,
-            stagger: 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: select(".partner-wall")[0],
-              start: "top 82%",
               toggleActions: "play none none reverse",
             },
           });
@@ -620,36 +649,52 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             <p className="partner-intro">{copy.partners.intro}</p>
           </div>
         </div>
-        <div className="partner-wall" aria-label={copy.partners.aria}>
-          {copy.partners.tiles.map((tile) => {
-            const content = (
-              <>
-                <span className="brand-eyebrow">{tile.eyebrow}</span>
-                <strong className={`brand-mark${"logoSrc" in tile ? " brand-mark--logo" : ""}`}>
-                  {"logoSrc" in tile ? (
-                    // The official self-hosted asset is shared by the Sites and GitHub Pages builds.
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={tile.logoSrc}
-                      alt={tile.logoAlt}
-                      width={tile.logoWidth}
-                      height={tile.logoHeight}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : tile.mark}
-                </strong>
-                <span className="brand-name">{tile.name}</span>
-                <small>{tile.note}</small>
-                {tile.kind === "cta" ? <span className="brand-arrow" aria-hidden="true">→</span> : null}
-              </>
-            );
-            return tile.kind === "cta" ? (
-              <a className="brand-tile brand-tile--cta" href="#contact" key={tile.id}>{content}</a>
-            ) : (
-              <article className={`brand-tile brand-tile--${tile.kind}`} key={tile.id}>{content}</article>
-            );
-          })}
+        <div className="partner-marquee-toolbar">
+          <button
+            className="partner-marquee-toggle"
+            type="button"
+            aria-controls="brand-marquee-track"
+            aria-pressed={isPartnerMarqueePaused}
+            onClick={() => setIsPartnerMarqueePaused((paused) => !paused)}
+          >
+            {isPartnerMarqueePaused ? copy.partners.resumeMotion : copy.partners.pauseMotion}
+          </button>
+        </div>
+        <div className="partner-marquee-shell">
+          <div
+            className={`partner-marquee${isPartnerMarqueePaused ? " is-paused" : ""}`}
+            aria-label={copy.partners.aria}
+          >
+            <div className="partner-marquee-track" id="brand-marquee-track">
+              {[0, 1].map((groupIndex) => (
+                <ul
+                  className="partner-marquee-group"
+                  aria-hidden={groupIndex === 1}
+                  inert={groupIndex === 1 ? true : undefined}
+                  key={groupIndex}
+                >
+                  {marqueeTiles.map((tile) => (
+                    <li className="partner-marquee-item" key={`${groupIndex}-${tile.id}`}>
+                      <article className={`brand-tile brand-tile--${tile.kind}`}>
+                        <PartnerTileContent tile={tile} />
+                      </article>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="partner-wall-footer">
+          {partnerFooterTiles.map((tile) => tile.kind === "cta" ? (
+            <a className="brand-tile brand-tile--cta" href="#contact" key={tile.id}>
+              <PartnerTileContent tile={tile} />
+            </a>
+          ) : (
+            <article className={`brand-tile brand-tile--${tile.kind}`} key={tile.id}>
+              <PartnerTileContent tile={tile} />
+            </article>
+          ))}
         </div>
       </section>
 

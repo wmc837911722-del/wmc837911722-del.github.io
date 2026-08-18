@@ -121,6 +121,30 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     siteCopy.en.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
     ["funeng-rare-earth", "chenghui-tech", "lynkvis-ai"],
   );
+  const placeholderIds = [
+    "private-slot-01",
+    "private-slot-02",
+    "private-slot-03",
+    "private-slot-04",
+    "private-slot-05",
+  ];
+  for (const locale of ["zh", "en"]) {
+    const placeholders = siteCopy[locale].partners.tiles.filter(
+      ({ kind }) => kind === "placeholder",
+    );
+
+    assert.deepEqual(placeholders.map(({ id }) => id), placeholderIds);
+    for (const placeholder of placeholders) {
+      assert.equal("logoSrc" in placeholder, false, `${locale}.${placeholder.id} must not imitate a real logo`);
+      assert.match(placeholder.note, locale === "zh" ? /视觉占位/ : /visual placeholder/i);
+      assert.match(
+        placeholder.note,
+        locale === "zh"
+          ? /不代表.*(?:客户|品牌)/
+          : /does not identify a specific public brand.*not a client claim/i,
+      );
+    }
+  }
   assert.doesNotMatch(
     JSON.stringify(siteCopy),
     /\bwude\b|WUDE 项目团队|WUDE project team/i,
@@ -148,4 +172,17 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     [...logo.subarray(0, 8)],
     [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
   );
+});
+
+test("WeChat copy identifies the profile field without turning it into an address", async () => {
+  const siteCopy = await loadSiteCopy();
+
+  assert.match(siteCopy.zh.contact.wechatNote, /^微信资料所在地：瑞典 西曼兰。/);
+  assert.match(siteCopy.en.contact.wechatNote, /^WeChat profile location: Västmanland, Sweden\./);
+  for (const locale of ["zh", "en"]) {
+    assert.doesNotMatch(
+      siteCopy[locale].contact.wechatNote,
+      /办公地址|现居|当前所在地|服务区域|office address|current location|service area/i,
+    );
+  }
 });
