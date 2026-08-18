@@ -50,25 +50,30 @@ test("non-interactive capability and process rows do not mimic buttons", () => {
   assert.doesNotMatch(css, /\.steps\s+li:hover\s*\{/);
 });
 
-test("all four lead cases are complete on-site and never link to the source site", () => {
+test("all seven cases are complete on-site with explicit, safe actions", () => {
   assert.match(page, /<a href="#case-study">\{copy\.header\.caseStudy\}<\/a>/);
   assert.match(page, /id="case-study"/);
   assert.match(page, /className="[^"]*\bcase-carousel\b[^"]*"/);
   assert.match(page, /id="case-carousel-track"/);
   assert.match(page, /copy\.caseStudy\.projects\.map\(\(project(?:,\s*index)?\) =>/);
   assert.match(page, /data-case-id=\{project\.id\}/);
+  assert.match(page, /className="case-index-button"/);
+  assert.match(page, /aria-pressed=\{index === activeCaseIndex\}/);
   assert.match(page, /className="system-case-role"/);
   assert.match(
     page,
     /className="system-case-cta"\s+href="#contact"/,
   );
   for (const title of [
+    "Lynkvis AI 室内设计出图平台",
+    "电商选品与内容自动化 Agent",
+    "复能助手：企业级 RAG + MCP Agent",
     "大白 AI 心理健康平台",
     "工业合规知识平台",
     "智能 SRE 运维助手",
     "生成式内容调度平台",
   ]) {
-    assert.match(copy, new RegExp(title));
+    assert.ok(copy.includes(title));
   }
   assert.match(copy, /role: "项目主导者"/);
   assert.doesNotMatch(page, /wude-case-details/);
@@ -77,6 +82,11 @@ test("all four lead cases are complete on-site and never link to the source site
   }
   assert.equal((copy.match(/role: "项目主导者"/g) ?? []).length, 4);
   assert.equal((copy.match(/role: "Project lead"/g) ?? []).length, 4);
+  assert.equal((copy.match(/role: "独立全栈开发"/g) ?? []).length, 1);
+  assert.equal((copy.match(/role: "独立开发"/g) ?? []).length, 1);
+  assert.equal((copy.match(/role: "全栈开发 \/ AI 应用开发"/g) ?? []).length, 1);
+  assert.match(page, /href=\{project\.externalUrl\}/);
+  assert.match(page, /rel="noopener noreferrer"/);
   assert.doesNotMatch(copy, /团队项目参与者|Team project contributor/i);
   assert.doesNotMatch(copy, /风雨确认参与|Participation confirmed by Fengyu/i);
   assert.doesNotMatch(copy, /具体职责(?:边界)?、(?:参与)?周期与量化结果(?:尚)?未公开/);

@@ -45,11 +45,36 @@ const rootPages = {
 
 const cases = [
   {
+    slug: "lynkvis-ai",
+    title: "Lynkvis AI 室内设计出图平台",
+    summary:
+      "面向室内设计师，将参考图导入、风格化出图、AI 生图/生视频、图像编辑、素材管理与 Agent 工作流放进统一 SaaS 产品。",
+    imagePath: "/cases/lynkvis-ai-workflow.png",
+    role: "独立全栈开发",
+  },
+  {
+    slug: "ecommerce-research-agent",
+    title: "电商选品与内容自动化 Agent",
+    summary:
+      "从多平台用户讨论与长尾关键词中识别选品机会、用户痛点和内容方向，输出保留来源证据的 HTML/JSON 结构化报告。",
+    imagePath: "/cases/ecommerce-research-agent.png",
+    role: "独立开发",
+  },
+  {
+    slug: "enterprise-rag-mcp-assistant",
+    title: "复能助手：企业级 RAG + MCP Agent",
+    summary:
+      "将企业文档、ERP 订单、WMS 库存与报表数据接入统一问答链路，支持业务查询、知识溯源和分析报告生成。",
+    imagePath: "/cases/enterprise-rag-mcp-assistant.png",
+    role: "全栈开发 / AI 应用开发",
+  },
+  {
     slug: "mental-health-platform",
     title: "大白 AI 心理健康平台",
     summary:
       "把咨询、测评、风险预警与交易串成一套可持续服务闭环，让用户体验与运营状态在同一系统中推进。",
     imagePath: "/cases/mental-health-platform.png",
+    role: "项目主导者",
   },
   {
     slug: "industrial-compliance-platform",
@@ -57,6 +82,7 @@ const cases = [
     summary:
       "让分散且敏感的合规资料在内网中可搜索、可追溯、可更新，为一线判断提供有来源的答案。",
     imagePath: "/cases/industrial-compliance-platform.png",
+    role: "项目主导者",
   },
   {
     slug: "sre-copilot",
@@ -64,6 +90,7 @@ const cases = [
     summary:
       "把指标、日志与集群事件串成可追踪的调查链路，帮助运维团队更快聚焦线索，同时保留人工判断与工具边界。",
     imagePath: "/cases/sre-copilot.png",
+    role: "项目主导者",
   },
   {
     slug: "content-orchestration",
@@ -71,6 +98,7 @@ const cases = [
     summary:
       "把分散的批量生成任务集中到统一工作台，统一输入、模型、队列与进度，降低规模化生产的操作复杂度。",
     imagePath: "/cases/content-orchestration-schematic.png",
+    role: "项目主导者",
   },
 ].map((project) => {
   const canonical = `${primaryOrigin}/cases/${project.slug}/`;
@@ -86,7 +114,7 @@ const cases = [
       "zh-CN": canonical,
       "x-default": canonical,
     },
-    visibleMarkers: [project.title, project.summary, "项目主导者"],
+    visibleMarkers: [project.title, project.summary, project.role],
   };
 });
 
@@ -267,7 +295,7 @@ function assertFactualLinkedData(html) {
   assert.deepEqual(
     creativeWorks.map((work) => work.name).sort(),
     cases.map((project) => project.title).sort(),
-    "the graph should describe exactly the four disclosed projects",
+    "the graph should describe every disclosed project",
   );
 
   for (const project of cases) {
@@ -448,7 +476,7 @@ test("localized homes keep one stable WebSite entity and do not invent English c
   }
 });
 
-test("GitHub Pages pre-renders an English page and four independently indexable case pages", async (t) => {
+test("GitHub Pages pre-renders an English page and seven independently indexable case pages", async (t) => {
   for (const specification of [rootPages.zh, rootPages.en, ...cases]) {
     await t.test(specification.route, async () => {
       const html = await readRequiredFile(
@@ -466,7 +494,7 @@ test("GitHub Pages pre-renders an English page and four independently indexable 
   }
 });
 
-test("Sites serves both localized roots and the four case routes with indexable metadata and content", async (t) => {
+test("Sites serves both localized roots and the seven case routes with indexable metadata and content", async (t) => {
   for (const specification of [rootPages.zh, rootPages.en, ...cases]) {
     await t.test(specification.route, async () => {
       const response = await fetchSitesDocument(specification.route);

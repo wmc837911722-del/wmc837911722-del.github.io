@@ -6,6 +6,9 @@ const projectRoot = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, projectRoot), "utf8");
 
 const projectIds = [
+  "lynkvis-ai",
+  "ecommerce-research-agent",
+  "enterprise-rag-mcp-assistant",
   "mental-health-platform",
   "industrial-compliance-platform",
   "sre-copilot",
@@ -54,6 +57,16 @@ test("case carousel supports keyboard navigation instead of requiring a pointer"
     assert.match(page, new RegExp(`["']${key}["']`));
   }
   assert.match(page, /event\.preventDefault\(\)/);
+});
+
+test("case carousel exposes direct, labelled case selectors", async () => {
+  const page = await read("app/home.tsx");
+
+  assert.match(page, /className="case-carousel-index"/);
+  assert.match(page, /aria-label=\{copy\.caseStudy\.selectorLabel\}/);
+  assert.match(page, /className="case-index-button"/);
+  assert.match(page, /aria-pressed=\{index === activeCaseIndex\}/);
+  assert.match(page, /aria-controls=\{`case-\$\{project\.id\}`\}/);
 });
 
 test("case carousel wraps through short direction-aware stacked transitions", async () => {
@@ -191,22 +204,22 @@ test("every project has a visible purpose label and an informative local image",
   }
 });
 
-test("rendered carousel retains all four cases and never sources case media externally", async () => {
+test("rendered carousel retains all seven cases and never sources case media externally", async () => {
   const html = caseSection(await read("dist-github-pages/index.html"));
 
   assert.match(html, /aria-roledescription="carousel"/);
-  assert.equal((html.match(/aria-roledescription="slide"/g) ?? []).length, 4);
+  assert.equal((html.match(/aria-roledescription="slide"/g) ?? []).length, projectIds.length);
   assert.equal(
     (html.match(/class="[^"]*\bsystem-case-purpose\b[^"]*"/g) ?? []).length,
-    4,
+    projectIds.length,
   );
   assert.equal(
     (html.match(/class="system-case-image"/g) ?? []).length,
-    4,
+    projectIds.length,
   );
-  assert.equal((html.match(/data-state=/g) ?? []).length, 4);
+  assert.equal((html.match(/data-state=/g) ?? []).length, projectIds.length);
   assert.equal((html.match(/data-state="active"/g) ?? []).length, 1);
-  assert.equal((html.match(/data-state="inactive"/g) ?? []).length, 3);
+  assert.equal((html.match(/data-state="inactive"/g) ?? []).length, projectIds.length - 1);
   assert.match(
     html,
     /class="[^"]*\bcase-carousel\b[^"]*"[^>]*data-direction="next"/,
@@ -220,7 +233,9 @@ test("rendered carousel retains all four cases and never sources case media exte
     assert.match(html, new RegExp(`data-case-id="${id}"`));
   }
 
-  assert.doesNotMatch(html, /\b(?:href|src)="https?:\/\//i);
+  assert.doesNotMatch(html, /\bsrc="https?:\/\//i);
+  assert.equal((html.match(/href="https?:\/\//gi) ?? []).length, 1);
+  assert.match(html, /href="https:\/\/linktelai\.com\/"[^>]*rel="noopener noreferrer"/i);
   assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude/i);
 });
 

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Enterprise RAG and MCP assistant workflow</title>
+  <desc id="desc">A resume-based system schematic showing enterprise document retrieval, ERP and WMS database tools, Qwen model generation, and streaming answers.</desc>
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1b2435" stroke-width="1"/></pattern>
+    <style>
+      .sans{font-family:Inter,"Segoe UI",Arial,sans-serif}.mono{font-family:"SFMono-Regular",Consolas,monospace}
+      .panel{fill:#111824;stroke:#35435a;stroke-width:1.5}.inner{fill:#0c131f;stroke:#43536d;stroke-width:1.5}
+      .label{fill:#7e94ff;font-size:17px;letter-spacing:2px}.title{fill:#f4f6fb;font-size:29px}.body{fill:#aeb8c9;font-size:18px}.small{fill:#8f9bad;font-size:14px;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#080b12"/><rect width="1600" height="900" fill="url(#grid)"/>
+  <rect class="panel" x="38" y="34" width="1524" height="98" rx="18"/>
+  <text class="sans" x="72" y="88" fill="#f7f8fb" font-size="31">ENTERPRISE RAG + MCP ASSISTANT</text>
+  <text class="mono label" x="1135" y="88">RESUME-BASED SCHEMATIC</text>
+
+  <rect class="panel" x="38" y="164" width="390" height="650" rx="18"/>
+  <text class="mono label" x="72" y="220">01 / ENTERPRISE DATA</text>
+  <text class="sans title" x="72" y="270">Two evidence paths</text>
+  <rect class="inner" x="72" y="318" width="322" height="132" rx="14"/>
+  <circle cx="108" cy="354" r="12" fill="#55d7bb"/>
+  <text class="mono label" x="138" y="360">DOCUMENTS</text>
+  <text class="sans body" x="98" y="402">20 PDF files</text>
+  <text class="sans body" x="98" y="430">manuals / process / policy</text>
+  <rect class="inner" x="72" y="484" width="322" height="132" rx="14"/>
+  <circle cx="108" cy="520" r="12" fill="#6f86ff"/>
+  <text class="mono label" x="138" y="526">BUSINESS DATA</text>
+  <text class="sans body" x="98" y="568">ERP orders / WMS stock</text>
+  <text class="sans body" x="98" y="596">reports / operating data</text>
+  <text class="mono small" x="72" y="754">PRIVATE ENTERPRISE CONTEXT</text>
+
+  <rect class="panel" x="466" y="164" width="668" height="650" rx="18"/>
+  <text class="mono label" x="502" y="220">02 / RETRIEVAL &amp; TOOL ROUTING</text>
+  <text class="sans title" x="502" y="270">Ground answers in evidence</text>
+  <rect class="inner" x="522" y="318" width="250" height="112" rx="14"/>
+  <text class="mono label" x="554" y="355">RAG</text>
+  <text class="sans body" x="554" y="391">parse / chunk / Milvus</text>
+  <rect class="inner" x="828" y="318" width="250" height="112" rx="14"/>
+  <text class="mono label" x="860" y="355">MCP</text>
+  <text class="sans body" x="860" y="391">ERP / WMS DB tools</text>
+  <path d="M647 430v78" stroke="#55d7bb" stroke-width="3"/><path d="m637 496 10 14 10-14" fill="none" stroke="#55d7bb" stroke-width="3"/>
+  <path d="M953 430v78" stroke="#6f86ff" stroke-width="3"/><path d="m943 496 10 14 10-14" fill="none" stroke="#6f86ff" stroke-width="3"/>
+  <rect x="522" y="516" width="556" height="118" rx="14" fill="#101a2b" stroke="#6f86ff" stroke-width="1.5"/>
+  <circle cx="564" cy="575" r="16" fill="#6f86ff"/>
+  <text class="mono label" x="600" y="563">QWEN3-72B + LORA</text>
+  <text class="sans body" x="600" y="599">Spring AI prompt &amp; answer orchestration</text>
+  <path d="M800 634v50" stroke="#6f86ff" stroke-width="3"/><path d="m790 672 10 14 10-14" fill="none" stroke="#6f86ff" stroke-width="3"/>
+  <rect class="inner" x="522" y="690" width="556" height="64" rx="14"/>
+  <text class="mono small" x="554" y="730">CITATION + STRUCTURED RESULT + STREAMING STATE</text>
+  <text class="mono small" x="502" y="786">JAVA / SPRING AI / MILVUS / MCP</text>
+
+  <rect class="panel" x="1172" y="164" width="390" height="650" rx="18"/>
+  <text class="mono label" x="1206" y="220">03 / BUSINESS ANSWER</text>
+  <text class="sans title" x="1206" y="270">Query, analyze, report</text>
+  <rect class="inner" x="1206" y="318" width="322" height="92" rx="14"/>
+  <text class="mono small" x="1236" y="352">KNOWLEDGE Q&amp;A</text>
+  <text class="sans body" x="1236" y="385">source-linked answer</text>
+  <rect class="inner" x="1206" y="438" width="322" height="92" rx="14"/>
+  <text class="mono small" x="1236" y="472">BUSINESS QUERY</text>
+  <text class="sans body" x="1236" y="505">order / inventory / report</text>
+  <rect class="inner" x="1206" y="558" width="322" height="92" rx="14"/>
+  <text class="mono small" x="1236" y="592">DOCUMENT REVIEW</text>
+  <text class="sans body" x="1236" y="625">OCR / clauses / risks</text>
+  <rect class="inner" x="1206" y="678" width="322" height="76" rx="14"/>
+  <text class="mono small" x="1236" y="709">VUE 3 STREAMING UI</text>
+  <text class="sans body" x="1236" y="738">progressive response</text>
+  <text class="mono small" x="1206" y="786">TRACEABLE DELIVERY</text>
+
+  <text class="mono label" x="52" y="868">DOCS</text><text class="mono label" x="150" y="868">+</text>
+  <text class="mono label" x="186" y="868">ERP/WMS</text><text class="mono label" x="326" y="868">→</text>
+  <text class="mono label" x="369" y="868">RAG/MCP</text><text class="mono label" x="509" y="868">→</text>
+  <text class="mono label" x="552" y="868">ANSWER</text><text class="mono small" x="1307" y="868">NON-PRODUCTION VISUAL</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">E-commerce research and content automation agent</title>
+  <desc id="desc">A resume-based workflow showing keyword expansion, multi-platform data collection, signal analysis, opportunity scoring, and traceable reports.</desc>
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1b2435" stroke-width="1"/></pattern>
+    <style>
+      .sans{font-family:Inter,"Segoe UI",Arial,sans-serif}.mono{font-family:"SFMono-Regular",Consolas,monospace}
+      .panel{fill:#111824;stroke:#35435a;stroke-width:1.5}.inner{fill:#0c131f;stroke:#43536d;stroke-width:1.5}
+      .label{fill:#7e94ff;font-size:17px;letter-spacing:2px}.title{fill:#f4f6fb;font-size:29px}.body{fill:#aeb8c9;font-size:18px}.small{fill:#8f9bad;font-size:14px;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#080b12"/><rect width="1600" height="900" fill="url(#grid)"/>
+  <rect class="panel" x="38" y="34" width="1524" height="98" rx="18"/>
+  <text class="sans" x="72" y="88" fill="#f7f8fb" font-size="31">E-COMMERCE RESEARCH AGENT</text>
+  <text class="mono label" x="1135" y="88">RESUME-BASED SCHEMATIC</text>
+
+  <rect class="panel" x="38" y="164" width="330" height="650" rx="18"/>
+  <text class="mono label" x="72" y="220">01 / SIGNAL SOURCES</text>
+  <text class="sans title" x="72" y="270">Find real demand</text>
+  <g class="mono small">
+    <rect class="inner" x="72" y="314" width="262" height="68" rx="12"/><text x="98" y="357">DOUYIN</text><circle cx="302" cy="348" r="9" fill="#55d7bb"/>
+    <rect class="inner" x="72" y="402" width="262" height="68" rx="12"/><text x="98" y="445">WEIBO</text><circle cx="302" cy="436" r="9" fill="#6f86ff"/>
+    <rect class="inner" x="72" y="490" width="262" height="68" rx="12"/><text x="98" y="533">XIAOHONGSHU</text><circle cx="302" cy="524" r="9" fill="#55d7bb"/>
+    <rect class="inner" x="72" y="578" width="262" height="68" rx="12"/><text x="98" y="621">ZHIHU</text><circle cx="302" cy="612" r="9" fill="#6f86ff"/>
+  </g>
+  <text class="sans body" x="72" y="702">complaints / comparisons</text>
+  <text class="sans body" x="72" y="734">reviews / tutorials / intent</text>
+  <text class="mono small" x="72" y="774">LONG-TAIL KEYWORDS</text>
+
+  <rect class="panel" x="402" y="164" width="760" height="650" rx="18"/>
+  <text class="mono label" x="438" y="220">02 / AGENT ANALYSIS PIPELINE</text>
+  <text class="sans title" x="438" y="270">Turn scattered discussion into evidence</text>
+  <g>
+    <rect class="inner" x="438" y="322" width="282" height="92" rx="14"/>
+    <text class="mono label" x="470" y="357">EXPAND</text><text class="sans body" x="470" y="389">keyword strategy</text>
+    <rect class="inner" x="842" y="322" width="282" height="92" rx="14"/>
+    <text class="mono label" x="874" y="357">COLLECT</text><text class="sans body" x="874" y="389">multi-platform records</text>
+    <path d="M720 368h118" stroke="#6f86ff" stroke-width="3"/><path d="m826 358 14 10-14 10" fill="none" stroke="#6f86ff" stroke-width="3"/>
+    <rect class="inner" x="438" y="478" width="282" height="92" rx="14"/>
+    <text class="mono label" x="470" y="513">CLEAN</text><text class="sans body" x="470" y="545">raw-data cleaning</text>
+    <rect class="inner" x="842" y="478" width="282" height="92" rx="14"/>
+    <text class="mono label" x="874" y="513">SCORE</text><text class="sans body" x="874" y="545">pain / opportunity / topic</text>
+    <path d="M983 414v59" stroke="#6f86ff" stroke-width="3"/><path d="m973 461 10 14 10-14" fill="none" stroke="#6f86ff" stroke-width="3"/>
+    <path d="M842 524H724" stroke="#6f86ff" stroke-width="3"/><path d="m736 514-14 10 14 10" fill="none" stroke="#6f86ff" stroke-width="3"/>
+    <rect x="438" y="632" width="686" height="104" rx="14" fill="#101a2b" stroke="#6f86ff" stroke-width="1.5"/>
+    <text class="mono label" x="470" y="670">TRACEABLE EVIDENCE LEDGER</text>
+    <text class="sans body" x="470" y="706">title / comment / context / platform source</text>
+    <path d="M579 570v57" stroke="#6f86ff" stroke-width="3"/><path d="m569 615 10 14 10-14" fill="none" stroke="#6f86ff" stroke-width="3"/>
+  </g>
+  <text class="mono small" x="438" y="774">PYTHON / CODEX / PLAYWRIGHT / JSON</text>
+
+  <rect class="panel" x="1196" y="164" width="366" height="650" rx="18"/>
+  <text class="mono label" x="1230" y="220">03 / OUTPUT</text>
+  <text class="sans title" x="1230" y="270">Reports for action</text>
+  <rect class="inner" x="1230" y="318" width="298" height="108" rx="14"/>
+  <text class="mono small" x="1260" y="354">PRODUCT OPPORTUNITY</text>
+  <text class="sans body" x="1260" y="389">category / evidence</text>
+  <rect class="inner" x="1230" y="454" width="298" height="108" rx="14"/>
+  <text class="mono small" x="1260" y="490">CONTENT DIRECTION</text>
+  <text class="sans body" x="1260" y="525">topic / pain point</text>
+  <rect class="inner" x="1230" y="590" width="298" height="108" rx="14"/>
+  <text class="mono small" x="1260" y="626">DELIVERABLE</text>
+  <text class="sans body" x="1260" y="661">HTML + JSON report</text>
+  <text class="mono small" x="1230" y="774">SOURCE-BACKED OUTPUT</text>
+
+  <text class="mono label" x="52" y="868">KEYWORDS</text><text class="mono label" x="195" y="868">→</text>
+  <text class="mono label" x="238" y="868">COLLECT</text><text class="mono label" x="370" y="868">→</text>
+  <text class="mono label" x="413" y="868">SCORE</text><text class="mono label" x="526" y="868">→</text>
+  <text class="mono label" x="569" y="868">REPORT</text><text class="mono small" x="1307" y="868">NON-PRODUCTION VISUAL</text>
+</svg>

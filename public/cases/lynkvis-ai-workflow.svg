@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Lynkvis AI design platform workflow</title>
+  <desc id="desc">A resume-based system schematic showing design input, multi-provider model routing, Redis Stream task orchestration, and design delivery.</desc>
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#1b2435" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6f86ff"/>
+      <stop offset="1" stop-color="#55d7bb"/>
+    </linearGradient>
+    <style>
+      .sans{font-family:Inter,"Segoe UI",Arial,sans-serif}.mono{font-family:"SFMono-Regular",Consolas,monospace}
+      .panel{fill:#111824;stroke:#35435a;stroke-width:1.5}.inner{fill:#0c131f;stroke:#43536d;stroke-width:1.5}
+      .label{fill:#7e94ff;font-size:17px;letter-spacing:2px}.title{fill:#f4f6fb;font-size:29px}.body{fill:#aeb8c9;font-size:18px}.small{fill:#8f9bad;font-size:14px;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#080b12"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect class="panel" x="38" y="34" width="1524" height="98" rx="18"/>
+  <text class="sans" x="72" y="88" fill="#f7f8fb" font-size="31">LYNKVIS AI DESIGN PLATFORM</text>
+  <text class="mono label" x="1135" y="88">RESUME-BASED SCHEMATIC</text>
+
+  <rect class="panel" x="38" y="164" width="438" height="650" rx="18"/>
+  <text class="mono label" x="72" y="220">01 / DESIGN INPUT</text>
+  <text class="sans title" x="72" y="270">Reference to production brief</text>
+  <rect class="inner" x="72" y="318" width="370" height="102" rx="14"/>
+  <circle cx="103" cy="350" r="10" fill="#6f86ff"/>
+  <text class="mono small" x="128" y="355">REFERENCE IMAGE</text>
+  <text class="sans body" x="94" y="393">space / layout / materials</text>
+  <rect class="inner" x="72" y="446" width="370" height="102" rx="14"/>
+  <circle cx="103" cy="478" r="10" fill="#55d7bb"/>
+  <text class="mono small" x="128" y="483">STYLE &amp; PROMPT</text>
+  <text class="sans body" x="94" y="521">preference / revision / intent</text>
+  <rect class="inner" x="72" y="574" width="370" height="102" rx="14"/>
+  <circle cx="103" cy="606" r="10" fill="#6f86ff"/>
+  <text class="mono small" x="128" y="611">AGENT WORKFLOW</text>
+  <text class="sans body" x="94" y="649">brief → recommendation → task</text>
+  <text class="mono small" x="72" y="758">USER APP / OPERATIONS CONSOLE</text>
+
+  <rect class="panel" x="514" y="164" width="572" height="650" rx="18"/>
+  <text class="mono label" x="550" y="220">02 / MODEL ORCHESTRATION</text>
+  <text class="sans title" x="550" y="270">Provider adapter &amp; async queue</text>
+  <rect class="inner" x="568" y="322" width="464" height="94" rx="14"/>
+  <circle cx="602" cy="369" r="14" fill="url(#accent)"/>
+  <text class="mono label" x="638" y="362">PROVIDER LAYER</text>
+  <text class="sans body" x="638" y="391">30+ model / vendor connections</text>
+  <path d="M800 416v52" stroke="#6f86ff" stroke-width="3"/>
+  <path d="m790 458 10 14 10-14" fill="none" stroke="#6f86ff" stroke-width="3"/>
+  <rect class="inner" x="568" y="474" width="464" height="94" rx="14" stroke="#6f86ff"/>
+  <circle cx="602" cy="521" r="14" fill="#55d7bb"/>
+  <text class="mono label" x="638" y="514">REDIS STREAM</text>
+  <text class="sans body" x="638" y="543">queue / retry / task state</text>
+  <path d="M800 568v52" stroke="#6f86ff" stroke-width="3"/>
+  <path d="m790 610 10 14 10-14" fill="none" stroke="#6f86ff" stroke-width="3"/>
+  <rect class="inner" x="568" y="626" width="464" height="94" rx="14"/>
+  <circle cx="602" cy="673" r="14" fill="#6f86ff"/>
+  <text class="mono label" x="638" y="666">TASK WORKER</text>
+  <text class="sans body" x="638" y="695">generate / persist / return result</text>
+  <text class="mono small" x="550" y="758">JAVA 17 / SPRING BOOT 3 / REDIS</text>
+
+  <rect class="panel" x="1124" y="164" width="438" height="650" rx="18"/>
+  <text class="mono label" x="1158" y="220">03 / DESIGN DELIVERY</text>
+  <text class="sans title" x="1158" y="270">Create, refine &amp; operate</text>
+  <rect class="inner" x="1158" y="318" width="370" height="86" rx="14"/>
+  <text class="mono small" x="1186" y="351">AI OUTPUT</text>
+  <text class="sans body" x="1186" y="381">image / video / editing</text>
+  <rect class="inner" x="1158" y="426" width="370" height="86" rx="14"/>
+  <text class="mono small" x="1186" y="459">ASSET LIBRARY</text>
+  <text class="sans body" x="1186" y="489">references / templates / results</text>
+  <rect class="inner" x="1158" y="534" width="370" height="86" rx="14"/>
+  <text class="mono small" x="1186" y="567">COMMERCIAL LOOP</text>
+  <text class="sans body" x="1186" y="597">points / VIP / entitlements</text>
+  <rect class="inner" x="1158" y="642" width="370" height="86" rx="14"/>
+  <text class="mono small" x="1186" y="675">OPERATIONS</text>
+  <text class="sans body" x="1186" y="705">content / analytics / management</text>
+  <text class="mono small" x="1158" y="758">VUE 3 / PINIA / ANT DESIGN VUE</text>
+
+  <text class="mono label" x="52" y="868">BRIEF</text>
+  <text class="mono label" x="169" y="868">→</text>
+  <text class="mono label" x="212" y="868">PROVIDER</text>
+  <text class="mono label" x="370" y="868">→</text>
+  <text class="mono label" x="413" y="868">QUEUE</text>
+  <text class="mono label" x="526" y="868">→</text>
+  <text class="mono label" x="569" y="868">DELIVER</text>
+  <text class="mono small" x="1307" y="868">NON-PRODUCTION VISUAL</text>
+</svg>

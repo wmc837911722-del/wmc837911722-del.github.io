@@ -146,19 +146,145 @@ export const siteCopy = {
       kicker: "AI APPLICATIONS / PLATFORM ENGINEERING",
       title: ["真实项目不只看界面，", "更要看它如何落地。"],
       intro:
-        "每个案例都说明它解决什么问题、系统如何运行、关键工程难点在哪里，以及我在项目中的角色。用左右按钮切换，找到与你最接近的场景。",
+        "每个案例都说明它解决什么问题、系统如何运行、关键工程难点在哪里，以及我在项目中的角色。可直接选择案例，也可用左右按钮切换，找到与你最接近的场景。",
       previous: "上一个案例",
       next: "下一个案例",
+      selectorLabel: "快速选择案例",
       keyboardHint: "聚焦案例后，可使用左右方向键切换；Home 和 End 跳到首尾案例。",
       imageLabel: "PROJECT MATERIAL / 项目资料",
       roleLabel: "MY ROLE / 我的角色",
       discuss: "聊聊我的类似需求",
       disclosure:
-        "以下均为风雨主导的团队项目。页面只呈现获准公开的系统信息；团队成员、客户敏感资料与量化结果继续遵循保密与授权边界。",
+        "以下包含独立开发与团队项目，角色与公开事实均按本人简历及授权信息标注。页面不披露客户敏感资料、团队成员信息或未经确认的结果。",
       projects: [
         {
-          id: "mental-health-platform",
+          id: "lynkvis-ai",
           number: "CASE 01",
+          year: "2026.04—2026.07",
+          category: "AI SaaS / 室内设计",
+          purpose: "室内设计 AI 出图与工作流",
+          imageSrc: "/cases/lynkvis-ai-workflow.png",
+          imageAlt: "Lynkvis AI 室内设计平台系统链路示意图，展示设计输入、多模型适配、Redis Stream 调度与结果交付",
+          imageWidth: 1600,
+          imageHeight: 900,
+          imageNote: "基于简历公开信息绘制的系统链路示意图 · 非实机截图",
+          title: "Lynkvis AI 室内设计出图平台",
+          summary:
+            "面向室内设计师，将参考图导入、风格化出图、AI 生图/生视频、图像编辑、素材管理与 Agent 工作流放进统一 SaaS 产品。",
+          flow: ["BRIEF", "PROVIDER", "QUEUE", "DELIVER"],
+          facts: [
+            {
+              id: "flow",
+              label: "系统链路",
+              value:
+                "室内设计需求与参考图 → 30+ 模型/厂商 Provider 适配 → 任务提交 → Redis Stream 异步调度 → 结果回写 → 素材库与运营管理。",
+            },
+            {
+              id: "focus",
+              label: "工程重点",
+              value:
+                "独立完成用户端、运营管理端和 Java 后端，统一模型参数、任务状态与异常处理，并接通积分、VIP 与权益发放链路。",
+            },
+            {
+              id: "evidence",
+              label: "简历记录",
+              value:
+                "覆盖 AI 出图/生视频、图像编辑、模板中心、素材库与 Agent 工作流；项目记录的 AI 任务成功率约 90%。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "Java 17 / Spring Boot 3 / Redis Stream / MySQL / Vue 3 / Pinia / Ant Design Vue",
+            },
+          ],
+          role: "独立全栈开发",
+          roleNote: "简历记录：独立完成用户端、运营管理端与 Java 后端开发，并负责需求拆解、接口设计、联调排错、测试补全和交付。",
+          tagsLabel: "Lynkvis AI 项目技术标签",
+          tags: ["AI SAAS", "MODEL PROVIDER", "REDIS STREAM", "VUE 3"],
+          externalUrl: "https://linktelai.com/",
+          externalLabel: "访问线上项目",
+        },
+        {
+          id: "ecommerce-research-agent",
+          number: "CASE 02",
+          year: "2026.03—2026.04",
+          category: "AI Agent / 电商研究",
+          purpose: "跨平台选品与内容机会发现",
+          imageSrc: "/cases/ecommerce-research-agent.png",
+          imageAlt: "电商选品与内容自动化 Agent 系统链路示意图，展示关键词扩展、多平台采集、机会评分与证据化报告",
+          imageWidth: 1600,
+          imageHeight: 900,
+          imageNote: "基于简历公开信息绘制的 Agent 工作流示意图 · 非实机截图",
+          title: "电商选品与内容自动化 Agent",
+          summary:
+            "从多平台用户讨论与长尾关键词中识别选品机会、用户痛点和内容方向，输出保留来源证据的 HTML/JSON 结构化报告。",
+          flow: ["EXPAND", "COLLECT", "SCORE", "REPORT"],
+          facts: [
+            {
+              id: "flow",
+              label: "Agent 流程",
+              value:
+                "关键词扩展 → 抖音、微博、小红书、知乎等平台数据采集 → 原始数据清洗 → 需求信号识别 → 机会评分 → HTML/JSON 报告。",
+            },
+            {
+              id: "focus",
+              label: "工程重点",
+              value:
+                "将选品机会、内容选题、用户痛点、证据来源与运营建议定义为结构化输出，并保留标题、评论、上下文和平台来源以便追溯。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "Python / Codex / Playwright / CloakBrowser / JSON / HTML Report / Keyword Strategy",
+            },
+          ],
+          role: "独立开发",
+          roleNote: "简历记录：基于 needs-collector 改造为 Codex 驱动的自动化 Agent，并独立实现多平台研究工作流、长尾关键词策略、Agent 分析结构和自动化报告输出。",
+          tagsLabel: "电商研究 Agent 项目技术标签",
+          tags: ["AI AGENT", "RESEARCH PIPELINE", "EVIDENCE", "HTML REPORT"],
+        },
+        {
+          id: "enterprise-rag-mcp-assistant",
+          number: "CASE 03",
+          year: "2025.12—2026.02",
+          category: "企业 AI / RAG + MCP",
+          purpose: "文档与 ERP/WMS 统一问答",
+          imageSrc: "/cases/enterprise-rag-mcp-assistant.png",
+          imageAlt: "企业级 RAG 与 MCP 助手系统链路示意图，展示 PDF 知识库、ERP/WMS 工具调用、Qwen3-72B 与流式回答",
+          imageWidth: 1600,
+          imageHeight: 900,
+          imageNote: "基于简历公开信息绘制的企业 AI 链路示意图 · 非实机截图",
+          title: "复能助手：企业级 RAG + MCP Agent",
+          summary:
+            "将企业文档、ERP 订单、WMS 库存与报表数据接入统一问答链路，支持业务查询、知识溯源和分析报告生成。",
+          flow: ["DOCS", "RETRIEVE", "TOOL", "ANSWER"],
+          facts: [
+            {
+              id: "flow",
+              label: "系统链路",
+              value:
+                "PDF 文档解析与 Milvus 检索 + MCP 数据库工具查询 ERP/WMS → Spring AI 编排 → Qwen3-72B 生成 → Vue 3 流式展示与引用溯源。",
+            },
+            {
+              id: "evidence",
+              label: "简历记录",
+              value:
+                "使用 5000 条业务样本完成 LoRA 微调，接入 20 份 PDF；项目记录问答准确率约 90%，常规分析报告约 5 分钟生成。",
+            },
+            {
+              id: "stack",
+              label: "技术栈",
+              value: "Java / Spring Boot / Spring AI / MCP / Milvus / Qwen3-72B / LLaMA-Factory / LoRA / Vue 3",
+            },
+          ],
+          role: "全栈开发 / AI 应用开发",
+          roleNote: "简历记录：参与 Spring AI 接入、RAG 检索、MCP 数据库工具、流式回答、模型微调部署与企业业务问答链路开发。",
+          tagsLabel: "企业 RAG + MCP 助手项目技术标签",
+          tags: ["RAG", "MCP", "MILVUS", "QWEN3-72B"],
+        },
+        {
+          id: "mental-health-platform",
+          number: "CASE 04",
           year: "2026",
           category: "行业 SaaS / AI 应用",
           purpose: "心理服务数字化闭环",
@@ -197,7 +323,7 @@ export const siteCopy = {
         },
         {
           id: "industrial-compliance-platform",
-          number: "CASE 02",
+          number: "CASE 05",
           year: "2025—2026",
           category: "私有 AI / RAG 平台",
           purpose: "私有知识检索与溯源",
@@ -236,7 +362,7 @@ export const siteCopy = {
         },
         {
           id: "sre-copilot",
-          number: "CASE 03",
+          number: "CASE 06",
           year: "2025",
           category: "AI Agent / 可观测性",
           purpose: "可审计的智能故障诊断",
@@ -275,7 +401,7 @@ export const siteCopy = {
         },
         {
           id: "content-orchestration",
-          number: "CASE 04",
+          number: "CASE 07",
           year: "2025—2026",
           category: "AIGC 基础设施 / 任务编排",
           purpose: "规模化内容生产调度",
@@ -481,19 +607,145 @@ export const siteCopy = {
       kicker: "AI APPLICATIONS / PLATFORM ENGINEERING",
       title: ["Real projects are more than screens.", "See how they reach production."],
       intro:
-        "Each case explains the problem it solves, how the system works, where the engineering gets hard, and my role in delivery. Use the arrows to find the scenario closest to yours.",
+        "Each case explains the problem it solves, how the system works, where the engineering gets hard, and my role in delivery. Choose a case directly or use the arrows to find the scenario closest to yours.",
       previous: "Previous case",
       next: "Next case",
+      selectorLabel: "Choose a case study",
       keyboardHint: "Focus the case and use Left or Right Arrow to switch; Home and End jump to the first or last case.",
       imageLabel: "PROJECT MATERIAL",
       roleLabel: "MY ROLE",
       discuss: "Discuss a similar need",
       disclosure:
-        "These are team projects led by Fengyu. Only approved system information appears here; team details, client-sensitive material and measured outcomes remain within agreed confidentiality boundaries.",
+        "This selection includes independent and team projects. Roles and public facts follow Fengyu's resume and approved information; client-sensitive material, team details and unverified outcomes are not disclosed.",
       projects: [
         {
-          id: "mental-health-platform",
+          id: "lynkvis-ai",
           number: "CASE 01",
+          year: "2026.04–2026.07",
+          category: "AI SaaS / Interior Design",
+          purpose: "AI design generation and workflows",
+          imageSrc: "/cases/lynkvis-ai-workflow.png",
+          imageAlt: "Lynkvis AI interior design platform schematic showing design input, multi-model adapters, Redis Stream orchestration and result delivery",
+          imageWidth: 1600,
+          imageHeight: 900,
+          imageNote: "System schematic based on public resume information · not a product screenshot",
+          title: "Lynkvis AI Interior Design Platform",
+          summary:
+            "Bring reference import, style-controlled generation, AI image and video creation, image editing, asset management and Agent workflows into one SaaS product for interior designers.",
+          flow: ["BRIEF", "PROVIDER", "QUEUE", "DELIVER"],
+          facts: [
+            {
+              id: "flow",
+              label: "System flow",
+              value:
+                "Interior design brief and reference → adapters for 30+ models and vendors → task submission → Redis Stream orchestration → result persistence → asset and operations management.",
+            },
+            {
+              id: "focus",
+              label: "Engineering focus",
+              value:
+                "Independently delivered the user app, operations console and Java backend, normalizing model parameters, task state and failure handling while connecting points, VIP and entitlement flows.",
+            },
+            {
+              id: "evidence",
+              label: "Resume record",
+              value:
+                "Scope includes AI image/video generation, image editing, templates, an asset library and Agent workflows; the project records an AI task success rate of about 90%.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "Java 17 / Spring Boot 3 / Redis Stream / MySQL / Vue 3 / Pinia / Ant Design Vue",
+            },
+          ],
+          role: "Independent full-stack developer",
+          roleNote: "Resume record: independently delivered the user app, operations console and Java backend, including requirements breakdown, API design, integration debugging, test completion and delivery.",
+          tagsLabel: "Lynkvis AI project technology tags",
+          tags: ["AI SAAS", "MODEL PROVIDER", "REDIS STREAM", "VUE 3"],
+          externalUrl: "https://linktelai.com/",
+          externalLabel: "Visit live project",
+        },
+        {
+          id: "ecommerce-research-agent",
+          number: "CASE 02",
+          year: "2026.03–2026.04",
+          category: "AI Agent / E-commerce Research",
+          purpose: "Cross-platform product and content discovery",
+          imageSrc: "/cases/ecommerce-research-agent.png",
+          imageAlt: "E-commerce research Agent schematic showing keyword expansion, multi-platform collection, opportunity scoring and evidence-backed reports",
+          imageWidth: 1600,
+          imageHeight: 900,
+          imageNote: "Agent workflow based on public resume information · not a product screenshot",
+          title: "E-commerce Research & Content Agent",
+          summary:
+            "Identify product opportunities, user pain points and content directions from multi-platform discussions and long-tail keywords, then deliver traceable HTML and JSON reports.",
+          flow: ["EXPAND", "COLLECT", "SCORE", "REPORT"],
+          facts: [
+            {
+              id: "flow",
+              label: "Agent flow",
+              value:
+                "Keyword expansion → collection across Douyin, Weibo, Xiaohongshu and Zhihu → raw-data cleaning → demand-signal detection → opportunity scoring → HTML/JSON report.",
+            },
+            {
+              id: "focus",
+              label: "Engineering focus",
+              value:
+                "Define product opportunities, content topics, pain points, evidence sources and operating suggestions as structured outputs while preserving titles, comments, context and platform provenance.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "Python / Codex / Playwright / CloakBrowser / JSON / HTML Report / Keyword Strategy",
+            },
+          ],
+          role: "Independent developer",
+          roleNote: "Resume record: the project was adapted from needs-collector into a Codex-driven e-commerce automation Agent; independent work covered the multi-platform research workflow, long-tail keyword strategy, Agent output structure and automated HTML/JSON reporting.",
+          tagsLabel: "E-commerce research Agent technology tags",
+          tags: ["AI AGENT", "RESEARCH PIPELINE", "EVIDENCE", "HTML REPORT"],
+        },
+        {
+          id: "enterprise-rag-mcp-assistant",
+          number: "CASE 03",
+          year: "2025.12–2026.02",
+          category: "Enterprise AI / RAG + MCP",
+          purpose: "Unified document and ERP/WMS answers",
+          imageSrc: "/cases/enterprise-rag-mcp-assistant.png",
+          imageAlt: "Enterprise RAG and MCP assistant schematic showing PDF knowledge, ERP and WMS tools, Qwen3-72B and streaming answers",
+          imageWidth: 1600,
+          imageHeight: 900,
+          imageNote: "Enterprise AI workflow based on public resume information · not a product screenshot",
+          title: "复能助手 — Enterprise RAG + MCP Assistant",
+          summary:
+            "Connect enterprise documents, ERP orders, WMS inventory and reporting data in one answer flow for business queries, source-traceable answers and analytical reports.",
+          flow: ["DOCS", "RETRIEVE", "TOOL", "ANSWER"],
+          facts: [
+            {
+              id: "flow",
+              label: "System flow",
+              value:
+                "PDF parsing and Milvus retrieval + MCP database tools for ERP/WMS → Spring AI orchestration → Qwen3-72B generation → Vue 3 streaming presentation with source traceability.",
+            },
+            {
+              id: "evidence",
+              label: "Resume record",
+              value:
+                "LoRA fine-tuning used 5,000 business samples and the knowledge base ingested 20 PDFs; the project records about 90% answer accuracy and roughly five minutes for a standard analysis report.",
+            },
+            {
+              id: "stack",
+              label: "Technology",
+              value: "Java / Spring Boot / Spring AI / MCP / Milvus / Qwen3-72B / LLaMA-Factory / LoRA / Vue 3",
+            },
+          ],
+          role: "Full-stack / AI application developer",
+          roleNote: "Resume record: contributed to Spring AI integration, RAG retrieval, MCP database tools, streaming answers, model fine-tuning deployment and the enterprise Q&A workflow.",
+          tagsLabel: "Enterprise RAG and MCP assistant technology tags",
+          tags: ["RAG", "MCP", "MILVUS", "QWEN3-72B"],
+        },
+        {
+          id: "mental-health-platform",
+          number: "CASE 04",
           year: "2026",
           category: "Industry SaaS / AI Application",
           purpose: "End-to-end mental health services",
@@ -532,7 +784,7 @@ export const siteCopy = {
         },
         {
           id: "industrial-compliance-platform",
-          number: "CASE 02",
+          number: "CASE 05",
           year: "2025–2026",
           category: "Private AI / RAG Platform",
           purpose: "Private knowledge retrieval and traceability",
@@ -571,7 +823,7 @@ export const siteCopy = {
         },
         {
           id: "sre-copilot",
-          number: "CASE 03",
+          number: "CASE 06",
           year: "2025",
           category: "AI Agent / Observability",
           purpose: "Auditable incident diagnosis",
@@ -610,7 +862,7 @@ export const siteCopy = {
         },
         {
           id: "content-orchestration",
-          number: "CASE 04",
+          number: "CASE 07",
           year: "2025–2026",
           category: "AIGC Infrastructure / Orchestration",
           purpose: "Content production at scale",

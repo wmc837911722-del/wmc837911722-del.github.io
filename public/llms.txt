@@ -16,6 +16,9 @@ GitHub profile: https://github.com/wmc837911722-del
 
 ## Public case studies
 
+- https://wmc837911722-del.github.io/cases/lynkvis-ai/
+- https://wmc837911722-del.github.io/cases/ecommerce-research-agent/
+- https://wmc837911722-del.github.io/cases/enterprise-rag-mcp-assistant/
 - https://wmc837911722-del.github.io/cases/mental-health-platform/
 - https://wmc837911722-del.github.io/cases/industrial-compliance-platform/
 - https://wmc837911722-del.github.io/cases/sre-copilot/

@@ -694,6 +694,23 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             </button>
           </div>
 
+          <div className="case-carousel-index" role="group" aria-label={copy.caseStudy.selectorLabel}>
+            {copy.caseStudy.projects.map((project, index) => (
+              <button
+                className="case-index-button"
+                type="button"
+                data-active={index === activeCaseIndex ? "true" : "false"}
+                aria-pressed={index === activeCaseIndex}
+                aria-controls={`case-${project.id}`}
+                onClick={() => goToCase(index, index < activeCaseIndex ? "previous" : "next")}
+                key={project.id}
+              >
+                <span>{project.number}</span>
+                <strong>{project.title}</strong>
+              </button>
+            ))}
+          </div>
+
           <div className="case-carousel-viewport">
             <div
               className="case-carousel-track"
@@ -792,6 +809,17 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
                       >
                         {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
                       </a>
+                      {"externalUrl" in project ? (
+                        <a
+                          className="system-case-external-link"
+                          href={project.externalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          tabIndex={index === activeCaseIndex ? 0 : -1}
+                        >
+                          {project.externalLabel}<span aria-hidden="true">↗</span>
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                   </article>

@@ -32,7 +32,7 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
         technology: "技术标签",
         disclosure: "披露说明",
         disclosureBody:
-          "该案例为风雨主导的团队项目。页面仅呈现获准公开的系统信息；客户敏感资料、团队成员信息与未授权量化结果不在本站披露。",
+          "案例角色与系统信息依据本人简历及已获准公开资料整理。客户敏感资料、团队成员信息与未经确认的结果不在本站披露。",
         moreCases: "查看首页中的其他案例",
       }
     : {
@@ -47,7 +47,7 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
         technology: "Technology",
         disclosure: "Disclosure",
         disclosureBody:
-          "This is a team project led by Fengyu. Only information approved for disclosure appears here; client-sensitive material, team details and unauthorized measured outcomes remain confidential.",
+          "The role and system information follow Fengyu's resume and approved public material. Client-sensitive content, team details and unverified outcomes remain confidential.",
         moreCases: "Explore the other case studies",
       };
 
@@ -140,9 +140,24 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
           <ul aria-label={project.tagsLabel}>
             {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
           </ul>
-          <a className="primary-button" href={`${localePaths[locale]}#contact`}>
-            <span>{labels.contact}</span><span aria-hidden="true">↗</span>
-          </a>
+          <div className="case-detail-actions">
+            <a className="primary-button" href={`${localePaths[locale]}#contact`}>
+              <span>{labels.contact}</span><span aria-hidden="true">↗</span>
+            </a>
+            <a className="case-detail-secondary-button" href={`${localePaths[locale]}#case-study`}>
+              <span>{labels.moreCases}</span><span aria-hidden="true">←</span>
+            </a>
+            {"externalUrl" in project ? (
+              <a
+                className="case-detail-secondary-button"
+                href={project.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{project.externalLabel}</span><span aria-hidden="true">↗</span>
+              </a>
+            ) : null}
+          </div>
         </section>
       </article>
 
