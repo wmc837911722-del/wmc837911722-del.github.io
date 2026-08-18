@@ -51,8 +51,12 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /合作品牌/);
   assert.match(html, /宁波复能稀土新材料股份有限公司/);
   assert.match(html, /温州橙绘科技有限公司/);
+  assert.match(html, /\/brands\/partner-ribbons\/banner1\.webp/);
+  assert.match(html, /\/brands\/partner-ribbons\/banner2\.webp/);
+  assert.match(html, /\/brands\/partner-ribbons\/banner3\.webp/);
   assert.match(html, /当前并未完整展示全部合作记录/);
   assert.doesNotMatch(html, /\bwude\b/i);
+  assert.doesNotMatch(html, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
   assert.match(html, /id="case-study"/);
   assert.match(html, /Lynkvis AI 室内设计出图平台/);
   assert.match(html, /电商选品与内容自动化 Agent/);

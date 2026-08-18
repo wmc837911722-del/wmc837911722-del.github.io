@@ -119,26 +119,31 @@ test("language and theme controls are accessible buttons with 44px targets", () 
   assert.match(css, /html\[data-theme="light"\]/);
 });
 
-test("partner wall scrolls only verified brands and explicit visual placeholders", () => {
+test("partner wall scrolls only confirmed collaboration brands", () => {
   assert.match(page, /id="partners"/);
   assert.match(page, /const \[isPartnerMarqueePaused, setIsPartnerMarqueePaused\] = useState\(false\)/);
   assert.match(
     page,
-    /const marqueeTiles = copy\.partners\.tiles\.filter\([\s\S]*?tile\.kind === "brand" \|\| tile\.kind === "placeholder"[\s\S]*?\);/,
+    /const featuredPartnerTiles = copy\.partners\.tiles\.filter\([\s\S]*?tile\.kind === "brand"[\s\S]*?\);/,
   );
   assert.match(page, /className="partner-marquee-shell"/);
   assert.match(page, /className=\{`partner-marquee\$\{isPartnerMarqueePaused \? " is-paused" : ""\}`\}/);
   assert.match(page, /className="partner-ribbon-stack"/);
   assert.match(page, /id="brand-ribbon-stack"/);
-  assert.match(page, /\{\[0, 1, 2\]\.map\(\(rowIndex\) => \{/);
+  assert.match(page, /copy\.partners\.ribbons\.map\(\(ribbon, rowIndex\) =>/);
   assert.match(page, /rowIndex === 1 \? " partner-ribbon-lane--reverse" : ""/);
-  assert.match(page, /aria-hidden=\{rowIndex > 0 \? true : undefined\}/);
-  assert.match(page, /inert=\{rowIndex > 0 \? true : undefined\}/);
+  assert.doesNotMatch(page, /aria-hidden=\{rowIndex > 0/);
+  assert.doesNotMatch(page, /inert=\{rowIndex > 0/);
   assert.match(page, /\{\[0, 1\]\.map\(\(groupIndex\) => \(/);
   assert.match(page, /aria-hidden=\{groupIndex === 1 \? true : undefined\}/);
   assert.match(page, /inert=\{groupIndex === 1 \? true : undefined\}/);
   assert.match(page, /className="partner-ribbon-tile/);
   assert.match(page, /className="sr-only">\{tile\.note\}<\/span>/);
+  assert.match(page, /className="partner-ribbon-strip"/);
+  assert.match(page, /src=\{ribbon\.src\}/);
+  assert.match(page, /alt=\{groupIndex === 0 \? ribbon\.alt : ""\}/);
+  assert.match(page, /width=\{ribbon\.width\}/);
+  assert.match(page, /height=\{ribbon\.height\}/);
   assert.match(page, /className="partner-marquee-toggle"/);
   assert.match(page, /type="button"/);
   assert.match(page, /aria-controls="brand-ribbon-stack"/);
@@ -150,8 +155,15 @@ test("partner wall scrolls only verified brands and explicit visual placeholders
   assert.doesNotMatch(copy, /\bwude\b|WUDE 项目团队|WUDE project team/i);
   assert.match(copy, /宁波复能稀土新材料股份有限公司/);
   assert.match(copy, /温州橙绘科技有限公司/);
+  assert.match(copy, /\/brands\/partner-ribbons\/banner1\.webp/);
+  assert.match(copy, /\/brands\/partner-ribbons\/banner2\.webp/);
+  assert.match(copy, /\/brands\/partner-ribbons\/banner3\.webp/);
+  assert.match(copy, /万科/);
+  assert.match(copy, /中国工商银行/);
+  assert.match(copy, /华润置地/);
   assert.match(copy, /当前并未完整展示全部合作记录/);
-  assert.match(copy, /因保密约定不公开名称、Logo、项目资料与业务数据/);
+  assert.match(copy, /因保密约定不公开/);
+  assert.doesNotMatch(copy, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
   assert.match(page, /src=\{tile\.logoSrc\}/);
   assert.match(page, /alt=\{tile\.logoAlt\}/);
   assert.match(page, /loading="lazy"/);
@@ -161,6 +173,7 @@ test("partner wall scrolls only verified brands and explicit visual placeholders
   assert.match(css, /\.partner-ribbon-lane\s*\{(?=[^}]*height:\s*63px)(?=[^}]*overflow:\s*(?:hidden|clip))[^}]*\}/s);
   assert.match(css, /\.partner-ribbon-track\s*\{(?=[^}]*display:\s*flex)(?=[^}]*width:\s*max-content)[^}]*\}/s);
   assert.match(css, /\.partner-ribbon-group\s*\{[^}]*flex:\s*none/s);
+  assert.match(css, /\.partner-ribbon-strip\s*\{(?=[^}]*width:\s*auto)(?=[^}]*height:\s*63px)[^}]*\}/s);
   assert.match(css, /\.partner-ribbon-track\s*\{[^}]*animation:\s*partner-ribbon-right\s+30s\s+linear\s+infinite/s);
   assert.match(css, /\.partner-ribbon-lane--reverse\s+\.partner-ribbon-track\s*\{[^}]*animation-name:\s*partner-ribbon-left/s);
   assert.match(css, /@keyframes partner-ribbon-left\s*\{[\s\S]*translate3d\(-50%,\s*0,\s*0\)/);
@@ -174,11 +187,15 @@ test("partner wall scrolls only verified brands and explicit visual placeholders
   );
   assert.match(
     css,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-lane\[aria-hidden="true"\][^}]*\{[^}]*display:\s*none/s,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-lane\s*\{[^}]*overflow-x:\s*auto/s,
   );
   assert.match(
     css,
     /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-group\[aria-hidden="true"\][^}]*\{[^}]*display:\s*none/s,
+  );
+  assert.doesNotMatch(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-lane\[aria-hidden="true"\]/s,
   );
   assert.doesNotMatch(
     css,

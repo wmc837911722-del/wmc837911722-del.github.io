@@ -5,6 +5,9 @@ import ts from "typescript";
 
 const sourceUrl = new URL("../app/site-copy.ts", import.meta.url);
 const lynkvisLogoUrl = new URL("../public/brands/lynkvis-ai-logo.png", import.meta.url);
+const partnerRibbonUrls = [1, 2, 3].map(
+  (index) => new URL(`../public/brands/partner-ribbons/banner${index}.webp`, import.meta.url),
+);
 
 async function loadSiteCopy() {
   const source = await readFile(sourceUrl, "utf8");
@@ -121,54 +124,41 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     siteCopy.en.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
     ["funeng-rare-earth", "chenghui-tech", "lynkvis-ai"],
   );
-  const placeholderIds = [
-    "private-slot-01",
-    "private-slot-02",
-    "private-slot-03",
-    "private-slot-04",
-    "private-slot-05",
-  ];
   for (const locale of ["zh", "en"]) {
-    const placeholders = siteCopy[locale].partners.tiles.filter(
-      ({ kind }) => kind === "placeholder",
+    const { partners } = siteCopy[locale];
+    assert.deepEqual(
+      partners.tiles.filter(({ kind }) => kind === "placeholder"),
+      [],
     );
-
-    assert.deepEqual(placeholders.map(({ id }) => id), placeholderIds);
-    for (const placeholder of placeholders) {
-      assert.equal("logoSrc" in placeholder, false, `${locale}.${placeholder.id} must not imitate a real logo`);
-      assert.match(
-        placeholder.name,
-        locale === "zh" ? /纯视觉占位.*非客户.*合作背书/ : /visual only.*no client.*partner endorsement/i,
-      );
-      assert.match(placeholder.note, locale === "zh" ? /视觉占位/ : /visual placeholder/i);
-      assert.match(
-        placeholder.note,
-        locale === "zh"
-          ? /不对应.*客户.*合作.*公开品牌.*不构成.*品牌背书/
-          : /does not identify a client, collaboration or public brand.*not an endorsement/i,
-      );
+    assert.deepEqual(
+      partners.ribbons.map(({ src }) => src),
+      [
+        "/brands/partner-ribbons/banner1.webp",
+        "/brands/partner-ribbons/banner2.webp",
+        "/brands/partner-ribbons/banner3.webp",
+      ],
+    );
+    for (const ribbon of partners.ribbons) {
+      assert.match(ribbon.src, /^\/brands\/partner-ribbons\/banner[1-3]\.webp$/);
+      assert.doesNotMatch(ribbon.src, /^https?:/);
+      assert.equal(ribbon.width, 5132);
+      assert.equal(ribbon.height, 168);
+      assert.match(ribbon.alt, locale === "zh" ? /合作品牌 Logo/ : /collaboration brand logos/i);
     }
   }
   assert.doesNotMatch(
     JSON.stringify(siteCopy),
-    /\bwude\b|WUDE 项目团队|WUDE project team/i,
+    /\bwude\b|WUDE 项目团队|WUDE project team|星洋智慧|starocean(?:wisdom)?|visual placeholder|纯视觉占位/i,
   );
-  assert.match(siteCopy.zh.partners.intro, /获得(?:公开)?(?:授权|许可)/);
-  assert.match(siteCopy.zh.partners.intro, /纯视觉占位/);
-  assert.match(siteCopy.zh.partners.intro, /不对应.*客户.*合作.*公开品牌.*不构成.*品牌背书/);
-  assert.match(siteCopy.zh.partners.aria, /视觉占位.*不代表客户、合作或品牌背书/);
+  assert.match(siteCopy.zh.partners.intro, /确认并授权公开/);
+  assert.match(siteCopy.zh.partners.aria, /确认并授权公开/);
   assert.match(siteCopy.zh.partners.intro, /并未完整展示.*因保密约定/);
   assert.match(
     siteCopy.en.partners.intro,
-    /explicit permission|approved (?:for disclosure|information)|only with permission/i,
+    /personally confirmed and authorized for public display/i,
   );
-  assert.match(siteCopy.en.partners.intro, /visual placeholders/i);
-  assert.match(
-    siteCopy.en.partners.intro,
-    /does not identify.*client, collaboration or public brand.*not an endorsement/i,
-  );
-  assert.match(siteCopy.en.partners.aria, /visual placeholders.*not client, collaboration or brand endorsements/i);
-  assert.match(siteCopy.en.partners.intro, /not a complete record.*confidentiality agreements/i);
+  assert.match(siteCopy.en.partners.aria, /confirmed and authorized for public display/i);
+  assert.match(siteCopy.en.partners.intro, /not a complete record.*remain confidential/i);
   for (const companyName of [
     "宁波复能稀土新材料股份有限公司",
     "温州橙绘科技有限公司",
@@ -185,6 +175,11 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     [...logo.subarray(0, 8)],
     [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
   );
+  for (const ribbonUrl of partnerRibbonUrls) {
+    const ribbon = await readFile(ribbonUrl);
+    assert.equal(ribbon.subarray(0, 4).toString("ascii"), "RIFF");
+    assert.equal(ribbon.subarray(8, 12).toString("ascii"), "WEBP");
+  }
 });
 
 test("WeChat copy identifies the profile field without turning it into an address", async () => {
