@@ -136,6 +136,10 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     assert.deepEqual(placeholders.map(({ id }) => id), placeholderIds);
     for (const placeholder of placeholders) {
       assert.equal("logoSrc" in placeholder, false, `${locale}.${placeholder.id} must not imitate a real logo`);
+      assert.match(
+        placeholder.name,
+        locale === "zh" ? /纯视觉占位.*非客户.*合作背书/ : /visual only.*no client.*partner endorsement/i,
+      );
       assert.match(placeholder.note, locale === "zh" ? /视觉占位/ : /visual placeholder/i);
       assert.match(
         placeholder.note,

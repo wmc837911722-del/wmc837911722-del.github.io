@@ -35,24 +35,34 @@ function PartnerTileContent({ tile }: { tile: PartnerTile }) {
   return (
     <>
       <span className="brand-eyebrow">{tile.eyebrow}</span>
-      <strong className={`brand-mark${tile.logoSrc ? " brand-mark--logo" : ""}`}>
-        {tile.logoSrc ? (
-          // The official self-hosted asset is shared by the Sites and GitHub Pages builds.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={tile.logoSrc}
-            alt={tile.logoAlt}
-            width={tile.logoWidth}
-            height={tile.logoHeight}
-            loading="lazy"
-            decoding="async"
-          />
-        ) : tile.mark}
-      </strong>
+      <strong className="brand-mark">{tile.mark}</strong>
       <span className="brand-name">{tile.name}</span>
       <small>{tile.note}</small>
       {tile.kind === "cta" ? <span className="brand-arrow" aria-hidden="true">→</span> : null}
     </>
+  );
+}
+
+function PartnerRibbonTile({ tile }: { tile: PartnerTile }) {
+  return (
+    <article className="partner-ribbon-tile" data-kind={tile.kind}>
+      {tile.logoSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          className="partner-ribbon-logo"
+          src={tile.logoSrc}
+          alt={tile.logoAlt}
+          width={tile.logoWidth}
+          height={tile.logoHeight}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <strong className="partner-ribbon-mark">{tile.mark}</strong>
+      )}
+      <span className="partner-ribbon-name">{tile.name}</span>
+      <span className="sr-only">{tile.note}</span>
+    </article>
   );
 }
 
@@ -653,7 +663,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           <button
             className="partner-marquee-toggle"
             type="button"
-            aria-controls="brand-marquee-track"
+            aria-controls="brand-ribbon-stack"
             aria-pressed={isPartnerMarqueePaused}
             onClick={() => setIsPartnerMarqueePaused((paused) => !paused)}
           >
@@ -665,23 +675,38 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             className={`partner-marquee${isPartnerMarqueePaused ? " is-paused" : ""}`}
             aria-label={copy.partners.aria}
           >
-            <div className="partner-marquee-track" id="brand-marquee-track">
-              {[0, 1].map((groupIndex) => (
-                <ul
-                  className="partner-marquee-group"
-                  aria-hidden={groupIndex === 1}
-                  inert={groupIndex === 1 ? true : undefined}
-                  key={groupIndex}
-                >
-                  {marqueeTiles.map((tile) => (
-                    <li className="partner-marquee-item" key={`${groupIndex}-${tile.id}`}>
-                      <article className={`brand-tile brand-tile--${tile.kind}`}>
-                        <PartnerTileContent tile={tile} />
-                      </article>
-                    </li>
-                  ))}
-                </ul>
-              ))}
+            <div className="partner-ribbon-stack" id="brand-ribbon-stack">
+              {[0, 1, 2].map((rowIndex) => {
+                const rowTiles = marqueeTiles.map(
+                  (_, tileIndex) => marqueeTiles[(tileIndex + rowIndex * 3) % marqueeTiles.length],
+                );
+
+                return (
+                  <div
+                    className={`partner-ribbon-lane${rowIndex === 1 ? " partner-ribbon-lane--reverse" : ""}`}
+                    aria-hidden={rowIndex > 0 ? true : undefined}
+                    inert={rowIndex > 0 ? true : undefined}
+                    key={rowIndex}
+                  >
+                    <div className="partner-ribbon-track">
+                      {[0, 1].map((groupIndex) => (
+                        <ul
+                          className="partner-ribbon-group"
+                          aria-hidden={groupIndex === 1 ? true : undefined}
+                          inert={groupIndex === 1 ? true : undefined}
+                          key={groupIndex}
+                        >
+                          {rowTiles.map((tile) => (
+                            <li className="partner-ribbon-item" key={`${rowIndex}-${groupIndex}-${tile.id}`}>
+                              <PartnerRibbonTile tile={tile} />
+                            </li>
+                          ))}
+                        </ul>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -128,13 +128,20 @@ test("partner wall scrolls only verified brands and explicit visual placeholders
   );
   assert.match(page, /className="partner-marquee-shell"/);
   assert.match(page, /className=\{`partner-marquee\$\{isPartnerMarqueePaused \? " is-paused" : ""\}`\}/);
-  assert.match(page, /id="brand-marquee-track"/);
+  assert.match(page, /className="partner-ribbon-stack"/);
+  assert.match(page, /id="brand-ribbon-stack"/);
+  assert.match(page, /\{\[0, 1, 2\]\.map\(\(rowIndex\) => \{/);
+  assert.match(page, /rowIndex === 1 \? " partner-ribbon-lane--reverse" : ""/);
+  assert.match(page, /aria-hidden=\{rowIndex > 0 \? true : undefined\}/);
+  assert.match(page, /inert=\{rowIndex > 0 \? true : undefined\}/);
   assert.match(page, /\{\[0, 1\]\.map\(\(groupIndex\) => \(/);
-  assert.match(page, /aria-hidden=\{groupIndex === 1\}/);
+  assert.match(page, /aria-hidden=\{groupIndex === 1 \? true : undefined\}/);
   assert.match(page, /inert=\{groupIndex === 1 \? true : undefined\}/);
+  assert.match(page, /className="partner-ribbon-tile/);
+  assert.match(page, /className="sr-only">\{tile\.note\}<\/span>/);
   assert.match(page, /className="partner-marquee-toggle"/);
   assert.match(page, /type="button"/);
-  assert.match(page, /aria-controls="brand-marquee-track"/);
+  assert.match(page, /aria-controls="brand-ribbon-stack"/);
   assert.match(page, /aria-pressed=\{isPartnerMarqueePaused\}/);
   assert.match(page, /setIsPartnerMarqueePaused\(\(paused\) => !paused\)/);
   assert.match(page, />\s*\{copy\.partners\.pauseMotion\}\s*<\/button>/);
@@ -150,21 +157,31 @@ test("partner wall scrolls only verified brands and explicit visual placeholders
   assert.match(page, /loading="lazy"/);
   assert.match(page, /brand-tile--cta/);
   assert.match(css, /\.partner-marquee\s*\{[^}]*overflow:\s*(?:hidden|clip)/s);
-  assert.match(css, /\.partner-marquee-track\s*\{[^}]*animation:\s*partner-marquee-scroll\s+\d+s\s+linear\s+infinite/s);
-  assert.match(css, /@keyframes partner-marquee-scroll\s*\{[\s\S]*translate3d\(-50%,\s*0,\s*0\)/);
-  assert.match(css, /\.partner-marquee\.is-paused\s+\.partner-marquee-track\s*\{[^}]*animation-play-state:\s*paused/s);
-  assert.match(css, /\.partner-marquee:hover\s+\.partner-marquee-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /\.partner-ribbon-stack\s*\{[^}]*(?:gap|row-gap):\s*21px/s);
+  assert.match(css, /\.partner-ribbon-lane\s*\{(?=[^}]*height:\s*63px)(?=[^}]*overflow:\s*(?:hidden|clip))[^}]*\}/s);
+  assert.match(css, /\.partner-ribbon-track\s*\{(?=[^}]*display:\s*flex)(?=[^}]*width:\s*max-content)[^}]*\}/s);
+  assert.match(css, /\.partner-ribbon-group\s*\{[^}]*flex:\s*none/s);
+  assert.match(css, /\.partner-ribbon-track\s*\{[^}]*animation:\s*partner-ribbon-right\s+30s\s+linear\s+infinite/s);
+  assert.match(css, /\.partner-ribbon-lane--reverse\s+\.partner-ribbon-track\s*\{[^}]*animation-name:\s*partner-ribbon-left/s);
+  assert.match(css, /@keyframes partner-ribbon-left\s*\{[\s\S]*translate3d\(-50%,\s*0,\s*0\)/);
+  assert.match(css, /@keyframes partner-ribbon-right\s*\{[\s\S]*from\s*\{[^}]*translate3d\(-50%,\s*0,\s*0\)[^}]*\}[\s\S]*to\s*\{[^}]*translate3d\(0,\s*0,\s*0\)/);
+  assert.match(css, /\.partner-marquee\.is-paused\s+\.partner-ribbon-track\s*\{[^}]*animation-play-state:\s*paused/s);
+  assert.match(css, /\.partner-marquee:hover\s+\.partner-ribbon-track\s*\{[^}]*animation-play-state:\s*paused/s);
   assert.match(css, /\.partner-marquee-toggle\s*\{[^}]*min-width:\s*44px[^}]*min-height:\s*44px/s);
   assert.match(
     css,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-marquee-track\s*\{[^}]*animation:\s*none\s*!important[^}]*transform:\s*none\s*!important/s,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-track\s*\{[^}]*animation:\s*none\s*!important[^}]*transform:\s*none\s*!important/s,
   );
   assert.match(
     css,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-marquee-group\[aria-hidden="true"\]\s*\{[^}]*display:\s*none/s,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-lane\[aria-hidden="true"\][^}]*\{[^}]*display:\s*none/s,
+  );
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-group\[aria-hidden="true"\][^}]*\{[^}]*display:\s*none/s,
   );
   assert.doesNotMatch(
     css,
-    /\.(?:partner-marquee|partner-marquee-track|partner-marquee-group)[^{]*\{[^}]*width:\s*100vw/s,
+    /\.(?:partner-marquee|partner-ribbon-track|partner-ribbon-group|partner-ribbon-lane)[^{]*\{[^}]*width:\s*100vw/s,
   );
 });
