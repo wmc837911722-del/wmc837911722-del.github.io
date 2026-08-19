@@ -14,6 +14,14 @@ GitHub profile: https://github.com/wmc837911722-del
 - 系统集成与生产上线
 - 运行优化与团队交接
 
+## FDE Learning Guide
+
+- Public Chinese guide: https://wmc837911722-del.github.io/fde-learning/
+- Repository and templates: https://github.com/wmc837911722-del/fde-learning
+- Audience: developers with programming fundamentals and no prior FDE experience
+- Standard path: 20–28 weeks, six capability dimensions, three progressive projects
+- The guide does not guarantee employment; current target-role requirements remain authoritative
+
 ## Public case studies
 
 - https://wmc837911722-del.github.io/cases/lynkvis-ai/

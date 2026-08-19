@@ -45,6 +45,16 @@ function commercialClaims(copy) {
     ...copy.process.steps.map(({ description }) => description),
     copy.about.quote,
     copy.about.body,
+    ...copy.fdeLearning.title,
+    copy.fdeLearning.intro,
+    copy.fdeLearning.audience,
+    ...copy.fdeLearning.facts.flatMap(({ label, value }) => [label, value]),
+    copy.fdeLearning.pathLabel,
+    ...copy.fdeLearning.stages.flatMap(({ title, description }) => [title, description]),
+    copy.fdeLearning.capstoneTitle,
+    copy.fdeLearning.capstoneBody,
+    copy.fdeLearning.proof,
+    copy.fdeLearning.disclaimer,
     copy.contact.titleStart,
     copy.contact.titleEnd,
     copy.contact.body,
@@ -75,6 +85,15 @@ test("every commercial section has useful bilingual copy and a clear next action
       cases: [copy.caseStudy.title.join(" "), copy.caseStudy.intro],
       process: [copy.process.title.join(" "), ...copy.process.steps.map(({ description }) => description)],
       about: [copy.about.quote, copy.about.body],
+      fdeLearning: [
+        copy.fdeLearning.title.join(" "),
+        copy.fdeLearning.intro,
+        copy.fdeLearning.audience,
+        ...copy.fdeLearning.stages.map(({ description }) => description),
+        copy.fdeLearning.capstoneBody,
+        copy.fdeLearning.proof,
+        copy.fdeLearning.disclaimer,
+      ],
       contact: [`${copy.contact.titleStart} ${copy.contact.titleEnd}`, copy.contact.body],
     };
 
@@ -91,6 +110,8 @@ test("every commercial section has useful bilingual copy and a clear next action
       services: copy.serviceAria,
       partners: copy.partners.tiles.find(({ kind }) => kind === "cta")?.name,
       cases: copy.caseStudy.discuss,
+      fdeLearning: copy.fdeLearning.primaryCta,
+      fdeLearningRepository: copy.fdeLearning.repositoryCta,
       contact: copy.contact.copyIdle,
     };
 
@@ -98,6 +119,93 @@ test("every commercial section has useful bilingual copy and a clear next action
       assertUsefulText(action, `${locale}.${section} CTA`);
     }
   }
+});
+
+test("FDE learning guide publishes aligned bilingual stages, facts, boundaries and actions", async () => {
+  const siteCopy = await loadSiteCopy();
+  const expectedFacts = {
+    zh: [
+      ["duration", "20–28 周", "标准学习路线"],
+      ["capabilities", "6 维", "FDE 能力矩阵"],
+      ["projects", "3 个", "递进式实战项目"],
+    ],
+    en: [
+      ["duration", "20–28 WEEKS", "STANDARD LEARNING PATH"],
+      ["capabilities", "6 DIMENSIONS", "FDE CAPABILITY MATRIX"],
+      ["projects", "3 PROJECTS", "PROGRESSIVE PRACTICE"],
+    ],
+  };
+  const expectedStageIds = [
+    "role",
+    "gap",
+    "discovery",
+    "engineering",
+    "production",
+    "evidence",
+  ];
+
+  for (const locale of ["zh", "en"]) {
+    const guide = siteCopy[locale].fdeLearning;
+    const textFields = [
+      guide.label,
+      guide.labelLocal,
+      guide.resourceName,
+      guide.kicker,
+      ...guide.title,
+      guide.intro,
+      guide.audienceLabel,
+      guide.audience,
+      guide.pathLabel,
+      guide.capstoneLabel,
+      guide.capstoneTitle,
+      guide.capstoneBody,
+      guide.proofLabel,
+      guide.proof,
+      guide.disclaimer,
+      guide.primaryCta,
+      guide.repositoryCta,
+      guide.newWindow,
+    ];
+
+    textFields.forEach((value, index) =>
+      assertUsefulText(value, `${locale}.fdeLearning text[${index}]`),
+    );
+    assert.deepEqual(
+      guide.facts.map(({ id, value, label }) => [id, value, label]),
+      expectedFacts[locale],
+      `${locale} should publish the verified duration, capability and project facts`,
+    );
+    assert.deepEqual(
+      guide.stages.map(({ id }) => id),
+      expectedStageIds,
+      `${locale} should preserve the six-stage learning sequence`,
+    );
+    assert.deepEqual(
+      guide.stages.map(({ number }) => number),
+      ["01", "02", "03", "04", "05", "06"],
+      `${locale} should number every learning stage`,
+    );
+    for (const [index, stage] of guide.stages.entries()) {
+      assertUsefulText(stage.title, `${locale}.fdeLearning.stages[${index}].title`);
+      assertUsefulText(stage.description, `${locale}.fdeLearning.stages[${index}].description`);
+    }
+  }
+
+  assert.deepEqual(
+    siteCopy.zh.fdeLearning.stages.map(({ id }) => id),
+    siteCopy.en.fdeLearning.stages.map(({ id }) => id),
+    "localized guides should describe the same learning path",
+  );
+  assert.match(siteCopy.zh.fdeLearning.intro, /已有编程基础、零 FDE 经验/);
+  assert.match(siteCopy.en.fdeLearning.intro, /Chinese-language guide.*programming fundamentals.*no prior FDE experience/i);
+  assert.match(siteCopy.zh.fdeLearning.capstoneTitle, /企业 RAG \+ MCP 助手/);
+  assert.match(siteCopy.en.fdeLearning.capstoneTitle, /Enterprise RAG \+ MCP Assistant/);
+  assert.match(siteCopy.zh.fdeLearning.disclaimer, /不是就业保证.*目标公司的最新职位描述/);
+  assert.match(siteCopy.en.fdeLearning.disclaimer, /not an employment guarantee.*latest requirements.*target role/i);
+  assert.match(siteCopy.zh.fdeLearning.primaryCta, /学习路线/);
+  assert.match(siteCopy.zh.fdeLearning.repositoryCta, /仓库.*模板/);
+  assert.match(siteCopy.en.fdeLearning.primaryCta, /Chinese guide/i);
+  assert.match(siteCopy.en.fdeLearning.repositoryCta, /repository.*templates/i);
 });
 
 test("commercial copy does not invent quantified outcomes or undisclosed clients", async () => {

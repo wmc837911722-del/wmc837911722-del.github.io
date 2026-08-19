@@ -25,6 +25,7 @@ export const siteCopy = {
       caseStudy: "项目案例",
       process: "合作方式",
       about: "关于",
+      fdeLearning: "FDE 教程",
       contact: "聊聊合作",
       contactShort: "合作",
     },
@@ -495,6 +496,43 @@ export const siteCopy = {
       quote: "“不以 Demo 交差，让 AI 在真实业务里被用起来、跑得稳定。”",
       body: "我会先判断一个场景是否值得做，再选择足够简单、能够验证的方案。真正的交付不仅是代码，还包括业务采用、数据与权限边界、运行稳定性，以及团队接得住的长期维护方式。",
     },
+    fdeLearning: {
+      label: "PUBLIC LEARNING GUIDE",
+      labelLocal: "FDE 成长手册",
+      resourceName: "FDE 成长手册",
+      kicker: "HOW TO BECOME AN FDE",
+      title: ["怎么成为一名 FDE？", "从可验证的交付证据开始。"],
+      intro:
+        "这套公开中文教程面向已有编程基础、零 FDE 经验的学习者。它不要求背工具清单，而是带你从读懂岗位、定位能力差距，一路完成客户发现、工程交付、AI 评测与生产化、作品集和面试准备。",
+      audienceLabel: "适合谁",
+      audience:
+        "能用至少一种编程语言完成中小型服务，掌握 Git、HTTP API、SQL 与基本测试，并愿意按标准路线每周投入 8–12 小时的学习者。",
+      facts: [
+        { id: "duration", value: "20–28 周", label: "标准学习路线" },
+        { id: "capabilities", value: "6 维", label: "FDE 能力矩阵" },
+        { id: "projects", value: "3 个", label: "递进式实战项目" },
+      ],
+      pathLabel: "成为 FDE 的学习路径",
+      stages: [
+        { id: "role", number: "01", title: "读懂岗位", description: "辨别 FDE 与相邻岗位，完成一份目标岗位简报。" },
+        { id: "gap", number: "02", title: "盘点差距", description: "用六维能力矩阵找到短板，制定未来 30 天计划。" },
+        { id: "discovery", number: "03", title: "客户发现", description: "把模糊的 AI 需求收敛成可验证的 Discovery Brief。" },
+        { id: "engineering", number: "04", title: "工程与 AI", description: "构建数据底座、RAG 基线、评测与 MCP 工具边界。" },
+        { id: "production", number: "05", title: "生产交付", description: "补齐认证、权限、监控、SLO、回滚、演练与交接。" },
+        { id: "evidence", number: "06", title: "证据转化", description: "把决策、失败与结果整理成作品集和面试证据。" },
+      ],
+      capstoneLabel: "CAPSTONE / 毕业项目",
+      capstoneTitle: "企业 RAG + MCP 助手",
+      capstoneBody:
+        "教程提供 v0.1 项目合同、设计与验收规范；你需要自行完成可部署、可评测、可审计、可降级、可回滚、可交接的垂直切片，而不是复制一套现成业务代码。",
+      proofLabel: "完成标准",
+      proof:
+        "最终拿出 Discovery Brief、版本化评测集、威胁模型、运行证据、runbook 与作品集证据链。",
+      disclaimer: "这不是就业保证；申请要求仍应以目标公司的最新职位描述为准。",
+      primaryCta: "开始 FDE 学习路线",
+      repositoryCta: "查看教程仓库与模板",
+      newWindow: "在新窗口打开",
+    },
     contact: {
       label: "CONTACT",
       labelLocal: "开始合作",
@@ -550,6 +588,7 @@ export const siteCopy = {
       caseStudy: "Case studies",
       process: "How we work",
       about: "About",
+      fdeLearning: "FDE guide",
       contact: "Start a project",
       contactShort: "Talk",
     },
@@ -1000,6 +1039,43 @@ export const siteCopy = {
       labelLocal: "What I believe",
       quote: "“The goal is not a convincing demo. It is AI that gets used and keeps working.”",
       body: "I first ask whether a use case is worth building, then choose the simplest path that can prove it. Delivery includes more than code: adoption, data and permission boundaries, reliability, and a maintenance model the team can own.",
+    },
+    fdeLearning: {
+      label: "PUBLIC LEARNING GUIDE",
+      labelLocal: "Chinese FDE learning guide",
+      resourceName: "FDE Learning Guide",
+      kicker: "HOW TO BECOME AN FDE",
+      title: ["How do you become an FDE?", "Build evidence that you can deliver."],
+      intro:
+        "This public Chinese-language guide is for developers with programming fundamentals and no prior FDE experience. Instead of memorizing a tool list, you move from role definition and skill gaps through discovery, engineering delivery, AI evaluation and production readiness, then turn the work into portfolio and interview evidence.",
+      audienceLabel: "WHO IT IS FOR",
+      audience:
+        "Learners who can build a small service in at least one language, use Git, HTTP APIs, SQL and basic tests, and commit 8–12 hours per week to the standard path.",
+      facts: [
+        { id: "duration", value: "20–28 WEEKS", label: "STANDARD LEARNING PATH" },
+        { id: "capabilities", value: "6 DIMENSIONS", label: "FDE CAPABILITY MATRIX" },
+        { id: "projects", value: "3 PROJECTS", label: "PROGRESSIVE PRACTICE" },
+      ],
+      pathLabel: "Path to becoming an FDE",
+      stages: [
+        { id: "role", number: "01", title: "Define the role", description: "Distinguish FDE work from adjacent roles and write a target-role brief." },
+        { id: "gap", number: "02", title: "Map the gaps", description: "Use the six-dimension matrix and create a focused 30-day plan." },
+        { id: "discovery", number: "03", title: "Run discovery", description: "Turn an ambiguous AI request into a testable Discovery Brief." },
+        { id: "engineering", number: "04", title: "Build AI systems", description: "Create the data foundation, RAG baseline, evaluation and MCP boundaries." },
+        { id: "production", number: "05", title: "Deliver to production", description: "Cover auth, permissions, monitoring, SLOs, rollback, drills and handoff." },
+        { id: "evidence", number: "06", title: "Turn work into proof", description: "Convert decisions, failures and results into portfolio and interview evidence." },
+      ],
+      capstoneLabel: "CAPSTONE",
+      capstoneTitle: "Enterprise RAG + MCP Assistant",
+      capstoneBody:
+        "The guide provides a v0.1 project contract plus design and acceptance criteria. You implement the deployable, evaluable, auditable, degradable, reversible and transferable vertical slice yourself; it is not a ready-made business codebase.",
+      proofLabel: "PROOF OF COMPLETION",
+      proof:
+        "Produce a Discovery Brief, versioned evaluation set, threat model, operating evidence, runbook and a reviewable portfolio evidence chain.",
+      disclaimer: "This is not an employment guarantee. Always check the latest requirements for your target role.",
+      primaryCta: "Read the Chinese guide",
+      repositoryCta: "View repository and templates",
+      newWindow: "Opens in a new window",
     },
     contact: {
       label: "CONTACT",

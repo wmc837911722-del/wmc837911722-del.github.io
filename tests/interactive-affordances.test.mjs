@@ -5,6 +5,7 @@ import test from "node:test";
 const page = readFileSync(new URL("../app/home.tsx", import.meta.url), "utf8");
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 const copy = readFileSync(new URL("../app/site-copy.ts", import.meta.url), "utf8");
+const seo = readFileSync(new URL("../app/seo.ts", import.meta.url), "utf8");
 const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
 
 test("service cards are real links to the contact section", () => {
@@ -48,6 +49,103 @@ test("contact section exposes both direct email links", () => {
 test("non-interactive capability and process rows do not mimic buttons", () => {
   assert.doesNotMatch(css, /\.capability-card:hover\s*\{/);
   assert.doesNotMatch(css, /\.steps\s+li:hover\s*\{/);
+});
+
+test("FDE learning guide is a semantic, ordered section between about and contact", () => {
+  const aboutStart = page.indexOf('<section className="about" id="about">');
+  const learningStart = page.indexOf(
+    '<section className="section fde-learning" id="fde-learning" aria-labelledby="fde-learning-title">',
+  );
+  const contactStart = page.indexOf('<section className="contact" id="contact">');
+  const learning = page.slice(learningStart, contactStart);
+  const contact = page.slice(contactStart, page.indexOf("</section>", contactStart));
+
+  assert.notEqual(aboutStart, -1, "expected the about section");
+  assert.notEqual(learningStart, -1, "expected the FDE learning section");
+  assert.notEqual(contactStart, -1, "expected the contact section");
+  assert.ok(
+    aboutStart < learningStart && learningStart < contactStart,
+    "expected about < FDE learning < contact in document order",
+  );
+  assert.match(page, /<a href="#fde-learning">\{copy\.header\.fdeLearning\}<\/a>/);
+  assert.match(learning, /<h2 id="fde-learning-title">/);
+  assert.match(learning, /<span>07<\/span>/);
+  assert.match(contact, /<span>08<\/span>/);
+  assert.match(learning, /<dl className="fde-learning-facts section-reveal">/);
+  assert.match(learning, /copy\.fdeLearning\.facts\.map\(\(fact\) => \(/);
+  assert.match(learning, /<dt>\{fact\.label\}<\/dt>/);
+  assert.match(learning, /<dd>\{fact\.value\}<\/dd>/);
+  assert.match(
+    learning,
+    /<ol className="fde-learning-path" aria-label=\{copy\.fdeLearning\.pathLabel\}>/,
+  );
+  assert.match(learning, /copy\.fdeLearning\.stages\.map\(\(stage\) => \(/);
+  assert.match(learning, /<h3>\{stage\.title\}<\/h3>/);
+  assert.match(learning, /<p>\{stage\.description\}<\/p>/);
+  assert.match(learning, /<article className="fde-learning-capstone section-reveal">/);
+  assert.match(learning, /<small>\{copy\.fdeLearning\.disclaimer\}<\/small>/);
+});
+
+test("FDE learning guide exposes two accurate, safe and responsive external actions", () => {
+  const learningStart = page.indexOf(
+    '<section className="section fde-learning" id="fde-learning"',
+  );
+  const contactStart = page.indexOf('<section className="contact" id="contact">');
+  const learning = page.slice(learningStart, contactStart);
+  const links = learning.match(/<a\s+[\s\S]*?>/g) ?? [];
+  const primaryOrigin = seo.match(
+    /export const PRIMARY_SITE_URL = "([^"]+)"/,
+  )?.[1];
+  const githubProfile = seo.match(
+    /export const GITHUB_PROFILE_URL = "([^"]+)"/,
+  )?.[1];
+  const linkRule = css.match(/\.fde-learning-link\s*\{([^}]*)\}/)?.[1];
+  const minHeight = Number(linkRule?.match(/min-height:\s*([\d.]+)px/)?.[1]);
+
+  assert.equal(primaryOrigin, "https://wmc837911722-del.github.io");
+  assert.equal(githubProfile, "https://github.com/wmc837911722-del");
+  assert.match(
+    seo,
+    /export const FDE_LEARNING_URL = `\$\{PRIMARY_SITE_URL\}\/fde-learning\/`/,
+  );
+  assert.match(
+    seo,
+    /export const FDE_LEARNING_REPOSITORY_URL = `\$\{GITHUB_PROFILE_URL\}\/fde-learning`/,
+  );
+  assert.equal(`${primaryOrigin}/fde-learning/`, "https://wmc837911722-del.github.io/fde-learning/");
+  assert.equal(`${githubProfile}/fde-learning`, "https://github.com/wmc837911722-del/fde-learning");
+  assert.equal(links.length, 2, "expected one guide link and one repository link");
+  assert.match(learning, /href=\{FDE_LEARNING_URL\}/);
+  assert.match(learning, /href=\{FDE_LEARNING_REPOSITORY_URL\}/);
+  for (const link of links) {
+    assert.match(link, /hrefLang="zh-CN"/);
+    assert.match(link, /target="_blank"/);
+    assert.match(link, /rel="noopener noreferrer"/);
+  }
+  assert.equal(
+    (learning.match(/className="sr-only">\{copy\.fdeLearning\.newWindow\}<\/span>/g) ?? []).length,
+    2,
+    "both links should announce that they open a new window",
+  );
+  assert.doesNotMatch(learning, /<button\b/);
+  assert.ok(linkRule, "expected a shared FDE learning link rule");
+  assert.ok(minHeight >= 44, "FDE learning links should have at least a 44px target");
+  assert.match(
+    css,
+    /@media\s*\(max-width:\s*799px\)[\s\S]*?\.fde-learning-facts,\s*\.fde-learning-path\s*\{[^}]*grid-template-columns:\s*1fr/s,
+  );
+  assert.match(
+    css,
+    /@media\s*\(max-width:\s*799px\)[\s\S]*?\.fde-learning-actions\s*\{[^}]*grid-template-columns:\s*1fr/s,
+  );
+  assert.match(
+    css,
+    /@media\s*\(max-width:\s*980px\)[\s\S]*?\.fde-learning-capstone\s*\{[^}]*grid-template-columns:\s*1fr/s,
+  );
+  assert.doesNotMatch(
+    css,
+    /\.fde-learning(?:-[\w-]+)?[^{}]*\{[^}]*width:\s*100vw/s,
+  );
 });
 
 test("all seven cases are complete on-site with explicit, safe actions", () => {

@@ -6,6 +6,9 @@ const projectRoot = new URL("../", import.meta.url);
 const primaryOrigin = "https://wmc837911722-del.github.io";
 const primaryRoot = `${primaryOrigin}/`;
 const githubProfile = "https://github.com/wmc837911722-del";
+const fdeLearningUrl = `${primaryOrigin}/fde-learning/`;
+const fdeLearningRepository = `${githubProfile}/fde-learning`;
+const fdeLearningResourceId = `${fdeLearningRepository}#learning-resource`;
 
 const rootPages = {
   zh: {
@@ -269,6 +272,27 @@ function hasType(entity, expectedType) {
   return types.includes(expectedType);
 }
 
+function assertLearningResource(entities) {
+  const learningResources = entities.filter((entity) => hasType(entity, "LearningResource"));
+  const people = entities.filter((entity) => hasType(entity, "Person"));
+
+  assert.equal(learningResources.length, 1, "each home should expose one LearningResource");
+  const [resource] = learningResources;
+  assert.equal(resource["@type"], "LearningResource");
+  assert.equal(resource["@id"], fdeLearningResourceId);
+  assert.equal(resource.url, fdeLearningUrl);
+  assert.equal(resource.sameAs, fdeLearningRepository);
+  assert.equal(resource.inLanguage, "zh-CN");
+  assert.equal(resource.learningResourceType, "Guide");
+  assert.deepEqual(resource.creator, { "@id": `${primaryRoot}#person` });
+  assert.ok(
+    people.some((person) => person["@id"] === resource.creator["@id"]),
+    "LearningResource.creator should resolve to the published Person",
+  );
+
+  return resource;
+}
+
 function assertFactualLinkedData(html) {
   const documents = extractJsonLd(html);
   const entities = collectTypedEntities(documents);
@@ -286,6 +310,7 @@ function assertFactualLinkedData(html) {
     [githubProfile],
     "Person.sameAs should contain only the confirmed GitHub profile",
   );
+  assertLearningResource(entities);
 
   assert.deepEqual(
     services.map((service) => service.name).sort(),
@@ -334,6 +359,7 @@ function assertStableLocalizedEntities(html) {
   const entities = collectTypedEntities(extractJsonLd(html));
   const websites = entities.filter((entity) => hasType(entity, "WebSite"));
   const creativeWorks = entities.filter((entity) => hasType(entity, "CreativeWork"));
+  const learningResource = assertLearningResource(entities);
 
   assert.equal(websites.length, 1, "each localized home should expose one WebSite entity");
   assert.equal(websites[0]["@id"], `${primaryRoot}#website`);
@@ -358,7 +384,7 @@ function assertStableLocalizedEntities(html) {
     );
   }
 
-  return websites[0];
+  return { website: websites[0], learningResource };
 }
 
 let sitesWorkerPromise;
@@ -445,7 +471,17 @@ test("both generated deployments publish robots and a canonical sitemap", async 
   }
 });
 
-test("both generated roots expose factual WebSite, Person, Service and CreativeWork JSON-LD", async () => {
+test("llms.txt publishes both FDE learning destinations", async () => {
+  const llms = await readRequiredFile("public/llms.txt", "public llms.txt");
+
+  assert.ok(llms.includes(fdeLearningUrl), "llms.txt should link to the public FDE guide");
+  assert.ok(
+    llms.includes(fdeLearningRepository),
+    "llms.txt should link to the FDE learning repository",
+  );
+});
+
+test("both generated roots expose factual WebSite, Person, LearningResource, Service and CreativeWork JSON-LD", async () => {
   const githubHtml = await readRequiredFile("dist-github-pages/index.html", "GitHub Pages root output");
   const sitesResponse = await fetchSitesDocument("/");
   assert.equal(sitesResponse.status, 200);
@@ -455,7 +491,7 @@ test("both generated roots expose factual WebSite, Person, Service and CreativeW
   assertFactualLinkedData(sitesHtml);
 });
 
-test("localized homes keep one stable WebSite entity and do not invent English case pages", async () => {
+test("localized homes keep stable WebSite and LearningResource entities without inventing English case pages", async () => {
   const githubChinese = await readRequiredFile("dist-github-pages/index.html", "GitHub Pages Chinese root");
   const githubEnglish = await readRequiredFile("dist-github-pages/en/index.html", "GitHub Pages English root");
   const [sitesChineseResponse, sitesEnglishResponse] = await Promise.all([
@@ -465,14 +501,23 @@ test("localized homes keep one stable WebSite entity and do not invent English c
   assert.equal(sitesChineseResponse.status, 200);
   assert.equal(sitesEnglishResponse.status, 200);
 
-  const websites = [
+  const localizedEntities = [
     assertStableLocalizedEntities(githubChinese),
     assertStableLocalizedEntities(githubEnglish),
     assertStableLocalizedEntities(await sitesChineseResponse.text()),
     assertStableLocalizedEntities(await sitesEnglishResponse.text()),
   ];
-  for (const website of websites.slice(1)) {
-    assert.deepEqual(website, websites[0], "the same WebSite @id must not change meaning by locale");
+  for (const entities of localizedEntities.slice(1)) {
+    assert.deepEqual(
+      entities.website,
+      localizedEntities[0].website,
+      "the same WebSite @id must not change meaning by locale or deployment",
+    );
+    assert.deepEqual(
+      entities.learningResource,
+      localizedEntities[0].learningResource,
+      "the same LearningResource @id must not change meaning by locale or deployment",
+    );
   }
 });
 

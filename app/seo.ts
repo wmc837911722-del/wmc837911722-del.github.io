@@ -2,6 +2,9 @@ import { siteCopy, type Locale } from "./site-copy";
 
 export const PRIMARY_SITE_URL = "https://wmc837911722-del.github.io";
 export const GITHUB_PROFILE_URL = "https://github.com/wmc837911722-del";
+export const FDE_LEARNING_URL = `${PRIMARY_SITE_URL}/fde-learning/`;
+export const FDE_LEARNING_REPOSITORY_URL = `${GITHUB_PROFILE_URL}/fde-learning`;
+const FDE_LEARNING_RESOURCE_ID = `${FDE_LEARNING_REPOSITORY_URL}#learning-resource`;
 
 export const localePaths: Record<Locale, string> = {
   zh: "/",
@@ -93,6 +96,7 @@ function webPageNode(locale: Locale) {
     inLanguage: locale === "zh" ? "zh-CN" : "en",
     isPartOf: { "@id": `${PRIMARY_SITE_URL}/#website` },
     about: { "@id": `${PRIMARY_SITE_URL}/#person` },
+    mentions: { "@id": FDE_LEARNING_RESOURCE_ID },
   };
 }
 
@@ -129,6 +133,31 @@ function projectNodes() {
   }));
 }
 
+function learningResourceNode() {
+  const guide = siteCopy.zh.fdeLearning;
+
+  return {
+    "@type": "LearningResource",
+    "@id": FDE_LEARNING_RESOURCE_ID,
+    url: FDE_LEARNING_URL,
+    sameAs: FDE_LEARNING_REPOSITORY_URL,
+    name: guide.resourceName,
+    alternateName: siteCopy.en.fdeLearning.resourceName,
+    description: guide.intro,
+    inLanguage: "zh-CN",
+    learningResourceType: "Guide",
+    educationalLevel: "Intermediate",
+    audience: {
+      "@type": "EducationalAudience",
+      educationalRole: "learner",
+      audienceType: "Developers with programming fundamentals and no prior FDE experience",
+    },
+    teaches: guide.stages.map(({ title }) => title),
+    creator: { "@id": `${PRIMARY_SITE_URL}/#person` },
+    isPartOf: { "@id": `${PRIMARY_SITE_URL}/#website` },
+  };
+}
+
 export function homeStructuredData(locale: Locale) {
   return {
     "@context": "https://schema.org",
@@ -136,6 +165,7 @@ export function homeStructuredData(locale: Locale) {
       personNode(),
       websiteNode(),
       webPageNode(locale),
+      learningResourceNode(),
       ...serviceNodes(),
       ...projectNodes(),
     ],

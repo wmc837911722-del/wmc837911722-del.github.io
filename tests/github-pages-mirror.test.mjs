@@ -10,6 +10,57 @@ function sectionById(html, id) {
   return section;
 }
 
+function assertFdeLearningStructure(html, locale) {
+  const section = sectionById(html, "fde-learning");
+  const facts = section.match(
+    /<dl class="fde-learning-facts section-reveal">[\s\S]*?<\/dl>/,
+  )?.[0];
+  const stages = section.match(
+    /<ol class="fde-learning-path"[^>]*>[\s\S]*?<\/ol>/,
+  )?.[0];
+
+  assert.ok(facts, "expected FDE learning facts");
+  assert.equal((facts.match(/<dt>/g) ?? []).length, 3);
+  assert.equal((facts.match(/<dd>/g) ?? []).length, 3);
+  assert.ok(stages, "expected FDE learning path");
+  assert.equal((stages.match(/<li\b/g) ?? []).length, 6);
+
+  const destinations = [
+    "https://wmc837911722-del.github.io/fde-learning/",
+    "https://github.com/wmc837911722-del/fde-learning",
+  ];
+  for (const destination of destinations) {
+    const anchor = section.match(
+      new RegExp(`<a\\b[^>]*href="${destination.replaceAll(".", "\\.")}"[^>]*>`),
+    )?.[0];
+    assert.ok(anchor, `expected safe external link to ${destination}`);
+    assert.match(anchor, /target="_blank"/);
+    assert.match(anchor, /rel="noopener noreferrer"/);
+  }
+  assert.equal((section.match(/target="_blank"/g) ?? []).length, 2);
+  assert.equal((section.match(/rel="noopener noreferrer"/g) ?? []).length, 2);
+
+  if (locale === "zh") {
+    assert.match(section, /这不是就业保证/);
+    assert.match(section, /开始 FDE 学习路线/);
+    assert.match(section, /查看教程仓库与模板/);
+  } else {
+    assert.match(section, /This is not an employment guarantee/);
+    assert.match(section, /Read the Chinese guide/);
+    assert.match(section, /View repository and templates/);
+  }
+}
+
+function assertHomeSectionOrder(html) {
+  const about = html.indexOf('id="about"');
+  const learning = html.indexOf('id="fde-learning"');
+  const contact = html.indexOf('id="contact"');
+
+  assert.ok(about >= 0, "expected #about section");
+  assert.ok(learning > about, "expected #fde-learning after #about");
+  assert.ok(contact > learning, "expected #contact after #fde-learning");
+}
+
 test("GitHub Pages entry reuses the existing portfolio", async () => {
   const entry = await read("github-pages/src/main.tsx");
 
@@ -82,6 +133,10 @@ test("GitHub Pages output contains pre-rendered portfolio content", async () => 
   assert.match(englishPartnerHtml, /prior written permission/i);
   assert.match(englishPartnerHtml, /does not identify or imply any specific organization/i);
   assert.match(englishPartnerHtml, /does not represent any organization[\s\S]*endorsement[\s\S]*recommendation/i);
+  assertFdeLearningStructure(html, "zh");
+  assertFdeLearningStructure(englishHtml, "en");
+  assertHomeSectionOrder(html);
+  assertHomeSectionOrder(englishHtml);
   assert.doesNotMatch(html, /\bwude\b/i);
   assert.doesNotMatch(englishHtml, /\bwude\b/i);
   assert.doesNotMatch(html, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);

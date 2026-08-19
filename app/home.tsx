@@ -4,6 +4,8 @@ import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { siteCopy, type Locale } from "./site-copy";
 import {
   GITHUB_PROFILE_URL,
+  FDE_LEARNING_REPOSITORY_URL,
+  FDE_LEARNING_URL,
   casePath,
   homeStructuredData,
   jsonLd,
@@ -463,6 +465,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             <a href="#case-study">{copy.header.caseStudy}</a>
             <a href="#process">{copy.header.process}</a>
             <a href="#about">{copy.header.about}</a>
+            <a href="#fde-learning">{copy.header.fdeLearning}</a>
             <a className="nav-cta" href="#contact">
               <span className="nav-cta-full">{copy.header.contact}</span>
               <span className="nav-cta-short">{copy.header.contactShort}</span>
@@ -917,10 +920,84 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
         </div>
       </section>
 
+      <section className="section fde-learning" id="fde-learning" aria-labelledby="fde-learning-title">
+        <div className="section-heading fde-learning-heading">
+          <div className="section-label section-reveal">
+            <span>07</span>
+            <p>{copy.fdeLearning.label}<br />{copy.fdeLearning.labelLocal}</p>
+          </div>
+          <div className="section-title section-reveal">
+            <p className="kicker">{copy.fdeLearning.kicker}</p>
+            <h2 id="fde-learning-title">{copy.fdeLearning.title[0]}<br />{copy.fdeLearning.title[1]}</h2>
+            <p className="fde-learning-intro">{copy.fdeLearning.intro}</p>
+            <p className="fde-learning-audience">
+              <strong>{copy.fdeLearning.audienceLabel}</strong>
+              <span>{copy.fdeLearning.audience}</span>
+            </p>
+          </div>
+        </div>
+
+        <dl className="fde-learning-facts section-reveal">
+          {copy.fdeLearning.facts.map((fact) => (
+            <div key={fact.id}>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <ol className="fde-learning-path" aria-label={copy.fdeLearning.pathLabel}>
+          {copy.fdeLearning.stages.map((stage) => (
+            <li className="section-reveal" key={stage.id}>
+              <span>{stage.number}</span>
+              <h3>{stage.title}</h3>
+              <p>{stage.description}</p>
+            </li>
+          ))}
+        </ol>
+
+        <article className="fde-learning-capstone section-reveal">
+          <div className="fde-learning-capstone-copy">
+            <p className="kicker">{copy.fdeLearning.capstoneLabel}</p>
+            <h3>{copy.fdeLearning.capstoneTitle}</h3>
+            <p>{copy.fdeLearning.capstoneBody}</p>
+          </div>
+          <div className="fde-learning-proof">
+            <strong>{copy.fdeLearning.proofLabel}</strong>
+            <p>{copy.fdeLearning.proof}</p>
+            <small>{copy.fdeLearning.disclaimer}</small>
+            <div className="fde-learning-actions">
+              <a
+                className="fde-learning-link fde-learning-link--primary"
+                href={FDE_LEARNING_URL}
+                hrefLang="zh-CN"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{copy.fdeLearning.primaryCta}</span>
+                <span aria-hidden="true">↗</span>
+                <span className="sr-only">{copy.fdeLearning.newWindow}</span>
+              </a>
+              <a
+                className="fde-learning-link"
+                href={FDE_LEARNING_REPOSITORY_URL}
+                hrefLang="zh-CN"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{copy.fdeLearning.repositoryCta}</span>
+                <span aria-hidden="true">↗</span>
+                <span className="sr-only">{copy.fdeLearning.newWindow}</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </section>
+
       <section className="contact" id="contact">
         <div className="cursor-glow" aria-hidden="true" />
         <div className="contact-head section-reveal">
-          <div className="section-label dark-label"><span>07</span><p>{copy.contact.label}<br />{copy.contact.labelLocal}</p></div>
+          <div className="section-label dark-label"><span>08</span><p>{copy.contact.label}<br />{copy.contact.labelLocal}</p></div>
           <p className="contact-status"><span /> {copy.contact.status}</p>
         </div>
         <h2 className="section-reveal">{copy.contact.titleStart}<br /><em>{copy.contact.titleEnd}</em></h2>
