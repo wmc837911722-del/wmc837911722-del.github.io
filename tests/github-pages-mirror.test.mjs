@@ -4,6 +4,12 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
+function sectionById(html, id) {
+  const section = html.match(new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?<\\/section>`))?.[0];
+  assert.ok(section, `expected #${id} section`);
+  return section;
+}
+
 test("GitHub Pages entry reuses the existing portfolio", async () => {
   const entry = await read("github-pages/src/main.tsx");
 
@@ -52,12 +58,30 @@ test("GitHub Pages output contains pre-rendered portfolio content", async () => 
   assert.match(html, /id="services"/);
   assert.match(html, /class="capability-section"/);
   assert.match(html, /id="partners"/);
-  assert.match(html, /宁波复能稀土新材料股份有限公司/);
-  assert.match(html, /温州橙绘科技有限公司/);
-  assert.match(html, /\/brands\/partner-ribbons\/banner1\.webp/);
-  assert.match(html, /\/brands\/partner-ribbons\/banner2\.webp/);
-  assert.match(html, /\/brands\/partner-ribbons\/banner3\.webp/);
-  assert.match(html, /当前并未完整展示全部合作记录/);
+  const partnerHtml = sectionById(html, "partners");
+  const englishPartnerHtml = sectionById(englishHtml, "partners");
+  for (const section of [partnerHtml, englishPartnerHtml]) {
+    assert.equal(
+      (section.match(/class="partner-ribbon-lane(?: partner-ribbon-lane--reverse)?"/g) ?? []).length,
+      3,
+    );
+    assert.equal((section.match(/class="partner-ribbon-tile"/g) ?? []).length, 48);
+    assert.equal((section.match(/data-kind="anonymous"/g) ?? []).length, 48);
+    assert.equal((section.match(/role="group"/g) ?? []).length, 4);
+    assert.doesNotMatch(section, /<img\b|data-kind="brand"|partner-ribbons|lynkvis-ai-logo/i);
+    assert.doesNotMatch(
+      section,
+      /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|Lynkvis AI|万科|中国工商银行|华润置地|Vanke|ICBC|CR Land/i,
+    );
+  }
+  assert.match(partnerHtml, /匿名项目经验/);
+  assert.match(partnerHtml, /未经相关权利方事先书面许可/);
+  assert.match(partnerHtml, /不指向或暗示任何特定企业/);
+  assert.match(partnerHtml, /不代表任何企业[\s\S]*推荐或背书/);
+  assert.match(englishPartnerHtml, /Anonymized project experience/i);
+  assert.match(englishPartnerHtml, /prior written permission/i);
+  assert.match(englishPartnerHtml, /does not identify or imply any specific organization/i);
+  assert.match(englishPartnerHtml, /does not represent any organization[\s\S]*endorsement[\s\S]*recommendation/i);
   assert.doesNotMatch(html, /\bwude\b/i);
   assert.doesNotMatch(englishHtml, /\bwude\b/i);
   assert.doesNotMatch(html, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
@@ -84,12 +108,4 @@ test("GitHub Pages output contains pre-rendered portfolio content", async () => 
   assert.match(html, /id="process"/);
   assert.match(html, /id="contact"/);
   assert.doesNotMatch(html, /chatgpt\.site/);
-
-  for (const index of [1, 2, 3]) {
-    const ribbon = await readFile(
-      new URL(`../dist-github-pages/brands/partner-ribbons/banner${index}.webp`, import.meta.url),
-    );
-    assert.equal(ribbon.subarray(0, 4).toString("ascii"), "RIFF");
-    assert.equal(ribbon.subarray(8, 12).toString("ascii"), "WEBP");
-  }
 });

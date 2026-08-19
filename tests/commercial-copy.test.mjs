@@ -4,10 +4,6 @@ import test from "node:test";
 import ts from "typescript";
 
 const sourceUrl = new URL("../app/site-copy.ts", import.meta.url);
-const lynkvisLogoUrl = new URL("../public/brands/lynkvis-ai-logo.png", import.meta.url);
-const partnerRibbonUrls = [1, 2, 3].map(
-  (index) => new URL(`../public/brands/partner-ribbons/banner${index}.webp`, import.meta.url),
-);
 
 async function loadSiteCopy() {
   const source = await readFile(sourceUrl, "utf8");
@@ -35,6 +31,11 @@ function commercialClaims(copy) {
     ...copy.capabilities.map(({ description }) => description),
     ...copy.partners.title,
     copy.partners.intro,
+    copy.partners.aria,
+    ...copy.partners.rows.flatMap(({ label, items }) => [
+      label,
+      ...items.flatMap(({ eyebrow, mark, name, note }) => [eyebrow, mark, name, note]),
+    ]),
     ...copy.partners.tiles.flatMap(({ name, note }) => [name, note]),
     ...copy.caseStudy.title,
     copy.caseStudy.intro,
@@ -116,69 +117,63 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     }
   }
 
-  assert.deepEqual(
-    siteCopy.zh.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
-    ["funeng-rare-earth", "chenghui-tech", "lynkvis-ai"],
-  );
-  assert.deepEqual(
-    siteCopy.en.partners.tiles.filter(({ kind }) => kind === "brand").map(({ id }) => id),
-    ["funeng-rare-earth", "chenghui-tech", "lynkvis-ai"],
-  );
+  const formerPartnerIdentifiers = /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|复能稀土|橙绘科技|Lynkvis AI|中检鉴定|belling|海丽达教育|广东交通集团|万科|南京大牌档|美心西饼|安宏基|石湾牌|MPE BEDDING|物银中国|ToyCity|中国工商银行|柏瑞康|顺丰速运|橙益用车|金蝶精斗云|绘王|澳康达|健康洪梅|哈文教育|杰科|美心|金地地产|周大福|华润置地|富印集团|北京大学临床研究所|博雅生命|有黔辣|Vanke|Nanjing Impressions|Maxim['’]s Cakes|AHOKE|SHI WAN PAI|monobank|ICBC|PROCARE|SF Express|Kingdee Jingdouyun|HUION|Gemdale|Chow Tai Fook|CR Land|Fuyin Group|PUCRI|Boyalife/i;
+
   for (const locale of ["zh", "en"]) {
     const { partners } = siteCopy[locale];
+    const rowItems = partners.rows.flatMap(({ items }) => items);
+    const partnerText = JSON.stringify(partners);
+
+    assert.equal(partners.rows.length, 3, `${locale} should have three anonymized rows`);
     assert.deepEqual(
-      partners.tiles.filter(({ kind }) => kind === "placeholder"),
-      [],
+      partners.rows.map(({ items }) => items.length),
+      [8, 8, 8],
+      `${locale} should have eight items in every anonymized row`,
     );
-    assert.deepEqual(
-      partners.ribbons.map(({ src }) => src),
-      [
-        "/brands/partner-ribbons/banner1.webp",
-        "/brands/partner-ribbons/banner2.webp",
-        "/brands/partner-ribbons/banner3.webp",
-      ],
+    assert.equal(
+      new Set(rowItems.map(({ id }) => id)).size,
+      24,
+      `${locale} anonymized item ids should be unique`,
     );
-    for (const ribbon of partners.ribbons) {
-      assert.match(ribbon.src, /^\/brands\/partner-ribbons\/banner[1-3]\.webp$/);
-      assert.doesNotMatch(ribbon.src, /^https?:/);
-      assert.equal(ribbon.width, 5132);
-      assert.equal(ribbon.height, 168);
-      assert.match(ribbon.alt, locale === "zh" ? /合作品牌 Logo/ : /collaboration brand logos/i);
+    assert.equal("ribbons" in partners, false, `${locale} should not expose image ribbons`);
+    assert.equal(
+      partners.tiles.some(({ kind }) => kind === "brand"),
+      false,
+      `${locale} should not contain brand tiles`,
+    );
+    for (const item of [...rowItems, ...partners.tiles]) {
+      assert.notEqual(item.kind, "brand", `${locale}.${item.id} should not be a brand`);
+      assert.equal("logoSrc" in item, false, `${locale}.${item.id} should not load a logo`);
+      assert.equal("logoAlt" in item, false, `${locale}.${item.id} should not describe a logo`);
     }
+    assert.doesNotMatch(partnerText, /partner-ribbons|lynkvis-ai-logo/i);
+    assert.doesNotMatch(partnerText, formerPartnerIdentifiers);
+    assert.doesNotMatch(
+      partnerText,
+      /确认并授权公开|获准公开展示|personally confirmed|approved for public display/i,
+    );
   }
+
   assert.doesNotMatch(
     JSON.stringify(siteCopy),
     /\bwude\b|WUDE 项目团队|WUDE project team|星洋智慧|starocean(?:wisdom)?|visual placeholder|纯视觉占位/i,
   );
-  assert.match(siteCopy.zh.partners.intro, /确认并授权公开/);
-  assert.match(siteCopy.zh.partners.aria, /确认并授权公开/);
-  assert.match(siteCopy.zh.partners.intro, /并未完整展示.*因保密约定/);
-  assert.match(
-    siteCopy.en.partners.intro,
-    /personally confirmed and authorized for public display/i,
-  );
-  assert.match(siteCopy.en.partners.aria, /confirmed and authorized for public display/i);
-  assert.match(siteCopy.en.partners.intro, /not a complete record.*remain confidential/i);
-  for (const companyName of [
-    "宁波复能稀土新材料股份有限公司",
-    "温州橙绘科技有限公司",
-    "Lynkvis AI",
+  assert.match(siteCopy.zh.partners.intro, /未经相关权利方(?:事先)?书面许可/);
+  assert.match(siteCopy.zh.partners.intro, /不指向或暗示任何特定企业/);
+  assert.match(siteCopy.zh.partners.intro, /不代表任何企业.*推荐或背书/);
+  assert.match(siteCopy.zh.partners.aria, /不指向特定企业.*品牌背书/);
+  assert.match(siteCopy.en.partners.intro, /prior written permission/i);
+  assert.match(siteCopy.en.partners.intro, /does not identify or imply any specific organization/i);
+  assert.match(siteCopy.en.partners.intro, /does not represent any organization.*endorsement.*recommendation/i);
+  assert.match(siteCopy.en.partners.aria, /no specific organization or brand endorsement is implied/i);
+
+  for (const retiredAsset of [
+    "../public/brands/lynkvis-ai-logo.png",
+    "../public/brands/partner-ribbons/banner1.webp",
+    "../public/brands/partner-ribbons/banner2.webp",
+    "../public/brands/partner-ribbons/banner3.webp",
   ]) {
-    assert.match(siteCopy.zh.partners.tiles.map(({ name }) => name).join("\n"), new RegExp(companyName));
-    assert.match(siteCopy.en.partners.tiles.map(({ name }) => name).join("\n"), new RegExp(companyName));
-  }
-  const lynkvisTile = siteCopy.zh.partners.tiles.find(({ id }) => id === "lynkvis-ai");
-  assert.equal(lynkvisTile?.logoSrc, "/brands/lynkvis-ai-logo.png");
-  assert.match(lynkvisTile?.logoAlt ?? "", /Lynkvis AI/);
-  const logo = await readFile(lynkvisLogoUrl);
-  assert.deepEqual(
-    [...logo.subarray(0, 8)],
-    [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
-  );
-  for (const ribbonUrl of partnerRibbonUrls) {
-    const ribbon = await readFile(ribbonUrl);
-    assert.equal(ribbon.subarray(0, 4).toString("ascii"), "RIFF");
-    assert.equal(ribbon.subarray(8, 12).toString("ascii"), "WEBP");
+    await assert.rejects(readFile(new URL(retiredAsset, import.meta.url)), { code: "ENOENT" });
   }
 });
 

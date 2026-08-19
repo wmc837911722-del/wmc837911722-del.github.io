@@ -18,10 +18,6 @@ type PartnerTile = {
   mark: string;
   name: string;
   note: string;
-  logoSrc?: string;
-  logoAlt?: string;
-  logoWidth?: number;
-  logoHeight?: number;
 };
 
 const LOCALE_STORAGE_KEY = "fengyu:locale:v1";
@@ -45,24 +41,11 @@ function PartnerTileContent({ tile }: { tile: PartnerTile }) {
 
 function PartnerRibbonTile({ tile }: { tile: PartnerTile }) {
   return (
-    <article className="partner-ribbon-tile" data-kind={tile.kind}>
-      {tile.logoSrc ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          className="partner-ribbon-logo"
-          src={tile.logoSrc}
-          alt={tile.logoAlt}
-          width={tile.logoWidth}
-          height={tile.logoHeight}
-          loading="lazy"
-          decoding="async"
-        />
-      ) : (
-        <strong className="partner-ribbon-mark">{tile.mark}</strong>
-      )}
+    <div className="partner-ribbon-tile" data-kind={tile.kind}>
+      <strong className="partner-ribbon-mark">{tile.mark}</strong>
       <span className="partner-ribbon-name">{tile.name}</span>
       <span className="sr-only">{tile.note}</span>
-    </article>
+    </div>
   );
 }
 
@@ -89,9 +72,6 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
   const structuredData = homeStructuredData(locale);
   const collaborationBrief = copy.contact.mailTemplate;
   const caseCount = copy.caseStudy.projects.length;
-  const featuredPartnerTiles = copy.partners.tiles.filter(
-    (tile) => tile.kind === "brand",
-  );
   const partnerFooterTiles = copy.partners.tiles.filter(
     (tile) => tile.kind === "policy" || tile.kind === "cta",
   );
@@ -663,7 +643,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           <button
             className="partner-marquee-toggle"
             type="button"
-            aria-controls="brand-ribbon-stack"
+            aria-controls="experience-ribbon-stack"
             aria-pressed={isPartnerMarqueePaused}
             onClick={() => setIsPartnerMarqueePaused((paused) => !paused)}
           >
@@ -674,45 +654,34 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           <div
             className={`partner-marquee${isPartnerMarqueePaused ? " is-paused" : ""}`}
             aria-label={copy.partners.aria}
+            role="group"
           >
-            <div className="partner-ribbon-stack" id="brand-ribbon-stack">
-              {copy.partners.ribbons.map((ribbon, rowIndex) => {
-                const featuredTile = featuredPartnerTiles[rowIndex % featuredPartnerTiles.length];
-
-                return (
-                  <div
-                    className={`partner-ribbon-lane${rowIndex === 1 ? " partner-ribbon-lane--reverse" : ""}`}
-                    key={ribbon.id}
-                  >
-                    <div className="partner-ribbon-track">
-                      {[0, 1].map((groupIndex) => (
-                        <ul
-                          className="partner-ribbon-group"
-                          aria-hidden={groupIndex === 1 ? true : undefined}
-                          inert={groupIndex === 1 ? true : undefined}
-                          key={groupIndex}
-                        >
-                          <li className="partner-ribbon-item partner-ribbon-item--featured">
-                            <PartnerRibbonTile tile={featuredTile} />
+            <div className="partner-ribbon-stack" id="experience-ribbon-stack">
+              {copy.partners.rows.map((row, rowIndex) => (
+                <div
+                  className={`partner-ribbon-lane${rowIndex === 1 ? " partner-ribbon-lane--reverse" : ""}`}
+                  key={row.id}
+                  role="group"
+                  aria-label={row.label}
+                >
+                  <div className="partner-ribbon-track">
+                    {[0, 1].map((groupIndex) => (
+                      <ul
+                        className="partner-ribbon-group"
+                        aria-hidden={groupIndex === 1 ? true : undefined}
+                        inert={groupIndex === 1 ? true : undefined}
+                        key={groupIndex}
+                      >
+                        {row.items.map((tile) => (
+                          <li className="partner-ribbon-item" key={tile.id}>
+                            <PartnerRibbonTile tile={tile} />
                           </li>
-                          <li className="partner-ribbon-strip-item">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              className="partner-ribbon-strip"
-                              src={ribbon.src}
-                              alt={groupIndex === 0 ? ribbon.alt : ""}
-                              width={ribbon.width}
-                              height={ribbon.height}
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          </li>
-                        </ul>
-                      ))}
-                    </div>
+                        ))}
+                      </ul>
+                    ))}
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         </div>

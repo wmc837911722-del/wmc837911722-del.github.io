@@ -119,61 +119,57 @@ test("language and theme controls are accessible buttons with 44px targets", () 
   assert.match(css, /html\[data-theme="light"\]/);
 });
 
-test("partner wall scrolls only confirmed collaboration brands", () => {
+test("anonymized project experience keeps the three-row marquee accessible", () => {
   assert.match(page, /id="partners"/);
   assert.match(page, /const \[isPartnerMarqueePaused, setIsPartnerMarqueePaused\] = useState\(false\)/);
-  assert.match(
-    page,
-    /const featuredPartnerTiles = copy\.partners\.tiles\.filter\([\s\S]*?tile\.kind === "brand"[\s\S]*?\);/,
-  );
+  assert.doesNotMatch(page, /featuredPartnerTiles|tile\.kind === "brand"/);
   assert.match(page, /className="partner-marquee-shell"/);
   assert.match(page, /className=\{`partner-marquee\$\{isPartnerMarqueePaused \? " is-paused" : ""\}`\}/);
   assert.match(page, /className="partner-ribbon-stack"/);
-  assert.match(page, /id="brand-ribbon-stack"/);
-  assert.match(page, /copy\.partners\.ribbons\.map\(\(ribbon, rowIndex\) =>/);
+  assert.match(page, /id="experience-ribbon-stack"/);
+  assert.match(page, /copy\.partners\.rows\.map\(\(row, rowIndex\) => \(/);
   assert.match(page, /rowIndex === 1 \? " partner-ribbon-lane--reverse" : ""/);
+  assert.match(page, /role="group"/);
+  assert.match(page, /aria-label=\{row\.label\}/);
   assert.doesNotMatch(page, /aria-hidden=\{rowIndex > 0/);
   assert.doesNotMatch(page, /inert=\{rowIndex > 0/);
   assert.match(page, /\{\[0, 1\]\.map\(\(groupIndex\) => \(/);
   assert.match(page, /aria-hidden=\{groupIndex === 1 \? true : undefined\}/);
   assert.match(page, /inert=\{groupIndex === 1 \? true : undefined\}/);
-  assert.match(page, /className="partner-ribbon-tile/);
+  assert.match(page, /row\.items\.map\(\(tile\) => \(/);
+  assert.match(page, /className="partner-ribbon-item"/);
+  assert.match(page, /<PartnerRibbonTile tile=\{tile\} \/>/);
+  assert.match(page, /className="partner-ribbon-tile"/);
+  assert.match(page, /className="partner-ribbon-mark">\{tile\.mark\}<\/strong>/);
+  assert.match(page, /className="partner-ribbon-name">\{tile\.name\}<\/span>/);
   assert.match(page, /className="sr-only">\{tile\.note\}<\/span>/);
-  assert.match(page, /className="partner-ribbon-strip"/);
-  assert.match(page, /src=\{ribbon\.src\}/);
-  assert.match(page, /alt=\{groupIndex === 0 \? ribbon\.alt : ""\}/);
-  assert.match(page, /width=\{ribbon\.width\}/);
-  assert.match(page, /height=\{ribbon\.height\}/);
+  assert.doesNotMatch(page, /copy\.partners\.ribbons|tile\.logoSrc|tile\.logoAlt/);
+  assert.doesNotMatch(page, /partner-ribbon-(?:logo|strip|strip-item|item--featured)/);
   assert.match(page, /className="partner-marquee-toggle"/);
   assert.match(page, /type="button"/);
-  assert.match(page, /aria-controls="brand-ribbon-stack"/);
+  assert.match(page, /aria-controls="experience-ribbon-stack"/);
   assert.match(page, /aria-pressed=\{isPartnerMarqueePaused\}/);
   assert.match(page, /setIsPartnerMarqueePaused\(\(paused\) => !paused\)/);
   assert.match(page, />\s*\{copy\.partners\.pauseMotion\}\s*<\/button>/);
   assert.doesNotMatch(page, /copy\.partners\.resumeMotion/);
   assert.match(page, /className="partner-wall-footer"/);
   assert.doesNotMatch(copy, /\bwude\b|WUDE 项目团队|WUDE project team/i);
-  assert.match(copy, /宁波复能稀土新材料股份有限公司/);
-  assert.match(copy, /温州橙绘科技有限公司/);
-  assert.match(copy, /\/brands\/partner-ribbons\/banner1\.webp/);
-  assert.match(copy, /\/brands\/partner-ribbons\/banner2\.webp/);
-  assert.match(copy, /\/brands\/partner-ribbons\/banner3\.webp/);
-  assert.match(copy, /万科/);
-  assert.match(copy, /中国工商银行/);
-  assert.match(copy, /华润置地/);
-  assert.match(copy, /当前并未完整展示全部合作记录/);
-  assert.match(copy, /因保密约定不公开/);
+  assert.match(copy, /未经相关权利方事先书面许可/);
+  assert.match(copy, /不指向或暗示任何特定企业/);
+  assert.match(copy, /不代表任何企业.*推荐或背书/);
+  assert.match(copy, /prior written permission/i);
+  assert.match(copy, /does not identify or imply any specific organization/i);
+  assert.match(copy, /does not represent any organization.*endorsement.*recommendation/i);
+  assert.doesNotMatch(copy, /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|\/brands\/partner-ribbons|lynkvis-ai-logo/i);
   assert.doesNotMatch(copy, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
-  assert.match(page, /src=\{tile\.logoSrc\}/);
-  assert.match(page, /alt=\{tile\.logoAlt\}/);
-  assert.match(page, /loading="lazy"/);
   assert.match(page, /brand-tile--cta/);
   assert.match(css, /\.partner-marquee\s*\{[^}]*overflow:\s*(?:hidden|clip)/s);
   assert.match(css, /\.partner-ribbon-stack\s*\{[^}]*(?:gap|row-gap):\s*21px/s);
   assert.match(css, /\.partner-ribbon-lane\s*\{(?=[^}]*height:\s*63px)(?=[^}]*overflow:\s*(?:hidden|clip))[^}]*\}/s);
-  assert.match(css, /\.partner-ribbon-track\s*\{(?=[^}]*display:\s*flex)(?=[^}]*width:\s*max-content)[^}]*\}/s);
-  assert.match(css, /\.partner-ribbon-group\s*\{[^}]*flex:\s*none/s);
-  assert.match(css, /\.partner-ribbon-strip\s*\{(?=[^}]*width:\s*auto)(?=[^}]*height:\s*63px)[^}]*\}/s);
+  assert.match(css, /\.partner-ribbon-track\s*\{(?=[^}]*min-width:\s*200%)(?=[^}]*display:\s*flex)(?=[^}]*width:\s*max-content)[^}]*\}/s);
+  assert.match(css, /\.partner-ribbon-group\s*\{(?=[^}]*flex:\s*0\s+0\s+50%)(?=[^}]*min-width:\s*max-content)[^}]*\}/s);
+  assert.match(css, /\.partner-ribbon-item\s*\{(?=[^}]*flex:\s*0\s+0)(?=[^}]*height:\s*63px)[^}]*\}/s);
+  assert.doesNotMatch(css, /\.partner-ribbon-(?:logo|strip|strip-item|item--featured)/);
   assert.match(css, /\.partner-ribbon-track\s*\{[^}]*animation:\s*partner-ribbon-right\s+30s\s+linear\s+infinite/s);
   assert.match(css, /\.partner-ribbon-lane--reverse\s+\.partner-ribbon-track\s*\{[^}]*animation-name:\s*partner-ribbon-left/s);
   assert.match(css, /@keyframes partner-ribbon-left\s*\{[\s\S]*translate3d\(-50%,\s*0,\s*0\)/);
@@ -188,6 +184,14 @@ test("partner wall scrolls only confirmed collaboration brands", () => {
   assert.match(
     css,
     /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-lane\s*\{[^}]*overflow-x:\s*auto/s,
+  );
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-track\s*\{[^}]*min-width:\s*max-content/s,
+  );
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.partner-ribbon-group\s*\{[^}]*flex:\s*none/s,
   );
   assert.match(
     css,

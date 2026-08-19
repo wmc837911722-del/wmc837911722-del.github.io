@@ -2,6 +2,27 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+function sectionById(html, id) {
+  const section = html.match(new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?<\\/section>`))?.[0];
+  assert.ok(section, `expected #${id} section`);
+  return section;
+}
+
+function assertAnonymizedExperienceStructure(section) {
+  assert.equal(
+    (section.match(/class="partner-ribbon-lane(?: partner-ribbon-lane--reverse)?"/g) ?? []).length,
+    3,
+  );
+  assert.equal((section.match(/class="partner-ribbon-tile"/g) ?? []).length, 48);
+  assert.equal((section.match(/data-kind="anonymous"/g) ?? []).length, 48);
+  assert.equal((section.match(/role="group"/g) ?? []).length, 4);
+  assert.doesNotMatch(section, /<img\b|data-kind="brand"|partner-ribbons|lynkvis-ai-logo/i);
+  assert.doesNotMatch(
+    section,
+    /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|Lynkvis AI|万科|中国工商银行|华润置地|Vanke|ICBC|CR Land/i,
+  );
+}
+
 async function render(path = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
@@ -33,6 +54,12 @@ test("server-renders the English route with an English root document", async () 
   assert.match(html, /<main[^>]*lang="en"/);
   assert.match(html, /<title>Fengyu \| FDE for AI Product Delivery<\/title>/);
   assert.match(html, /Turn real problems/);
+  const partnerHtml = sectionById(html, "partners");
+  assertAnonymizedExperienceStructure(partnerHtml);
+  assert.match(partnerHtml, /Anonymized project experience/i);
+  assert.match(partnerHtml, /prior written permission/i);
+  assert.match(partnerHtml, /does not identify or imply any specific organization/i);
+  assert.match(partnerHtml, /does not represent any organization[\s\S]*endorsement[\s\S]*recommendation/i);
   assert.doesNotMatch(html, /\bwude\b/i);
   assert.doesNotMatch(html, /document\.documentElement\.lang\s*=/);
 });
@@ -48,13 +75,12 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /把业务难题/);
   assert.match(html, /id="services"/);
   assert.match(html, /id="partners"/);
-  assert.match(html, /合作品牌/);
-  assert.match(html, /宁波复能稀土新材料股份有限公司/);
-  assert.match(html, /温州橙绘科技有限公司/);
-  assert.match(html, /\/brands\/partner-ribbons\/banner1\.webp/);
-  assert.match(html, /\/brands\/partner-ribbons\/banner2\.webp/);
-  assert.match(html, /\/brands\/partner-ribbons\/banner3\.webp/);
-  assert.match(html, /当前并未完整展示全部合作记录/);
+  const partnerHtml = sectionById(html, "partners");
+  assertAnonymizedExperienceStructure(partnerHtml);
+  assert.match(partnerHtml, /匿名项目经验/);
+  assert.match(partnerHtml, /未经相关权利方事先书面许可/);
+  assert.match(partnerHtml, /不指向或暗示任何特定企业/);
+  assert.match(partnerHtml, /不代表任何企业[\s\S]*推荐或背书/);
   assert.doesNotMatch(html, /\bwude\b/i);
   assert.doesNotMatch(html, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
   assert.match(html, /id="case-study"/);
