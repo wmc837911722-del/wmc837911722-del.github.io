@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
@@ -48,11 +48,11 @@ const rootPages = {
 
 const cases = [
   {
-    slug: "lynkvis-ai",
-    title: "Lynkvis AI 室内设计出图平台",
+    slug: "interior-design-ai-platform",
+    title: "室内设计 AI 出图与工作流平台",
     summary:
       "面向室内设计师，将参考图导入、风格化出图、AI 生图/生视频、图像编辑、素材管理与 Agent 工作流放进统一 SaaS 产品。",
-    imagePath: "/cases/lynkvis-ai-live.webp",
+    imagePath: "/cases/interior-design-ai-platform-live.webp",
     role: "独立全栈开发",
   },
   {
@@ -517,6 +517,37 @@ test("localized homes keep stable WebSite and LearningResource entities without 
       entities.learningResource,
       localizedEntities[0].learningResource,
       "the same LearningResource @id must not change meaning by locale or deployment",
+    );
+  }
+});
+
+test("public source, indexes, routes and assets keep the lead AI platform anonymous", async () => {
+  const retiredIdentifiers = [
+    ["lyn", "kvis"].join(""),
+    ["link", "telai.com"].join(""),
+    ["/cases/lynk", "vis-ai/"].join(""),
+  ];
+  const publicSurfaces = await Promise.all([
+    readRequiredFile("app/site-copy.ts", "site copy"),
+    readRequiredFile("public/llms.txt", "llms.txt"),
+    readRequiredFile("public/sitemap.xml", "sitemap"),
+    readRequiredFile("dist-github-pages/index.html", "GitHub Pages Chinese root"),
+    readRequiredFile("dist-github-pages/en/index.html", "GitHub Pages English root"),
+    readRequiredFile(
+      "dist-github-pages/cases/interior-design-ai-platform/index.html",
+      "anonymized case page",
+    ),
+  ]);
+  const caseAssetNames = (await readdir(new URL("../public/cases/", import.meta.url))).join("\n");
+  const searchableContent = [...publicSurfaces, caseAssetNames]
+    .join("\n")
+    .toLowerCase();
+
+  for (const identifier of retiredIdentifiers) {
+    assert.equal(
+      searchableContent.includes(identifier),
+      false,
+      "retired product identifiers must not return to public surfaces",
     );
   }
 });

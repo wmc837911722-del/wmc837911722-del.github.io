@@ -16,10 +16,10 @@ function assertAnonymizedExperienceStructure(section) {
   assert.equal((section.match(/class="partner-ribbon-tile"/g) ?? []).length, 48);
   assert.equal((section.match(/data-kind="anonymous"/g) ?? []).length, 48);
   assert.equal((section.match(/role="group"/g) ?? []).length, 4);
-  assert.doesNotMatch(section, /<img\b|data-kind="brand"|partner-ribbons|lynkvis-ai-logo/i);
+  assert.doesNotMatch(section, /<img\b|data-kind="brand"|partner-ribbons/i);
   assert.doesNotMatch(
     section,
-    /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|Lynkvis AI|万科|中国工商银行|华润置地|Vanke|ICBC|CR Land/i,
+    /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|万科|中国工商银行|华润置地|Vanke|ICBC|CR Land/i,
   );
 }
 
@@ -139,7 +139,7 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.doesNotMatch(html, /\bwude\b/i);
   assert.doesNotMatch(html, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
   assert.match(html, /id="case-study"/);
-  assert.match(html, /Lynkvis AI 室内设计出图平台/);
+  assert.match(html, /室内设计 AI 出图与工作流平台/);
   assert.match(html, /电商选品与内容自动化 Agent/);
   assert.match(html, /复能助手：企业级 RAG \+ MCP Agent/);
   assert.match(html, /大白 AI 心理健康平台/);

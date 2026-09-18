@@ -225,7 +225,7 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
     }
   }
 
-  const formerPartnerIdentifiers = /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|复能稀土|橙绘科技|Lynkvis AI|中检鉴定|belling|海丽达教育|广东交通集团|万科|南京大牌档|美心西饼|安宏基|石湾牌|MPE BEDDING|物银中国|ToyCity|中国工商银行|柏瑞康|顺丰速运|橙益用车|金蝶精斗云|绘王|澳康达|健康洪梅|哈文教育|杰科|美心|金地地产|周大福|华润置地|富印集团|北京大学临床研究所|博雅生命|有黔辣|Vanke|Nanjing Impressions|Maxim['’]s Cakes|AHOKE|SHI WAN PAI|monobank|ICBC|PROCARE|SF Express|Kingdee Jingdouyun|HUION|Gemdale|Chow Tai Fook|CR Land|Fuyin Group|PUCRI|Boyalife/i;
+  const formerPartnerIdentifiers = /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|复能稀土|橙绘科技|中检鉴定|belling|海丽达教育|广东交通集团|万科|南京大牌档|美心西饼|安宏基|石湾牌|MPE BEDDING|物银中国|ToyCity|中国工商银行|柏瑞康|顺丰速运|橙益用车|金蝶精斗云|绘王|澳康达|健康洪梅|哈文教育|杰科|美心|金地地产|周大福|华润置地|富印集团|北京大学临床研究所|博雅生命|有黔辣|Vanke|Nanjing Impressions|Maxim['’]s Cakes|AHOKE|SHI WAN PAI|monobank|ICBC|PROCARE|SF Express|Kingdee Jingdouyun|HUION|Gemdale|Chow Tai Fook|CR Land|Fuyin Group|PUCRI|Boyalife/i;
 
   for (const locale of ["zh", "en"]) {
     const { partners } = siteCopy[locale];
@@ -254,7 +254,7 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
       assert.equal("logoSrc" in item, false, `${locale}.${item.id} should not load a logo`);
       assert.equal("logoAlt" in item, false, `${locale}.${item.id} should not describe a logo`);
     }
-    assert.doesNotMatch(partnerText, /partner-ribbons|lynkvis-ai-logo/i);
+    assert.doesNotMatch(partnerText, /partner-ribbons/i);
     assert.doesNotMatch(partnerText, formerPartnerIdentifiers);
     assert.doesNotMatch(
       partnerText,
@@ -276,7 +276,6 @@ test("commercial copy does not invent quantified outcomes or undisclosed clients
   assert.match(siteCopy.en.partners.aria, /no specific organization or brand endorsement is implied/i);
 
   for (const retiredAsset of [
-    "../public/brands/lynkvis-ai-logo.png",
     "../public/brands/partner-ribbons/banner1.webp",
     "../public/brands/partner-ribbons/banner2.webp",
     "../public/brands/partner-ribbons/banner3.webp",

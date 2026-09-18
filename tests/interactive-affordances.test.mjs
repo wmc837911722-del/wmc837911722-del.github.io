@@ -163,7 +163,7 @@ test("all seven cases are complete on-site with explicit, safe actions", () => {
     /className="system-case-cta"\s+href="#contact"/,
   );
   for (const title of [
-    "Lynkvis AI 室内设计出图平台",
+    "室内设计 AI 出图与工作流平台",
     "电商选品与内容自动化 Agent",
     "复能助手：企业级 RAG + MCP Agent",
     "大白 AI 心理健康平台",
@@ -183,8 +183,7 @@ test("all seven cases are complete on-site with explicit, safe actions", () => {
   assert.equal((copy.match(/role: "独立全栈开发"/g) ?? []).length, 1);
   assert.equal((copy.match(/role: "独立开发"/g) ?? []).length, 1);
   assert.equal((copy.match(/role: "全栈开发 \/ AI 应用开发"/g) ?? []).length, 1);
-  assert.match(page, /href=\{project\.externalUrl\}/);
-  assert.match(page, /rel="noopener noreferrer"/);
+  assert.doesNotMatch(page, /project\.externalUrl|project\.externalLabel/);
   assert.doesNotMatch(copy, /团队项目参与者|Team project contributor/i);
   assert.doesNotMatch(copy, /风雨确认参与|Participation confirmed by Fengyu/i);
   assert.doesNotMatch(copy, /具体职责(?:边界)?、(?:参与)?周期与量化结果(?:尚)?未公开/);
@@ -258,7 +257,7 @@ test("anonymized project experience keeps the three-row marquee accessible", () 
   assert.match(copy, /prior written permission/i);
   assert.match(copy, /does not identify or imply any specific organization/i);
   assert.match(copy, /does not represent any organization.*endorsement.*recommendation/i);
-  assert.doesNotMatch(copy, /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|\/brands\/partner-ribbons|lynkvis-ai-logo/i);
+  assert.doesNotMatch(copy, /宁波复能稀土新材料股份有限公司|温州橙绘科技有限公司|\/brands\/partner-ribbons/i);
   assert.doesNotMatch(copy, /星洋智慧|starocean(?:wisdom)?|VISUAL PLACEHOLDER|纯视觉占位/i);
   assert.match(page, /brand-tile--cta/);
   assert.match(css, /\.partner-marquee\s*\{[^}]*overflow:\s*(?:hidden|clip)/s);

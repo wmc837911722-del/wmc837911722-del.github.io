@@ -870,17 +870,6 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
                       >
                         {copy.caseStudy.discuss}<span aria-hidden="true">→</span>
                       </a>
-                      {"externalUrl" in project ? (
-                        <a
-                          className="system-case-external-link"
-                          href={project.externalUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          tabIndex={index === activeCaseIndex ? 0 : -1}
-                        >
-                          {project.externalLabel}<span aria-hidden="true">↗</span>
-                        </a>
-                      ) : null}
                     </div>
                   </div>
                   </article>

@@ -6,7 +6,7 @@ const projectRoot = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, projectRoot), "utf8");
 
 const projectIds = [
-  "lynkvis-ai",
+  "interior-design-ai-platform",
   "ecommerce-research-agent",
   "enterprise-rag-mcp-assistant",
   "mental-health-platform",
@@ -234,8 +234,7 @@ test("rendered carousel retains all seven cases and never sources case media ext
   }
 
   assert.doesNotMatch(html, /\bsrc="https?:\/\//i);
-  assert.equal((html.match(/href="https?:\/\//gi) ?? []).length, 1);
-  assert.match(html, /href="https:\/\/linktelai\.com\/"[^>]*rel="noopener noreferrer"/i);
+  assert.equal((html.match(/href="https?:\/\//gi) ?? []).length, 0);
   assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude/i);
 });
 

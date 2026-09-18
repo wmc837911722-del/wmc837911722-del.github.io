@@ -147,16 +147,6 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
             <a className="case-detail-secondary-button" href={`${localePaths[locale]}#case-study`}>
               <span>{labels.moreCases}</span><span aria-hidden="true">←</span>
             </a>
-            {"externalUrl" in project ? (
-              <a
-                className="case-detail-secondary-button"
-                href={project.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{project.externalLabel}</span><span aria-hidden="true">↗</span>
-              </a>
-            ) : null}
           </div>
         </section>
       </article>

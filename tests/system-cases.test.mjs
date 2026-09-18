@@ -6,9 +6,9 @@ const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 const projects = [
   {
-    id: "lynkvis-ai",
-    zh: "Lynkvis AI 室内设计出图平台",
-    en: "Lynkvis AI Interior Design Platform",
+    id: "interior-design-ai-platform",
+    zh: "室内设计 AI 出图与工作流平台",
+    en: "Interior Design AI Rendering & Workflow Platform",
   },
   {
     id: "ecommerce-research-agent",
@@ -95,6 +95,6 @@ test("the rendered GitHub Pages case section stays on-site", async () => {
   assert.match(html, />独立开发</);
   assert.match(html, />全栈开发 \/ AI 应用开发</);
   assert.doesNotMatch(html, /\bsrc="https?:\/\//i);
-  assert.match(html, /href="https:\/\/linktelai\.com\/"/i);
+  assert.doesNotMatch(html, /href="https?:\/\//i);
   assert.doesNotMatch(html, /cs-wude\.github\.io|github\.com\/CS-wude|wude-case-details/i);
 });
