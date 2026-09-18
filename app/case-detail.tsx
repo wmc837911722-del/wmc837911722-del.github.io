@@ -28,11 +28,11 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
         eyebrow: "AI 项目案例",
         purpose: "项目用途",
         facts: "系统与工程信息",
-        role: "项目角色",
+        role: "交付范围",
         technology: "技术标签",
         disclosure: "披露说明",
         disclosureBody:
-          "案例角色与系统信息依据本人简历及已获准公开资料整理。客户敏感资料、团队成员信息与未经确认的结果不在本站披露。",
+          "案例中的交付范围与系统信息依据实际项目资料及获准公开内容整理。为保护合作方，客户敏感资料、团队成员信息与未经核验的结果不在本站披露。",
         moreCases: "查看首页中的其他案例",
       }
     : {
@@ -43,11 +43,11 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
         eyebrow: "AI CASE STUDY",
         purpose: "Purpose",
         facts: "System and engineering details",
-        role: "Project role",
+        role: "Delivery scope",
         technology: "Technology",
         disclosure: "Disclosure",
         disclosureBody:
-          "The role and system information follow Fengyu's resume and approved public material. Client-sensitive content, team details and unverified outcomes remain confidential.",
+          "Delivery scope and system details are based on documented project material and content approved for public release. Client-sensitive material, team details and unverified outcomes remain confidential.",
         moreCases: "Explore the other case studies",
       };
 

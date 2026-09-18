@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">E-commerce research and content automation agent</title>
-  <desc id="desc">A resume-based workflow showing keyword expansion, multi-platform data collection, signal analysis, opportunity scoring, and traceable reports.</desc>
+  <desc id="desc">A solution workflow showing keyword expansion, multi-platform data collection, signal analysis, opportunity scoring, and traceable reports.</desc>
   <defs>
     <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1b2435" stroke-width="1"/></pattern>
     <style>
@@ -12,7 +12,7 @@
   <rect width="1600" height="900" fill="#080b12"/><rect width="1600" height="900" fill="url(#grid)"/>
   <rect class="panel" x="38" y="34" width="1524" height="98" rx="18"/>
   <text class="sans" x="72" y="88" fill="#f7f8fb" font-size="31">E-COMMERCE RESEARCH AGENT</text>
-  <text class="mono label" x="1135" y="88">RESUME-BASED SCHEMATIC</text>
+  <text class="mono label" x="1135" y="88">SOLUTION WORKFLOW SCHEMATIC</text>
 
   <rect class="panel" x="38" y="164" width="330" height="650" rx="18"/>
   <text class="mono label" x="72" y="220">01 / SIGNAL SOURCES</text>

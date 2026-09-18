@@ -73,6 +73,30 @@ test("English case-study heading does not hard-code the project count", async ()
   assert.doesNotMatch(en.caseStudy.title.join(" "), /\bfour\b/i);
 });
 
+test("case studies use commercial delivery language instead of resume framing", async () => {
+  const siteCopy = await loadSiteCopy();
+  const publicCopy = [
+    JSON.stringify(siteCopy),
+    await readFile(new URL("../app/case-detail.tsx", import.meta.url), "utf8"),
+    await readFile(new URL("../public/cases/ecommerce-research-agent.svg", import.meta.url), "utf8"),
+    await readFile(new URL("../public/cases/enterprise-rag-mcp-assistant.svg", import.meta.url), "utf8"),
+  ].join("\n");
+  const careerDocumentFraming = new RegExp([
+    ["简", "历"].join(""),
+    ["res", "ume"].join(""),
+  ].join("|"), "i");
+
+  assert.doesNotMatch(publicCopy, careerDocumentFraming);
+  assert.equal(siteCopy.zh.caseStudy.roleLabel, "DELIVERY SCOPE / 交付范围");
+  assert.equal(siteCopy.en.caseStudy.roleLabel, "DELIVERY SCOPE");
+  for (const project of siteCopy.zh.caseStudy.projects.slice(0, 3)) {
+    assert.match(project.roleNote, /^(?:交付范围|参与范围)：/);
+  }
+  for (const project of siteCopy.en.caseStudy.projects.slice(0, 3)) {
+    assert.match(project.roleNote, /^(?:Delivery scope|Contribution scope):/);
+  }
+});
+
 test("every commercial section has useful bilingual copy and a clear next action", async () => {
   const siteCopy = await loadSiteCopy();
 

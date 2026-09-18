@@ -190,10 +190,10 @@ export const siteCopy = {
       selectorLabel: "快速选择案例",
       keyboardHint: "聚焦案例后，可使用左右方向键切换；Home 和 End 跳到首尾案例。",
       imageLabel: "PROJECT MATERIAL / 项目资料",
-      roleLabel: "MY ROLE / 我的角色",
+      roleLabel: "DELIVERY SCOPE / 交付范围",
       discuss: "聊聊我的类似需求",
       disclosure:
-        "以下包含独立开发与团队项目，角色与公开事实均按本人简历及授权信息标注。页面不披露客户敏感资料、团队成员信息或未经确认的结果。",
+        "以下案例覆盖独立交付与团队协作，展示业务目标、系统链路、关键工程与本人交付范围。为保护合作方，客户敏感资料、团队成员信息及未经核验的结果不予公开。",
       projects: [
         {
           id: "interior-design-ai-platform",
@@ -225,7 +225,7 @@ export const siteCopy = {
             },
             {
               id: "evidence",
-              label: "简历记录",
+              label: "项目记录",
               value:
                 "覆盖 AI 出图/生视频、图像编辑、模板中心、素材库与 Agent 工作流；项目记录的 AI 任务成功率约 90%。",
             },
@@ -236,7 +236,7 @@ export const siteCopy = {
             },
           ],
           role: "独立全栈开发",
-          roleNote: "简历记录：独立完成用户端、运营管理端与 Java 后端开发，并负责需求拆解、接口设计、联调排错、测试补全和交付。",
+          roleNote: "交付范围：独立完成用户端、运营管理端与 Java 后端开发，并负责需求拆解、接口设计、联调排错、测试补全和交付。",
           tagsLabel: "室内设计 AI 出图平台项目技术标签",
           tags: ["AI SAAS", "MODEL PROVIDER", "REDIS STREAM", "VUE 3"],
         },
@@ -250,7 +250,7 @@ export const siteCopy = {
           imageAlt: "电商选品与内容自动化 Agent 概念视觉，展示多平台信号汇聚、分析处理、机会输出与证据回溯链路",
           imageWidth: 1600,
           imageHeight: 900,
-          imageNote: "根据简历项目描述生成的概念视觉 · 非真实产品截图",
+          imageNote: "基于案例说明生成的概念视觉 · 非真实产品截图",
           title: "电商选品与内容自动化 Agent",
           summary:
             "从多平台用户讨论与长尾关键词中识别选品机会、用户痛点和内容方向，输出保留来源证据的 HTML/JSON 结构化报告。",
@@ -275,7 +275,7 @@ export const siteCopy = {
             },
           ],
           role: "独立开发",
-          roleNote: "简历记录：基于 needs-collector 改造为 Codex 驱动的自动化 Agent，并独立实现多平台研究工作流、长尾关键词策略、Agent 分析结构和自动化报告输出。",
+          roleNote: "交付范围：将 needs-collector 改造为 Codex 驱动的自动化 Agent，并独立实现多平台研究工作流、长尾关键词策略、Agent 分析结构和自动化报告输出。",
           tagsLabel: "电商研究 Agent 项目技术标签",
           tags: ["AI AGENT", "RESEARCH PIPELINE", "EVIDENCE", "HTML REPORT"],
         },
@@ -289,7 +289,7 @@ export const siteCopy = {
           imageAlt: "复能助手企业级 RAG 与 MCP Agent 概念视觉，展示文档检索、业务工具调用、中央编排与引用溯源",
           imageWidth: 1600,
           imageHeight: 900,
-          imageNote: "根据简历项目描述生成的概念视觉 · 非真实产品截图",
+          imageNote: "基于案例说明生成的概念视觉 · 非真实产品截图",
           title: "复能助手：企业级 RAG + MCP Agent",
           summary:
             "将企业文档、ERP 订单、WMS 库存与报表数据接入统一问答链路，支持业务查询、知识溯源和分析报告生成。",
@@ -303,7 +303,7 @@ export const siteCopy = {
             },
             {
               id: "evidence",
-              label: "简历记录",
+              label: "项目记录",
               value:
                 "使用 5000 条业务样本完成 LoRA 微调，接入 20 份 PDF；项目记录问答准确率约 90%，常规分析报告约 5 分钟生成。",
             },
@@ -314,7 +314,7 @@ export const siteCopy = {
             },
           ],
           role: "全栈开发 / AI 应用开发",
-          roleNote: "简历记录：参与 Spring AI 接入、RAG 检索、MCP 数据库工具、流式回答、模型微调部署与企业业务问答链路开发。",
+          roleNote: "参与范围：Spring AI 接入、RAG 检索、MCP 数据库工具、流式回答、模型微调部署与企业业务问答链路开发。",
           tagsLabel: "企业 RAG + MCP 助手项目技术标签",
           tags: ["RAG", "MCP", "MILVUS", "QWEN3-72B"],
         },
@@ -732,10 +732,10 @@ export const siteCopy = {
       selectorLabel: "Choose a case study",
       keyboardHint: "Focus the case and use Left or Right Arrow to switch; Home and End jump to the first or last case.",
       imageLabel: "PROJECT MATERIAL",
-      roleLabel: "MY ROLE",
+      roleLabel: "DELIVERY SCOPE",
       discuss: "Discuss a similar need",
       disclosure:
-        "This selection includes independent and team projects. Roles and public facts follow Fengyu's resume and approved information; client-sensitive material, team details and unverified outcomes are not disclosed.",
+        "These case studies cover independent delivery and team collaboration, showing business goals, system flows, engineering decisions and Fengyu's delivery scope. Client-sensitive material, team details and unverified outcomes remain confidential.",
       projects: [
         {
           id: "interior-design-ai-platform",
@@ -767,7 +767,7 @@ export const siteCopy = {
             },
             {
               id: "evidence",
-              label: "Resume record",
+              label: "Project record",
               value:
                 "Scope includes AI image/video generation, image editing, templates, an asset library and Agent workflows; the project records an AI task success rate of about 90%.",
             },
@@ -778,7 +778,7 @@ export const siteCopy = {
             },
           ],
           role: "Independent full-stack developer",
-          roleNote: "Resume record: independently delivered the user app, operations console and Java backend, including requirements breakdown, API design, integration debugging, test completion and delivery.",
+          roleNote: "Delivery scope: independently delivered the user app, operations console and Java backend, including requirements breakdown, API design, integration debugging, test completion and delivery.",
           tagsLabel: "Interior-design AI platform technology tags",
           tags: ["AI SAAS", "MODEL PROVIDER", "REDIS STREAM", "VUE 3"],
         },
@@ -792,7 +792,7 @@ export const siteCopy = {
           imageAlt: "Concept visual for an e-commerce research Agent showing multi-platform signals, analysis stages, opportunity outputs and traceable evidence paths",
           imageWidth: 1600,
           imageHeight: 900,
-          imageNote: "Concept visual generated from the resume project description · not a real product screenshot",
+          imageNote: "Concept visual based on the documented case description · not a real product screenshot",
           title: "E-commerce Research & Content Agent",
           summary:
             "Identify product opportunities, user pain points and content directions from multi-platform discussions and long-tail keywords, then deliver traceable HTML and JSON reports.",
@@ -817,7 +817,7 @@ export const siteCopy = {
             },
           ],
           role: "Independent developer",
-          roleNote: "Resume record: the project was adapted from needs-collector into a Codex-driven e-commerce automation Agent; independent work covered the multi-platform research workflow, long-tail keyword strategy, Agent output structure and automated HTML/JSON reporting.",
+          roleNote: "Delivery scope: adapted needs-collector into a Codex-driven e-commerce automation Agent and independently delivered the multi-platform research workflow, long-tail keyword strategy, Agent output structure and automated HTML/JSON reporting.",
           tagsLabel: "E-commerce research Agent technology tags",
           tags: ["AI AGENT", "RESEARCH PIPELINE", "EVIDENCE", "HTML REPORT"],
         },
@@ -831,7 +831,7 @@ export const siteCopy = {
           imageAlt: "Concept visual for 复能助手, an enterprise RAG and MCP Agent, showing document retrieval, business-tool access, central orchestration and citation traceability",
           imageWidth: 1600,
           imageHeight: 900,
-          imageNote: "Concept visual generated from the resume project description · not a real product screenshot",
+          imageNote: "Concept visual based on the documented case description · not a real product screenshot",
           title: "复能助手 — Enterprise RAG + MCP Assistant",
           summary:
             "Connect enterprise documents, ERP orders, WMS inventory and reporting data in one answer flow for business queries, source-traceable answers and analytical reports.",
@@ -845,7 +845,7 @@ export const siteCopy = {
             },
             {
               id: "evidence",
-              label: "Resume record",
+              label: "Project record",
               value:
                 "LoRA fine-tuning used 5,000 business samples and the knowledge base ingested 20 PDFs; the project records about 90% answer accuracy and roughly five minutes for a standard analysis report.",
             },
@@ -856,7 +856,7 @@ export const siteCopy = {
             },
           ],
           role: "Full-stack / AI application developer",
-          roleNote: "Resume record: contributed to Spring AI integration, RAG retrieval, MCP database tools, streaming answers, model fine-tuning deployment and the enterprise Q&A workflow.",
+          roleNote: "Contribution scope: Spring AI integration, RAG retrieval, MCP database tools, streaming answers, model fine-tuning deployment and the enterprise Q&A workflow.",
           tagsLabel: "Enterprise RAG and MCP assistant technology tags",
           tags: ["RAG", "MCP", "MILVUS", "QWEN3-72B"],
         },
