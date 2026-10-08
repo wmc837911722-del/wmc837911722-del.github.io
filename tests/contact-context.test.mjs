@@ -16,8 +16,40 @@ async function moduleUrl(name, dependencies = {}) {
 const copyUrl = await moduleUrl("site-copy");
 const seoUrl = await moduleUrl("seo", { "./site-copy": copyUrl });
 const contextUrl = await moduleUrl("contact-context", { "./site-copy": copyUrl, "./seo": seoUrl });
-const { contactPath, contactBrief, readContactContext, resolveContactContext } = await import(contextUrl);
+const { contactPath, contactBrief, readContactContext, resolveContactContext, restoreInitialContactAnchor } = await import(contextUrl);
 const { siteCopy } = await import(copyUrl);
+
+test("initial contact fragment is restored after layout without overriding newer navigation or user scrolling", () => {
+  const initialUrl = "https://wmc837911722-del.github.io/?case=enterprise-rag-mcp-assistant#contact";
+  const calls = [];
+  const oldWindow = globalThis.window;
+  const oldDocument = globalThis.document;
+  globalThis.window = { location: { href: initialUrl, hash: "#contact" }, scrollY: 0 };
+  globalThis.document = { getElementById: (id) => ({
+    scrollIntoView: (options) => calls.push([id, "scroll", options]),
+    focus: (options) => calls.push([id, "focus", options]),
+  }) };
+  try {
+    restoreInitialContactAnchor(initialUrl);
+    assert.deepEqual(calls, [
+      ["contact", "scroll", { behavior: "instant", block: "start" }],
+      ["contact-title", "focus", { preventScroll: true }],
+    ]);
+    calls.length = 0;
+    window.scrollY = 300;
+    restoreInitialContactAnchor(initialUrl);
+    window.scrollY = 0;
+    window.location.href = "https://wmc837911722-del.github.io/#services";
+    restoreInitialContactAnchor(initialUrl);
+    window.location.href = initialUrl;
+    window.location.hash = "";
+    restoreInitialContactAnchor(initialUrl);
+    assert.deepEqual(calls, []);
+  } finally {
+    if (oldWindow === undefined) delete globalThis.window; else globalThis.window = oldWindow;
+    if (oldDocument === undefined) delete globalThis.document; else globalThis.document = oldDocument;
+  }
+});
 
 test("each case and service produces a valid, localized contact URL and brief", () => {
   for (const locale of ["zh", "en"]) {

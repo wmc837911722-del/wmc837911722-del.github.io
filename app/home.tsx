@@ -2,7 +2,7 @@
 
 import { type KeyboardEvent, type MouseEvent, useEffect, useRef, useState } from "react";
 import { siteCopy, type Locale } from "./site-copy";
-import { contactBrief, contactPath, readContactContext, resolveContactContext, type ContactContext } from "./contact-context";
+import { contactBrief, contactPath, readContactContext, resolveContactContext, restoreInitialContactAnchor, type ContactContext } from "./contact-context";
 import {
   GITHUB_PROFILE_URL,
   FDE_LEARNING_REPOSITORY_URL,
@@ -317,6 +317,8 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
   useEffect(() => {
     let disposed = false;
     let disposeAnimations = () => {};
+    let contactFrame: number | null = null;
+    const initialUrl = window.location.href;
 
     async function startAnimations() {
       const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
@@ -500,14 +502,19 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
       );
 
       disposeAnimations = () => media.revert();
+      ScrollTrigger.refresh();
     }
 
     void startAnimations().catch(() => {
       document.documentElement.removeAttribute("data-motion");
+    }).finally(() => {
+      if (disposed) return;
+      contactFrame = window.requestAnimationFrame(() => restoreInitialContactAnchor(initialUrl));
     });
 
     return () => {
       disposed = true;
+      if (contactFrame !== null) window.cancelAnimationFrame(contactFrame);
       document.documentElement.removeAttribute("data-motion");
       disposeAnimations();
     };
