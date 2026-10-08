@@ -147,7 +147,7 @@ test("server-renders the complete FDE portfolio", async () => {
   assert.match(html, /智能 SRE 运维助手/);
   assert.match(html, /生成式内容调度平台/);
   assert.equal((html.match(/data-case-id=/g) ?? []).length, 7);
-  assert.equal((html.match(/class="system-case-cta" href="#contact"/g) ?? []).length, 7);
+  assert.equal((html.match(/class="system-case-cta" href="\/\?case=[a-z0-9-]+#contact"/g) ?? []).length, 7);
   assert.equal((html.match(/>项目主导者</g) ?? []).length, 4);
   assert.match(html, />独立全栈开发</);
   assert.match(html, />独立开发</);

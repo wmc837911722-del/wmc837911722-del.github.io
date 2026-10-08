@@ -40,8 +40,9 @@ export const siteCopy = {
       ],
       label: "00 / INTRODUCTION",
       intro:
-        "我是风雨，前沿部署工程师。你带来真实业务问题，我负责把需求、数据、模型与现有系统接起来——先验证价值，再稳定上线，避免项目停在 Demo。",
+        "我是风雨，前沿部署工程师。为需要 AI 产品开发或业务系统集成的团队，提供企业知识问答、流程自动化与 AI SaaS 开发，从需求验证做到上线交接。",
       cta: "聊聊你的 AI 场景",
+      casesCta: "先看项目案例",
       scroll: "向下探索",
     },
     ticker: {
@@ -227,7 +228,7 @@ export const siteCopy = {
               id: "evidence",
               label: "项目记录",
               value:
-                "覆盖 AI 出图/生视频、图像编辑、模板中心、素材库与 Agent 工作流；项目记录的 AI 任务成功率约 90%。",
+                "覆盖 AI 出图/生视频、图像编辑、模板中心、素材库与 Agent 工作流，并接通积分、VIP 与权益发放链路。",
             },
             {
               id: "stack",
@@ -305,7 +306,7 @@ export const siteCopy = {
               id: "evidence",
               label: "项目记录",
               value:
-                "使用 5000 条业务样本完成 LoRA 微调，接入 20 份 PDF；项目记录问答准确率约 90%，常规分析报告约 5 分钟生成。",
+                "接入 20 份 PDF，使用 5000 条业务样本完成 LoRA 微调；支持流式问答、引用溯源与分析报告生成。微调样本不等于独立评测集。",
             },
             {
               id: "stack",
@@ -498,6 +499,7 @@ export const siteCopy = {
       label: "PUBLIC LEARNING GUIDE",
       labelLocal: "FDE 成长手册",
       resourceName: "FDE 成长手册",
+      expandLabel: "展开学习路线与适用说明",
       kicker: "HOW TO BECOME AN FDE",
       title: ["怎么成为一名 FDE？", "从可验证的交付证据开始。"],
       intro:
@@ -537,7 +539,10 @@ export const siteCopy = {
       status: "当前可承接 AI 落地合作",
       titleStart: "把你的业务问题，",
       titleEnd: "变成下一项上线成果。",
-      body: "已有明确场景，可以带上当前卡点与期望结果；还不确定从哪里开始，也可以先描述业务流程。你可以发邮件附上信息，也可以扫描微信二维码先聊。",
+      body: "不需要先写完整需求文档，先说说你现在卡在哪。描述业务场景、当前问题和希望改善的结果即可；现有系统、计划时间与预算可以后续再补。你可以发邮件，也可以复制下方模板后用微信聊。",
+      contextLabel: "这次想聊",
+      clearContext: "清除来源",
+      previewLabel: "查看可复制的沟通模板",
       emailListLabel: "联系邮箱",
       emailAria: "发送合作邮件到",
       wechatLabel: "WECHAT / 个人微信",
@@ -555,7 +560,7 @@ export const siteCopy = {
       liveDone: "合作沟通模板已复制到剪贴板",
       liveFailed: "复制失败，请重试",
       mailSubject: "AI 落地项目合作｜业务场景初步沟通",
-      mailTemplate: `你好风雨，我想沟通一个 AI 落地项目。\n\n业务场景与使用者：\n当前问题：\n已有数据或系统：\n期望结果：\n计划时间：\n预算范围（可选）：`,
+      mailTemplate: `你好风雨，我想沟通一个 AI 落地项目。\n\n业务场景与使用者：\n当前问题：\n希望改善的结果：\n\n如果方便，可以补充：\n已有数据或系统（可选）：\n计划时间（可选）：\n预算范围（可选）：`,
     },
     footer: {
       tagline: "从真实问题出发，交付可运行的 AI。",
@@ -601,8 +606,9 @@ export const siteCopy = {
       ],
       label: "00 / INTRODUCTION",
       intro:
-        "I’m Fengyu, a Forward Deployed Engineer. Bring the real workflow; I connect users, data, models and existing systems—validate value first, then ship with the controls production requires.",
+        "I’m Fengyu, a Forward Deployed Engineer. I build enterprise knowledge assistants, workflow automation and AI SaaS for teams that need AI product development or business-system integration, from validation through launch and handoff.",
       cta: "Discuss your AI use case",
+      casesCta: "Explore selected work",
       scroll: "Scroll to explore",
     },
     ticker: {
@@ -769,7 +775,7 @@ export const siteCopy = {
               id: "evidence",
               label: "Project record",
               value:
-                "Scope includes AI image/video generation, image editing, templates, an asset library and Agent workflows; the project records an AI task success rate of about 90%.",
+                "Delivered AI image/video generation, image editing, a template center, an asset library and Agent workflows, with credits, VIP and entitlement delivery.",
             },
             {
               id: "stack",
@@ -847,7 +853,7 @@ export const siteCopy = {
               id: "evidence",
               label: "Project record",
               value:
-                "LoRA fine-tuning used 5,000 business samples and the knowledge base ingested 20 PDFs; the project records about 90% answer accuracy and roughly five minutes for a standard analysis report.",
+                "The knowledge base ingested 20 PDFs and LoRA fine-tuning used 5,000 business samples. The workflow supports streaming answers, source traceability and analytical reports. Training samples are not an independent evaluation set.",
             },
             {
               id: "stack",
@@ -1040,6 +1046,7 @@ export const siteCopy = {
       label: "PUBLIC LEARNING GUIDE",
       labelLocal: "Chinese FDE learning guide",
       resourceName: "FDE Learning Guide",
+      expandLabel: "Show the learning path and guidance",
       kicker: "HOW TO BECOME AN FDE",
       title: ["How do you become an FDE?", "Build evidence that you can deliver."],
       intro:
@@ -1079,7 +1086,10 @@ export const siteCopy = {
       status: "Available for AI delivery projects",
       titleStart: "Turn your business problem",
       titleEnd: "into the next shipped outcome.",
-      body: "If you have a defined use case, bring the current blocker and desired result. If you do not know where to start, describe the workflow. Email the details or scan the WeChat QR code to start a conversation.",
+      body: "No full requirements document needed. Start with your workflow, what is getting in the way and what you want to improve. Systems, timing and budget can follow later. Email me, or copy the brief below and start a conversation on WeChat.",
+      contextLabel: "Let’s discuss",
+      clearContext: "Clear topic",
+      previewLabel: "Preview the project brief",
       emailListLabel: "Contact email addresses",
       emailAria: "Send a project email to",
       wechatLabel: "WECHAT / PERSONAL CONTACT",
@@ -1097,7 +1107,7 @@ export const siteCopy = {
       liveDone: "The project brief was copied to your clipboard",
       liveFailed: "Copy failed. Please try again",
       mailSubject: "AI delivery project | Initial use-case discussion",
-      mailTemplate: `Hi Fengyu, I’d like to discuss an AI delivery project.\n\nBusiness context and users:\nCurrent problem:\nExisting data or systems:\nDesired outcome:\nTarget timeline:\nBudget range (optional):`,
+      mailTemplate: `Hi Fengyu, I’d like to discuss an AI delivery project.\n\nBusiness context and users:\nCurrent problem:\nDesired improvement:\n\nOptional details, if known:\nExisting data or systems (optional):\nTarget timeline (optional):\nBudget range (optional):`,
     },
     footer: {
       tagline: "Start with a real problem. Deliver AI that works.",

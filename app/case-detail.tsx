@@ -1,4 +1,7 @@
 import { siteCopy, type Locale } from "./site-copy";
+import { getCaseNarrative } from "./case-narratives";
+import { contactPath } from "./contact-context";
+import "./case-narratives.css";
 import {
   GITHUB_PROFILE_URL,
   caseStructuredData,
@@ -16,6 +19,7 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
   const copy = siteCopy[locale];
   const project = getProject(locale, caseId);
   const structuredData = caseStructuredData(locale, caseId);
+  const narrative = getCaseNarrative(locale, caseId);
 
   if (!project || !structuredData) return null;
 
@@ -64,7 +68,7 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
         </a>
         <nav aria-label={labels.cases}>
           <a href={`${localePaths[locale]}#case-study`}>{labels.moreCases}</a>
-          <a className="nav-cta" href={`${localePaths[locale]}#contact`}>
+          <a className="nav-cta" href={contactPath(locale, { kind: "case", id: project.id })}>
             {labels.contact}<span aria-hidden="true">→</span>
           </a>
         </nav>
@@ -107,6 +111,19 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
           </figure>
         </header>
 
+        {narrative && (
+          <section className="case-detail-section" aria-labelledby="case-detail-problem">
+            <div className="case-detail-section-title">
+              <p className="kicker">CONTEXT / PROBLEM</p>
+              <h2 id="case-detail-problem">{narrative.problem.heading}</h2>
+            </div>
+            <div className="case-narrative-prose">
+              <p>{narrative.problem.body}</p>
+              <p>{narrative.problem.focus}</p>
+            </div>
+          </section>
+        )}
+
         <section className="case-detail-section" aria-labelledby="case-detail-facts">
           <div className="case-detail-section-title">
             <p className="kicker">SYSTEM / DELIVERY</p>
@@ -122,18 +139,64 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
           </dl>
         </section>
 
+        {narrative && (
+          <section className="case-detail-section" aria-labelledby="case-detail-decisions">
+            <div className="case-detail-section-title">
+              <p className="kicker">ENGINEERING / CHOICES</p>
+              <h2 id="case-detail-decisions">{narrative.decisions.heading}</h2>
+            </div>
+            <ol className="case-narrative-items case-narrative-decisions">
+              {narrative.decisions.items.map((item) => (
+                <li key={item.title}>
+                  <div><h3>{item.title}</h3><p>{item.body}</p></div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
         <section className="case-detail-section case-detail-proof" aria-labelledby="case-detail-role">
           <div>
             <p className="kicker">ROLE / DISCLOSURE</p>
             <h2 id="case-detail-role">{labels.role}</h2>
             <strong>{project.role}</strong>
             <p>{project.roleNote}</p>
+            {narrative && (
+              <div className="case-narrative-scope">
+                <h3>{narrative.scope.heading}</h3>
+                <ul className="case-narrative-items">
+                  {narrative.scope.items.map((item) => (
+                    <li key={item.title}><h4>{item.title}</h4><p>{item.body}</p></li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <aside>
-            <h3>{labels.disclosure}</h3>
-            <p>{labels.disclosureBody}</p>
+            <h3>{narrative?.boundaries.heading ?? labels.disclosure}</h3>
+            <p>{narrative?.boundaries.body ?? labels.disclosureBody}</p>
           </aside>
         </section>
+
+        {narrative && (
+          <section className="case-detail-section" aria-labelledby="case-detail-evidence">
+            <div className="case-detail-section-title">
+              <p className="kicker">DELIVERABLES / EVIDENCE</p>
+              <h2 id="case-detail-evidence">{narrative.evidence.heading}</h2>
+            </div>
+            <div className="case-narrative-evidence">
+              <div>
+                <h3>{narrative.evidence.deliverablesHeading}</h3>
+                <ul>{narrative.evidence.deliverables.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+              <div>
+                <h3>{narrative.evidence.availableHeading}</h3>
+                {narrative.evidence.available.map((item) => <p key={item}>{item}</p>)}
+              </div>
+              <p className="case-narrative-measurement">{narrative.evidence.measurementNote}</p>
+            </div>
+          </section>
+        )}
 
         <section className="case-detail-technology" aria-labelledby="case-detail-technology">
           <h2 id="case-detail-technology">{labels.technology}</h2>
@@ -141,7 +204,7 @@ export default function CaseDetail({ caseId, locale = "zh" }: CaseDetailProps) {
             {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
           </ul>
           <div className="case-detail-actions">
-            <a className="primary-button" href={`${localePaths[locale]}#contact`}>
+            <a className="primary-button" href={contactPath(locale, { kind: "case", id: project.id })}>
               <span>{labels.contact}</span><span aria-hidden="true">↗</span>
             </a>
             <a className="case-detail-secondary-button" href={`${localePaths[locale]}#case-study`}>

@@ -87,7 +87,7 @@ test("the rendered GitHub Pages case section stays on-site", async () => {
 
   assert.equal((html.match(/data-case-id=/g) ?? []).length, projects.length);
   assert.equal(
-    (html.match(/class="system-case-cta" href="#contact"/g) ?? []).length,
+    (html.match(/class="system-case-cta" href="\/\?case=[a-z0-9-]+#contact"/g) ?? []).length,
     projects.length,
   );
   assert.equal((html.match(/>项目主导者</g) ?? []).length, 4);

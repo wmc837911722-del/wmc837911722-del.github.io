@@ -9,7 +9,7 @@ const seo = readFileSync(new URL("../app/seo.ts", import.meta.url), "utf8");
 const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
 
 test("service cards are real links to the contact section", () => {
-  assert.match(page, /<a\s+className="service-card"\s+href="#contact"/);
+  assert.match(page, /<a\s+className="service-card"\s+href=\{contactPath\(locale, \{ kind: "service", id: service\.id \}\)\}/);
   assert.doesNotMatch(page, /<article\s+className="service-card"/);
 });
 
@@ -160,7 +160,7 @@ test("all seven cases are complete on-site with explicit, safe actions", () => {
   assert.match(page, /className="system-case-role"/);
   assert.match(
     page,
-    /className="system-case-cta"\s+href="#contact"/,
+    /className="system-case-cta"\s+href=\{contactPath\(locale, \{ kind: "case", id: project\.id \}\)\}/,
   );
   for (const title of [
     "室内设计 AI 出图与工作流平台",

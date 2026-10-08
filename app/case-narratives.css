@@ -1,0 +1,35 @@
+.case-narrative-prose { min-width: 0; }
+.case-narrative-prose p { margin: 0; color: var(--header-muted); font-size: clamp(17px,1.5vw,21px); line-height: 1.85; }
+.case-narrative-prose p + p { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line-dark); font-size: 16px; }
+.case-narrative-scope { margin-top: 34px; }
+.case-narrative-scope h3 { margin: 0 0 20px; font-size: 17px; font-weight: 650; }
+.case-narrative-items { min-width: 0; margin: 0; padding: 0; list-style: none; }
+.case-narrative-items > li { min-width: 0; padding: 24px 0; border-top: 1px solid var(--line-dark); }
+.case-narrative-items h3, .case-narrative-items h4 { margin: 0; color: var(--white); font-size: clamp(19px,2vw,27px); line-height: 1.4; letter-spacing: -.02em; }
+.case-narrative-items p { margin: 12px 0 0; color: var(--header-muted); font-size: 16px; line-height: 1.85; overflow-wrap: anywhere; }
+.case-narrative-scope .case-narrative-items h4 { font-size: 18px; }
+.case-narrative-decisions { counter-reset: case-decision; }
+.case-narrative-decisions > li { counter-increment: case-decision; display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 18px; }
+.case-narrative-decisions > li::before { content: counter(case-decision, decimal-leading-zero); padding-top: 5px; color: var(--blue-bright); font: 11px var(--font-geist-mono),monospace; letter-spacing: .1em; }
+.case-narrative-evidence { min-width: 0; }
+.case-narrative-evidence > div + div { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line-dark); }
+.case-narrative-evidence h3 { margin: 0 0 18px; font-size: clamp(20px,2vw,27px); line-height: 1.4; letter-spacing: -.02em; }
+.case-narrative-evidence ul { margin: 0; padding-left: 21px; color: var(--header-muted); }
+.case-narrative-evidence li, .case-narrative-evidence p { font-size: 16px; line-height: 1.85; overflow-wrap: anywhere; }
+.case-narrative-evidence li + li { margin-top: 12px; }
+.case-narrative-evidence li::marker { color: var(--blue-bright); }
+.case-narrative-evidence p { margin: 14px 0 0; color: var(--header-muted); }
+.case-narrative-evidence .case-narrative-measurement { margin-top: 28px; padding: 20px 22px; color: var(--white); background: var(--night-soft); border-left: 3px solid var(--blue-bright); font-size: 14px; }
+.case-detail-proof:has(.case-narrative-scope) { grid-template-columns: minmax(0,1.35fr) minmax(230px,.65fr); }
+.case-detail-proof:has(.case-narrative-scope) aside { align-self: start; }
+.case-detail-proof:has(.case-narrative-scope) > div > p { color: var(--header-muted); line-height: 1.75; }
+
+@media (max-width: 980px) {
+  .case-detail-proof:has(.case-narrative-scope) { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 799px) {
+  .case-narrative-prose p { font-size: 17px; }
+  .case-narrative-decisions > li { grid-template-columns: 26px minmax(0,1fr); gap: 12px; }
+  .case-narrative-evidence .case-narrative-measurement { padding: 18px; }
+}

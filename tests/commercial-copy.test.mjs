@@ -40,7 +40,7 @@ function commercialClaims(copy) {
     ...copy.caseStudy.title,
     copy.caseStudy.intro,
     copy.caseStudy.disclosure,
-    ...copy.caseStudy.projects.flatMap(({ summary, roleNote }) => [summary, roleNote]),
+    ...copy.caseStudy.projects.flatMap(({ summary, roleNote, facts }) => [summary, roleNote, ...facts.map(({ value }) => value)]),
     ...copy.process.title,
     ...copy.process.steps.map(({ description }) => description),
     copy.about.quote,

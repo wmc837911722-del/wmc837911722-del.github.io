@@ -1,7 +1,8 @@
 "use client";
 
-import { type KeyboardEvent, useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, type MouseEvent, useEffect, useRef, useState } from "react";
 import { siteCopy, type Locale } from "./site-copy";
+import { contactBrief, contactPath, readContactContext, resolveContactContext, type ContactContext } from "./contact-context";
 import {
   GITHUB_PROFILE_URL,
   FDE_LEARNING_REPOSITORY_URL,
@@ -28,6 +29,14 @@ const contactEmails = [
   { label: "QQ MAIL", address: "837911722@qq.com" },
   { label: "GMAIL", address: "wmc837911722@gmail.com" },
 ];
+
+function refreshScrollLayout() {
+  void import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+    ScrollTrigger.refresh(true);
+  }).catch(() => {
+    // Native links and disclosures remain usable if animation loading fails.
+  });
+}
 
 function PartnerTileContent({ tile }: { tile: PartnerTile }) {
   return (
@@ -58,6 +67,7 @@ export type HomeProps = {
 export default function Home({ initialLocale = "zh" }: HomeProps) {
   const pageRef = useRef<HTMLElement>(null);
   const copyResetRef = useRef<number | null>(null);
+  const copyAttemptRef = useRef(0);
   const caseTransitionRef = useRef<number | null>(null);
   const [locale, setLocale] = useState<Locale>(initialLocale);
   const [theme, setTheme] = useState<Theme>("dark");
@@ -72,11 +82,63 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
   >("idle");
   const copy = siteCopy[locale];
   const structuredData = homeStructuredData(locale);
-  const collaborationBrief = copy.contact.mailTemplate;
+  const [contactContext, setContactContext] = useState<ContactContext | null>(null);
+  const selectedContact = resolveContactContext(locale, contactContext);
+  const collaborationBrief = contactBrief(locale, contactContext);
+  const featuredProjects = [0, 2, 1].map((index) => copy.caseStudy.projects[index]);
   const caseCount = copy.caseStudy.projects.length;
   const partnerFooterTiles = copy.partners.tiles.filter(
     (tile) => tile.kind === "policy" || tile.kind === "cta",
   );
+
+  const resetBriefStatus = () => {
+    copyAttemptRef.current += 1;
+    if (copyResetRef.current !== null) {
+      window.clearTimeout(copyResetRef.current);
+      copyResetRef.current = null;
+    }
+    setCopyState("idle");
+  };
+
+  const selectContact = (event: MouseEvent<HTMLAnchorElement>, context: ContactContext) => {
+    // Keep open-in-new-tab, modified clicks and the non-JS link working normally.
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    resetBriefStatus();
+    setContactContext(context);
+    const destination = contactPath(locale, context);
+    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== destination) {
+      window.history.pushState(null, "", destination);
+    }
+    const section = document.getElementById("contact");
+    section?.scrollIntoView({ behavior: "instant", block: "start" });
+    document.getElementById("contact-title")?.focus({ preventScroll: true });
+  };
+
+  const clearContact = () => {
+    resetBriefStatus();
+    setContactContext(null);
+    window.history.pushState(null, "", contactPath(locale));
+    document.getElementById("contact-title")?.focus({ preventScroll: true });
+  };
+
+  useEffect(() => {
+    const synchronizeContact = () => {
+      copyAttemptRef.current += 1;
+      if (copyResetRef.current !== null) {
+        window.clearTimeout(copyResetRef.current);
+        copyResetRef.current = null;
+      }
+      setContactContext(readContactContext(window.location.search));
+      setCopyState("idle");
+    };
+    const frame = window.requestAnimationFrame(synchronizeContact);
+    window.addEventListener("popstate", synchronizeContact);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("popstate", synchronizeContact);
+    };
+  }, []);
 
   const goToCase = (index: number, direction: CaseDirection) => {
     const nextIndex = ((index % caseCount) + caseCount) % caseCount;
@@ -117,6 +179,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
   };
 
   const copyCollaborationBrief = async () => {
+    const attempt = ++copyAttemptRef.current;
     const fallbackCopy = () => {
       const textArea = document.createElement("textarea");
       textArea.value = collaborationBrief;
@@ -153,11 +216,13 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
       copied = fallbackCopy();
     }
 
+    if (attempt !== copyAttemptRef.current) return;
     setCopyState(copied ? "copied" : "failed");
     copyResetRef.current = window.setTimeout(() => setCopyState("idle"), 3200);
   };
 
   const toggleLocale = () => {
+    copyAttemptRef.current += 1;
     const nextLocale: Locale = locale === "zh" ? "en" : "zh";
     document.documentElement.lang = nextLocale === "zh" ? "zh-CN" : "en";
     try {
@@ -182,7 +247,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
         nextLocale === "en" ? "changedToEnglish" : "changedToChinese"
       ],
     );
-    window.location.assign(`${localePaths[nextLocale]}${window.location.hash}`);
+    window.location.assign(`${localePaths[nextLocale]}${window.location.search}${window.location.hash}`);
   };
 
   const toggleTheme = () => {
@@ -212,6 +277,11 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
     });
     return () => window.cancelAnimationFrame(frame);
   }, [initialLocale]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(refreshScrollLayout);
+    return () => window.cancelAnimationFrame(frame);
+  }, [contactContext]);
 
   useEffect(() => {
     document.title = copy.seo.title;
@@ -407,7 +477,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           );
 
           if (desktop) {
-            const contact = select(".contact")[0];
+            const contact = select(".contact")[0] as HTMLElement;
             const glow = select(".cursor-glow")[0];
             const moveX = gsap.quickTo(glow, "x", {
               duration: 0.55,
@@ -547,13 +617,41 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             <span className="copy-number">{copy.hero.label}</span>
             <p>{copy.hero.intro}</p>
           </div>
-          <a className="primary-button" href="#contact">
-            <span>{copy.hero.cta}</span>
-            <span className="button-arrow" aria-hidden="true">↓</span>
-          </a>
+          <div className="hero-actions">
+            <a className="primary-button" href="#contact">
+              <span>{copy.hero.cta}</span>
+              <span className="button-arrow" aria-hidden="true">↓</span>
+            </a>
+            <a className="hero-cases-link" href="#featured-work">{copy.hero.casesCta}<span aria-hidden="true">↓</span></a>
+          </div>
         </div>
         <div className="scroll-cue hero-reveal" aria-hidden="true">
           <span /> {copy.hero.scroll}
+        </div>
+      </section>
+
+      <section className="featured-work" id="featured-work" aria-labelledby="featured-work-title">
+        <div className="featured-work-heading">
+          <div><p className="kicker">SELECTED WORK</p><h2 id="featured-work-title">{locale === "zh" ? "先看与你接近的项目" : "Start with a relevant project"}</h2></div>
+          <a href="#case-study">{locale === "zh" ? "查看全部案例" : "Explore all case studies"}<span aria-hidden="true">↗</span></a>
+        </div>
+        <div className="featured-work-grid">
+          {featuredProjects.map((project) => (
+            <article className="featured-work-card" key={project.id}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={project.imageSrc} alt={project.imageAlt} width={project.imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />
+              <div className="featured-work-copy">
+                <p className="kicker">{project.purpose}</p>
+                <h3><a href={casePath(project.id)} hrefLang="zh-CN">{project.title}</a></h3>
+                <p>{project.summary}</p>
+                <small>{project.role} · {project.imageNote}</small>
+                <div className="featured-work-actions">
+                  <a href={casePath(project.id)} hrefLang="zh-CN">{locale === "zh" ? "查看完整案例" : "Full case (Chinese)"}<span aria-hidden="true">↗</span></a>
+                  <a href={contactPath(locale, { kind: "case", id: project.id })} onClick={(event) => selectContact(event, { kind: "case", id: project.id })}>{copy.caseStudy.discuss}<span aria-hidden="true">→</span></a>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -588,7 +686,8 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           {copy.services.map((service) => (
             <a
               className="service-card"
-              href="#contact"
+              href={contactPath(locale, { kind: "service", id: service.id })}
+              onClick={(event) => selectContact(event, { kind: "service", id: service.id })}
               key={service.id}
               aria-label={`${copy.serviceAria}: ${service.title}`}
             >
@@ -864,7 +963,8 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
                       </a>
                       <a
                         className="system-case-cta"
-                        href="#contact"
+                        href={contactPath(locale, { kind: "case", id: project.id })}
+                        onClick={(event) => selectContact(event, { kind: "case", id: project.id })}
                         aria-label={`${copy.caseStudy.discuss}: ${project.title}`}
                         tabIndex={index === activeCaseIndex ? 0 : -1}
                       >
@@ -919,13 +1019,40 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             <p className="kicker">{copy.fdeLearning.kicker}</p>
             <h2 id="fde-learning-title">{copy.fdeLearning.title[0]}<br />{copy.fdeLearning.title[1]}</h2>
             <p className="fde-learning-intro">{copy.fdeLearning.intro}</p>
+
+          </div>
+        </div>
+
+            <div className="fde-learning-actions">
+              <a
+                className="fde-learning-link fde-learning-link--primary"
+                href={FDE_LEARNING_URL}
+                hrefLang="zh-CN"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{copy.fdeLearning.primaryCta}</span>
+                <span aria-hidden="true">↗</span>
+                <span className="sr-only">{copy.fdeLearning.newWindow}</span>
+              </a>
+              <a
+                className="fde-learning-link"
+                href={FDE_LEARNING_REPOSITORY_URL}
+                hrefLang="zh-CN"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{copy.fdeLearning.repositoryCta}</span>
+                <span aria-hidden="true">↗</span>
+                <span className="sr-only">{copy.fdeLearning.newWindow}</span>
+              </a>
+            </div>
+        <details className="fde-learning-details" onToggle={refreshScrollLayout}>
+          <summary>{copy.fdeLearning.expandLabel}</summary>
             <p className="fde-learning-audience">
               <strong>{copy.fdeLearning.audienceLabel}</strong>
               <span>{copy.fdeLearning.audience}</span>
             </p>
-          </div>
-        </div>
-
         <dl className="fde-learning-facts section-reveal">
           {copy.fdeLearning.facts.map((fact) => (
             <div key={fact.id}>
@@ -955,32 +1082,10 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
             <strong>{copy.fdeLearning.proofLabel}</strong>
             <p>{copy.fdeLearning.proof}</p>
             <small>{copy.fdeLearning.disclaimer}</small>
-            <div className="fde-learning-actions">
-              <a
-                className="fde-learning-link fde-learning-link--primary"
-                href={FDE_LEARNING_URL}
-                hrefLang="zh-CN"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{copy.fdeLearning.primaryCta}</span>
-                <span aria-hidden="true">↗</span>
-                <span className="sr-only">{copy.fdeLearning.newWindow}</span>
-              </a>
-              <a
-                className="fde-learning-link"
-                href={FDE_LEARNING_REPOSITORY_URL}
-                hrefLang="zh-CN"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{copy.fdeLearning.repositoryCta}</span>
-                <span aria-hidden="true">↗</span>
-                <span className="sr-only">{copy.fdeLearning.newWindow}</span>
-              </a>
-            </div>
+
           </div>
         </article>
+        </details>
       </section>
 
       <section className="contact" id="contact">
@@ -989,10 +1094,20 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
           <div className="section-label dark-label"><span>08</span><p>{copy.contact.label}<br />{copy.contact.labelLocal}</p></div>
           <p className="contact-status"><span /> {copy.contact.status}</p>
         </div>
-        <h2 className="section-reveal">{copy.contact.titleStart}<br /><em>{copy.contact.titleEnd}</em></h2>
+        <h2 className="section-reveal" id="contact-title" tabIndex={-1}>{copy.contact.titleStart}<br /><em>{copy.contact.titleEnd}</em></h2>
         <div className="contact-bottom section-reveal">
           <div className="contact-copy">
             <p>{copy.contact.body}</p>
+            {selectedContact ? (
+              <div className="contact-context" role="status" aria-live="polite">
+                <span>{copy.contact.contextLabel}: <strong>{selectedContact.title}</strong></span>
+                <button type="button" onClick={clearContact}>{copy.contact.clearContext}</button>
+              </div>
+            ) : null}
+            <details className="contact-brief-preview" onToggle={refreshScrollLayout}>
+              <summary>{copy.contact.previewLabel}</summary>
+              <pre>{collaborationBrief}</pre>
+            </details>
             <div className="contact-email-list" aria-label={copy.contact.emailListLabel}>
               {contactEmails.map(({ label, address }) => (
                 <a
