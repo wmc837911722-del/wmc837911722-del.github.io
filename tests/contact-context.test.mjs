@@ -36,8 +36,11 @@ test("initial contact fragment is restored after layout without overriding newer
       ["contact-title", "focus", { preventScroll: true }],
     ]);
     calls.length = 0;
-    window.scrollY = 300;
+    window.scrollY = 282;
     restoreInitialContactAnchor(initialUrl);
+    assert.equal(calls.length, 2, "partial native smooth scrolling must still reach contact");
+    calls.length = 0;
+    restoreInitialContactAnchor(initialUrl, true);
     window.scrollY = 0;
     window.location.href = "https://wmc837911722-del.github.io/#services";
     restoreInitialContactAnchor(initialUrl);

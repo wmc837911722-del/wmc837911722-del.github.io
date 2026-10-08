@@ -5,9 +5,10 @@ export type ContactContext = { kind: "case" | "service"; id: string };
 
 // Native fragment scrolling can run before hydration/animation layout settles.
 // Restore only an untouched initial contact navigation, never a newer URL or
-// a position the visitor has already scrolled to.
-export function restoreInitialContactAnchor(initialUrl: string) {
-  if (window.location.href !== initialUrl || window.location.hash !== "#contact" || window.scrollY > 1) return;
+// visitor interaction. A partially completed native smooth scroll is not user
+// intent, so its intermediate scrollY must not suppress restoration.
+export function restoreInitialContactAnchor(initialUrl: string, interrupted = false) {
+  if (interrupted || window.location.href !== initialUrl || window.location.hash !== "#contact") return;
   document.getElementById("contact")?.scrollIntoView({ behavior: "instant", block: "start" });
   document.getElementById("contact-title")?.focus({ preventScroll: true });
 }

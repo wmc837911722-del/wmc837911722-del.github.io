@@ -319,6 +319,13 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
     let disposeAnimations = () => {};
     let contactFrame: number | null = null;
     const initialUrl = window.location.href;
+    let contactNavigationInterrupted = false;
+    const interruptContactNavigation = () => { contactNavigationInterrupted = true; };
+    const contactInterruptEvents = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+    const stopWatchingContactNavigation = () => {
+      contactInterruptEvents.forEach((event) => window.removeEventListener(event, interruptContactNavigation));
+    };
+    contactInterruptEvents.forEach((event) => window.addEventListener(event, interruptContactNavigation, { passive: true }));
 
     async function startAnimations() {
       const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
@@ -509,12 +516,16 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
       document.documentElement.removeAttribute("data-motion");
     }).finally(() => {
       if (disposed) return;
-      contactFrame = window.requestAnimationFrame(() => restoreInitialContactAnchor(initialUrl));
+      contactFrame = window.requestAnimationFrame(() => {
+        restoreInitialContactAnchor(initialUrl, contactNavigationInterrupted);
+        stopWatchingContactNavigation();
+      });
     });
 
     return () => {
       disposed = true;
       if (contactFrame !== null) window.cancelAnimationFrame(contactFrame);
+      stopWatchingContactNavigation();
       document.documentElement.removeAttribute("data-motion");
       disposeAnimations();
     };
