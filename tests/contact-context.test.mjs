@@ -116,5 +116,9 @@ test("homepage renders early selected work, native compact guide, and contact so
   assert.match(source, /fde-learning-details" onToggle=\{refreshScrollLayout\}/);
   assert.match(source, /contact-brief-preview" onToggle=\{refreshScrollLayout\}/);
   assert.match(source, /ScrollTrigger\.refresh\(true\)/);
+  assert.match(source, /ScrollTrigger\.addEventListener\("refresh", scheduleContactLanding\)/);
+  assert.match(source, /window\.addEventListener\("load", scheduleContactLanding\)/);
+  assert.match(source, /window\.addEventListener\("pageshow", scheduleContactLanding\)/);
+  assert.match(source, /ScrollTrigger\.removeEventListener\("refresh", scheduleContactLanding\)/);
   assert.match(source, /if \(attempt !== copyAttemptRef\.current\) return/);
 });

@@ -320,12 +320,26 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
     let contactFrame: number | null = null;
     const initialUrl = window.location.href;
     let contactNavigationInterrupted = false;
-    const interruptContactNavigation = () => { contactNavigationInterrupted = true; };
+    let removeContactRefreshListener = () => {};
+    const scheduleContactLanding = () => {
+      if (disposed || contactNavigationInterrupted || window.location.hash !== "#contact" || window.location.href !== initialUrl) return;
+      if (contactFrame !== null) window.cancelAnimationFrame(contactFrame);
+      contactFrame = window.requestAnimationFrame(() => restoreInitialContactAnchor(initialUrl, contactNavigationInterrupted));
+    };
     const contactInterruptEvents = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
     const stopWatchingContactNavigation = () => {
       contactInterruptEvents.forEach((event) => window.removeEventListener(event, interruptContactNavigation));
+      window.removeEventListener("load", scheduleContactLanding);
+      window.removeEventListener("pageshow", scheduleContactLanding);
+      removeContactRefreshListener();
+    };
+    const interruptContactNavigation = () => {
+      contactNavigationInterrupted = true;
+      stopWatchingContactNavigation();
     };
     contactInterruptEvents.forEach((event) => window.addEventListener(event, interruptContactNavigation, { passive: true }));
+    window.addEventListener("load", scheduleContactLanding);
+    window.addEventListener("pageshow", scheduleContactLanding);
 
     async function startAnimations() {
       const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
@@ -337,6 +351,13 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
 
       document.documentElement.removeAttribute("data-motion");
       gsap.registerPlugin(ScrollTrigger);
+      // ScrollTrigger may refresh again on load and restore an earlier scroll
+      // position. Keep the initial anchor through those real layout events,
+      // stopping as soon as the visitor takes control.
+      if (!contactNavigationInterrupted) {
+        ScrollTrigger.addEventListener("refresh", scheduleContactLanding);
+        removeContactRefreshListener = () => ScrollTrigger.removeEventListener("refresh", scheduleContactLanding);
+      }
       const select = gsap.utils.selector(pageRef);
       const media = gsap.matchMedia();
 
@@ -515,11 +536,7 @@ export default function Home({ initialLocale = "zh" }: HomeProps) {
     void startAnimations().catch(() => {
       document.documentElement.removeAttribute("data-motion");
     }).finally(() => {
-      if (disposed) return;
-      contactFrame = window.requestAnimationFrame(() => {
-        restoreInitialContactAnchor(initialUrl, contactNavigationInterrupted);
-        stopWatchingContactNavigation();
-      });
+      scheduleContactLanding();
     });
 
     return () => {
